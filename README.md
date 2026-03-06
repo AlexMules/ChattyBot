@@ -1,11 +1,11 @@
-# 📚 Softawre Design - 2026
+# 📚 Software Design - 2026
 
 # Project: [Insert Project Name Here]
 
 ## 👤 Student Information
-* **Name:** [Insert Full Name]
-* **GitHub Username:** @[Insert Username]
-* **Group:** [e.g., 30222-1]
+* **Name:** Alexandru Mules
+* **GitHub Username:** @AlexMules
+* **Group:** 30232-2
 
 ---
 
