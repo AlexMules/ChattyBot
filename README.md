@@ -1,6 +1,6 @@
 # 📚 Software Design - 2026
 
-# Project: [Insert Project Name Here]
+# Project: Chat Application with Bot Integration
 
 ## 👤 Student Information
 * **Name:** Alexandru Mules
