@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ChattyBot.Client/ChattyBot.Client.csproj" />
+  <Project Path="ChattyBot.Server/ChattyBot.Server.csproj" />
+  <Project Path="ChattyBot.Shared/ChattyBot.Shared.csproj" />
+</Solution>

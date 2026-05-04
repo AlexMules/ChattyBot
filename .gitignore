@@ -52,3 +52,42 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# User-specific settings
+.vs/
+.idea/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Secrets & Config
+appsettings.json
+!appsettings.Development.json
+!appsettings.Example.json
+dotnet-user-secrets/
+.env
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.dockerignore
+obj/Docker/
+
+# Redis/Local Data
+*.rdb
+*.bak
+
+# Web tools
+node_modules/
+.npm/
+dist/
+wwwroot/css/*.min.css
+wwwroot/js/*.min.js
