@@ -1,5 +1,14 @@
+using ChattyBot.Server.Application.Interfaces;
+using ChattyBot.Server.Application.Services;
 using ChattyBot.Server.Infrastructure.Persistence.Context;
+using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
+using ChattyBot.Server.Infrastructure.Persistence.Repositories;
+using ChattyBot.Server.Infrastructure.Security;
+using ChattyBot.Server.Infrastructure.Security.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,10 +16,38 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found!");
 
 builder.Services.AddDbContext<ChattyBotDbContext>(options =>
-    options.UseMySQL(connectionString));
+    options.UseMySQL(connectionString, x => x.MigrationsAssembly("ChattyBot.Server")));
 
-builder.Services.AddDbContext<ChattyBotDbContext>(options =>
-    options.UseMySQL(connectionString)); 
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!))
+        };
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("BlazorLocalPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader(); 
+    });
+});
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAccountManagerService, AccountManagerService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -24,6 +61,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("BlazorLocalPolicy");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

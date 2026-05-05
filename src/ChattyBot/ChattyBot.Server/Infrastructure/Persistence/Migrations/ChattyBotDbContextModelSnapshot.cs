@@ -3,19 +3,16 @@ using System;
 using ChattyBot.Server.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ChattyBot.Server.Migrations
+namespace ChattyBot.Server.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ChattyBotDbContext))]
-    [Migration("20260504165629_InitialCreate")]
-    partial class InitialCreate
+    partial class ChattyBotDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

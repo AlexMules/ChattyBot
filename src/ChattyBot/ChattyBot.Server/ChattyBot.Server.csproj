@@ -29,11 +29,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\" />
+		<ProjectReference Include="..\ChattyBot.Shared\ChattyBot.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ChattyBot.Shared\ChattyBot.Shared.csproj" />
+	  <Folder Include="Infrastructure\Persistence\Migrations\" />
 	</ItemGroup>
 
 </Project>

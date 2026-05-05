@@ -14,6 +14,11 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
+
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -22,6 +27,11 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
         public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> SaveChangesAsync()

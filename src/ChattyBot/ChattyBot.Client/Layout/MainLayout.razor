@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -6,7 +7,16 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <span class="me-3">Welcome, <strong>@context.User.Identity?.Name</strong>!</span>
+                    <a href="logout" class="btn btn-sm btn-outline-secondary">Logout</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="login" class="me-2">Login</a>
+                    <a href="register">Înregistrare</a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">

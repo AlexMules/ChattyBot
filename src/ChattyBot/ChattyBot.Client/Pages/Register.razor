@@ -1,0 +1,139 @@
+﻿@page "/"
+@page "/register"
+@using ChattyBot.Shared.Contracts.DTO
+@using ChattyBot.Client.Services.ApiClients
+@inject AuthClient AuthClient
+@inject NavigationManager Navigation
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-dark text-white text-center py-3">
+                    <h3 class="mb-0">Create ChattyBot Account</h3>
+                </div>
+                <div class="card-body p-4">
+                    
+                    @* Error Alert *@
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger shadow-sm">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> @errorMessage
+                        </div>
+                    }
+
+                    @* Success Alert *@
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success shadow-sm">
+                            <i class="bi bi-check-circle-fill me-2"></i> @successMessage
+                        </div>
+                    }
+
+                    <EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+                        <DataAnnotationsValidator />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Username</label>
+                            <InputText @bind-Value="registerModel.Username" class="form-control" placeholder="Choose a username..." />
+                            <ValidationMessage For="@(() => registerModel.Username)" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <InputText @bind-Value="registerModel.Email" class="form-control" placeholder="user@domain.com" />
+                            <ValidationMessage For="@(() => registerModel.Email)" class="text-danger" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Password</label>
+                            <InputText @bind-Value="registerModel.Password" type="password" class="form-control" />
+                            <ValidationMessage For="@(() => registerModel.Password)" class="text-danger" />
+                        </div>
+
+                        <!-- Avatar Selection Section -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold d-block text-center mb-3">Choose your avatar</label>
+                            <div class="avatar-selector-container">
+                                
+                                <div class="avatar-option @(registerModel.AvatarPath == "avatar1.png" ? "selected" : "")"
+                                     @onclick='() => registerModel.AvatarPath = "avatar1.png"'>
+                                    <img src="images/avatar1.png" alt="Avatar 1" />
+                                    @if (registerModel.AvatarPath == "avatar1.png")
+                                    {
+                                        <div class="selection-check">Selected</div>
+                                    }
+                                </div>
+
+                                <div class="avatar-option @(registerModel.AvatarPath == "avatar2.png" ? "selected" : "")"
+                                     @onclick='() => registerModel.AvatarPath = "avatar2.png"'>
+                                    <img src="images/avatar2.png" alt="Avatar 2" />
+                                    @if (registerModel.AvatarPath == "avatar2.png")
+                                    {
+                                        <div class="selection-check">Selected</div>
+                                    }
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 pt-2">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm" disabled="@isSubmitting">
+                                @if (isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span> <span>Processing...</span>
+                                }
+                                else
+                                {
+                                    <span>Complete Registration</span>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="card-footer text-center py-3 bg-light">
+                    <a href="/login" class="text-decoration-none">Already have an account? Log in here.</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterDTO registerModel = new();
+    private string? errorMessage;
+    private string? successMessage;
+    private bool isSubmitting = false;
+
+    private async Task HandleRegister()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        successMessage = null;
+
+        try
+        {
+            var result = await AuthClient.RegisterAsync(registerModel);
+
+            if (result.IsSuccess)
+            {
+                successMessage = "Account created successfully! Redirecting to login...";
+                isSubmitting = false;
+                StateHasChanged();
+
+                await Task.Delay(3000);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                errorMessage = result.ErrorMessage;
+                isSubmitting = false;
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "An unexpected error occurred. Please try again!";
+            isSubmitting = false;
+        }
+    }
+}

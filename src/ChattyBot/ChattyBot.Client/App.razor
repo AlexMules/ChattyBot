@@ -1,6 +1,37 @@
-﻿<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.NotFound)">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-    </Found>
-</Router>
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                
+                <NotAuthorized>
+                    @if (context.User.Identity?.IsAuthenticated != true)
+                    {
+                        <div class="alert alert-warning m-4">
+                            Nu ești logat. Te rugăm să te <a href="login">autentifici</a> pentru a continua.
+                        </div>
+                    }
+                    else
+                    {
+                        <p role="alert">Nu ai permisiuni pentru a vedea această pagină.</p>
+                    }
+                </NotAuthorized>
+
+                <Authorizing>
+                    <div class="text-center mt-5">
+                        <div class="spinner-border" role="status"></div>
+                        <p>Se verifică identitatea...</p>
+                    </div>
+                </Authorizing>
+
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Ups! Nu am găsit nimic la această adresă.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

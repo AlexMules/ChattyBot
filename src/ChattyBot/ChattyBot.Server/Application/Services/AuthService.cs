@@ -1,31 +1,32 @@
 ﻿using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Server.Domain.Entities;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
+using ChattyBot.Server.Infrastructure.Security.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace ChattyBot.Server.Application.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IConfiguration _configuration;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, ITokenGenerator tokenGenerator)
         {
             _userRepository = userRepository;
-            _configuration = configuration;
+            _tokenGenerator = tokenGenerator;
         }
 
-        public async Task<bool> RegisterAsync(RegisterDTO dto)
+        public async Task<AuthResponseDTO> RegisterAsync(RegisterDTO dto)
         {
             var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
             if (existingUser != null)
             {
-                return false;
+                return new AuthResponseDTO
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Email is already taken!"
+                };
             }
 
             var user = new User
@@ -38,7 +39,12 @@ namespace ChattyBot.Server.Application.Services
             };
 
             await _userRepository.AddAsync(user);
-            return await _userRepository.SaveChangesAsync();
+            await _userRepository.SaveChangesAsync();
+
+            return new AuthResponseDTO
+            {
+                IsSuccess = true
+            };
         }
 
         public async Task<AuthResponseDTO> LoginAsync(LoginDTO dto)
@@ -50,42 +56,13 @@ namespace ChattyBot.Server.Application.Services
                 return new AuthResponseDTO { IsSuccess = false, ErrorMessage = "Invalid email or password!" };
             }
 
-            var token = GenerateJwtToken(user);
+            var token = _tokenGenerator.GenerateJwtToken(user);
 
             return new AuthResponseDTO
             {
                 IsSuccess = true,
                 Token = token
             };
-        }
-
-        private string GenerateJwtToken(User user)
-        {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            var jwtKey = _configuration["Jwt:Key"];
-            if (string.IsNullOrEmpty(jwtKey))
-            {
-                throw new InvalidOperationException("JWT Key is missing in configuration!");
-            }
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
