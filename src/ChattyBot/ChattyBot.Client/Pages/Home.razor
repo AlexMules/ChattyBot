@@ -1,52 +1,79 @@
 ﻿@page "/home"
 @using Microsoft.AspNetCore.Components.Authorization
-@* Această linie blochează accesul dacă nu ești logat *@
-@attribute [Authorize] 
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager Navigation
+@attribute [Authorize]
 
-<div class="profile-page-container">
-    <div class="profile-card shadow-lg">
-        @* Antetul colorat (Blurple) *@
-        <div class="profile-header">
-            <div class="avatar-wrapper">
-                @* Path-ul pozei trebuie să fie complet *@
-                <img src="images/@UserAvatar" alt="Profile" class="large-avatar" />
-            </div>
-        </div>
+<div class="profile-settings-container">
+    <div class="user-profile-card">
         
-        <div class="profile-content text-center">
-            <h2 class="username">@Username</h2>
-            <p class="email-tag">@Email</p>
-            
-            @* Secțiunea de statistici stil Discord *@
-            <div class="stats-row">
-                <div class="stat-box">
-                    <span class="stat-value">12</span>
-                    <span class="stat-label">Chats</span>
-                </div>
-                <div class="stat-box border-start border-secondary">
-                    <span class="stat-value text-success">Active</span>
-                    <span class="stat-label">Status</span>
-                </div>
-            </div>
+        @* 1. Banner *@
+        <div class="profile-banner">
+            <h4 class="welcome-on-banner">Welcome, test!</h4>
+        </div>
 
-            @* Butoanele de acțiune cu rutele pe care le-am definit în NavMenu *@
-            <div class="action-buttons mt-4">
-                <a href="/chat" class="btn btn-primary btn-lg w-100 mb-3 fw-bold">
-                    <i class="bi bi-chat-fill me-2"></i> Open Chats
-                </a>
-                <a href="/account/manage" class="btn btn-outline-secondary w-100">
-                    <i class="bi bi-gear-fill me-2"></i> Manage Account
-                </a>
+        @* 2. Header *@
+        <div class="profile-header-section">
+            <div class="avatar-container">
+                <img src="images/@UserAvatar" alt="Avatar" class="profile-picture" />
+                <div class="status-indicator online"></div>
+            </div>
+            
+            <div class="header-info">
+                <div class="name-badge-row">
+                    <h2 class="display-name">@Username</h2>
+                    <div class="badge-icon">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+                </div>
+                <button class="btn btn-blurple btn-sm mt-2" @onclick="GoToManage">Edit User Profile</button>
             </div>
         </div>
+
+        @* 3. Detalii *@
+        <div class="details-container">
+            <div class="details-box">
+                
+                <div class="detail-row">
+                    <div class="detail-info">
+                        <span class="detail-label">Username</span>
+                        <span class="detail-value">@Username.ToLower()</span>
+                    </div>
+                    <button class="btn btn-discord-secondary btn-sm" @onclick="GoToManage">Edit</button>
+                </div>
+
+                <div class="detail-row">
+                    <div class="detail-info">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">
+                            @MaskEmail(Email)
+                            <span class="reveal-link" @onclick="ToggleReveal">@(isRevealed ? "Hide" : "Reveal")</span>
+                        </span>
+                    </div>
+                    <button class="btn btn-discord-secondary btn-sm" @onclick="GoToManage">Edit</button>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>
 
 @code {
-    // În viitor, datele astea le vom lua din AuthenticationState
-    private string Username = "John Doe"; 
-    private string Email = "john.doe@domain.com";
-    private string UserAvatar = "avatar1.png"; 
+    private string Username = "Alex";
+    private string Email = "alex_placeholder_710@gmail.com";
+    private string UserAvatar = "avatar1.png";
+    private bool isRevealed = false;
 
-    // Notă: Poți adăuga aici un OnInitializedAsync pentru a trage datele reale din Claims
+    private void GoToManage() => Navigation.NavigateTo("/account/manage");
+    private void ToggleReveal() => isRevealed = !isRevealed;
+
+    private string MaskEmail(string email)
+    {
+        if (string.IsNullOrEmpty(email)) return "****";
+        if (isRevealed) return email;
+        var parts = email.Split('@');
+        if (parts.Length < 2) return email;
+        return "*****************@" + parts[1];
+    }
 }

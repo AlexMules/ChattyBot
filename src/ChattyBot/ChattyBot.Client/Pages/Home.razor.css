@@ -1,81 +1,161 @@
-﻿.home-wrapper {
+﻿/* Containerul principal */
+.profile-settings-container {
+    padding: 40px 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 20px;
+    background-color: #313338;
+    min-height: 90vh;
 }
 
-.profile-card {
-    background-color: #2b2d31;
+/* Cardul de profil - am scos orice constrângere de înălțime */
+.user-profile-card {
     width: 100%;
-    max-width: 450px;
-    border-radius: 12px;
+    max-width: 700px;
+    background-color: #2b2d31;
+    border-radius: 8px;
     overflow: hidden;
-    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    height: fit-content; /* Forțează cardul să se muleze pe conținut */
 }
 
-.profile-header {
-    background-color: #5865f2; /* Discord Blurple */
+/* Banner Mov */
+.profile-banner {
     height: 100px;
+    background-color: #4a148c;
     position: relative;
-    margin-bottom: 60px;
+}
+
+.welcome-on-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: 700;
+    font-size: 2.1rem;
+    white-space: nowrap;
+}
+
+/* Secțiunea de Header */
+.profile-header-section {
+    padding: 0 16px 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
 }
 
 .avatar-container {
-    position: absolute;
-    bottom: -50px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    margin-top: -45px;
 }
 
-.profile-avatar {
-    width: 110px;
-    height: 110px;
+.profile-picture {
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    border: 5px solid #2b2d31;
+    border: 6px solid #2b2d31;
     background-color: #313338;
 }
 
-.profile-body {
-    padding: 0 2rem 2rem 2rem;
+.status-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    border: 4px solid #2b2d31;
+}
+
+    .status-indicator.online {
+        background-color: #23a559;
+    }
+
+.header-info {
+    flex-grow: 1;
+    margin-left: 20px;
 }
 
 .display-name {
+    margin: 0;
+    color: white;
     font-weight: 700;
-    margin-bottom: 5px;
+    font-size: 2.2rem;
 }
 
-.user-email {
-    color: #b5bac1 !important;
-}
-
-.divider {
-    height: 1px;
-    background-color: #3f4147;
-    margin: 1.5rem 0;
-}
-
-.info-grid {
+.badge-icon {
+    color: #5865f2;
+    font-size: 1.5rem;
     display: flex;
-    justify-content: space-around;
-    background-color: #1e1f22;
-    padding: 1rem;
-    border-radius: 8px;
+    align-items: center;
 }
 
-.info-item {
+/* --- AJUSTĂRI PENTRU SPAȚIUL DE JOS --- */
+.details-container {
+    padding: 16px 16px 20px 16px; /* Redus padding-ul de jos la 20px */
+}
+
+.details-box {
+    background-color: #1e1f22;
+    border-radius: 8px;
+    padding: 20px 20px 10px 20px; /* Redus padding interior jos la 10px */
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid #3f4147;
+}
+
+    /* Ultimul rând nu are bordură și are spațiu minim jos */
+    .detail-row:last-child {
+        border-bottom: none;
+        padding-bottom: 5px;
+    }
+
+.detail-info {
     display: flex;
     flex-direction: column;
+    gap: 4px;
 }
 
-.info-label {
-    font-size: 10px;
-    text-transform: uppercase;
+.detail-label {
     color: #b5bac1;
+    text-transform: uppercase;
+    font-size: 12px;
     font-weight: 700;
 }
 
-.info-value {
+.detail-value {
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.reveal-link {
+    color: #00a8fc;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 10px;
+}
+
+/* Butoane */
+.btn-blurple {
+    background-color: #5865f2;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 3px;
     font-weight: 600;
+}
+
+.btn-discord-secondary {
+    background-color: #4e5058;
+    color: white;
+    border: none;
+    font-size: 14px;
+    padding: 4px 16px;
 }
