@@ -9,20 +9,31 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
 
         <AuthorizeView>
             <Authorized>
+                @* 1. Profilul utilizatorului (Home-ul nou) *@
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="chat">
-                        <span class="bi bi-chat-dots-fill" aria-hidden="true"></span> Chat Room
+                    <NavLink class="nav-link" href="home" Match="NavLinkMatch.All">
+                        <span class="bi bi-person-circle" aria-hidden="true"></span> Profile
                     </NavLink>
                 </div>
+
+                @* 2. Secțiunea de Chat *@
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="chat">
+                        <span class="bi bi-chat-dots-fill" aria-hidden="true"></span> Chats
+                    </NavLink>
+                </div>
+
+                @* 3. Administrare Cont *@
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="account/manage">
+                        <span class="bi bi-gear-fill" aria-hidden="true"></span> Manage Account
+                    </NavLink>
+                </div>
+
+                @* 4. Logout *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="logout">
                         <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
@@ -49,7 +60,6 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()

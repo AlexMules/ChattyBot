@@ -1,0 +1,136 @@
+﻿/* Fundalul paginii */
+.login-page-wrapper {
+    background-color: #313338;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin: -1.5rem;
+}
+
+/* Cardul principal */
+.wide-card {
+    max-width: 850px;
+    width: 100%;
+    background-color: #2b2d31;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    color: #f2f3f5;
+    overflow: hidden;
+}
+
+/* Partea stângă cu Logo */
+.logo-section {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #2b2d31;
+    border-right: 1px solid #3f4147;
+}
+
+.logo-img {
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* Partea dreaptă cu Formular */
+.form-section {
+    padding: 3rem !important;
+    background-color: #2b2d31;
+}
+
+.form-title {
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #ffffff;
+}
+
+/* Iconițele din Input */
+.input-group {
+    background-color: #1e1f22 !important;
+    border: 1px solid #1e1f22;
+    border-radius: 8px;
+    display: flex;
+    align-items: stretch; /* Face ca elementele interne să aibă aceeași înălțime */
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+    .input-group:focus-within {
+        border-color: #5865f2;
+    }
+
+/* Secțiunea ICONIȚEI - Aici facem magia */
+.input-group-text {
+    background-color: transparent !important;
+    border: none !important;
+    color: #b5bac1;
+    /* Centrare perfectă */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px; /* Lățime fixă: iconițele vor fi mereu una sub alta, perfect aliniate */
+    padding: 0 !important; /* Eliminăm padding-ul care le împingea spre dreapta */
+    font-size: 1.1rem; /* Mărim puțin iconița să fie vizibilă */
+}
+
+/* Inputul propriu-zis */
+.form-control {
+    background-color: transparent !important;
+    border: none !important;
+    color: #dbdee1 !important;
+    height: 48px;
+    padding: 10px 10px 10px 0; /* 0 pe stânga pentru că spațiul e dat de width-ul de la iconiță */
+    box-shadow: none !important;
+}
+
+    .form-control::placeholder {
+        color: #72767d;
+    }
+
+    .form-control:focus {
+        color: #ffffff !important;
+    }
+
+/* Butonul de Login */
+.btn-primary {
+    background-color: #5865f2;
+    border: none;
+    font-weight: 600;
+    height: 48px;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+    .btn-primary:hover {
+        background-color: #4752c4;
+    }
+
+.register-link {
+    color: #00a8fc;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+    .register-link:hover {
+        text-decoration: underline;
+    }
+
+@media (max-width: 768px) {
+    .logo-section {
+        border-right: none;
+        border-bottom: 1px solid #3f4147;
+        padding: 2rem;
+    }
+}

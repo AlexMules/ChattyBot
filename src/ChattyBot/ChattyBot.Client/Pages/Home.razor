@@ -1,5 +1,52 @@
-﻿<PageTitle>Home</PageTitle>
+﻿@page "/home"
+@using Microsoft.AspNetCore.Components.Authorization
+@* Această linie blochează accesul dacă nu ești logat *@
+@attribute [Authorize] 
 
-<h1>Hello, world!</h1>
+<div class="profile-page-container">
+    <div class="profile-card shadow-lg">
+        @* Antetul colorat (Blurple) *@
+        <div class="profile-header">
+            <div class="avatar-wrapper">
+                @* Path-ul pozei trebuie să fie complet *@
+                <img src="images/@UserAvatar" alt="Profile" class="large-avatar" />
+            </div>
+        </div>
+        
+        <div class="profile-content text-center">
+            <h2 class="username">@Username</h2>
+            <p class="email-tag">@Email</p>
+            
+            @* Secțiunea de statistici stil Discord *@
+            <div class="stats-row">
+                <div class="stat-box">
+                    <span class="stat-value">12</span>
+                    <span class="stat-label">Chats</span>
+                </div>
+                <div class="stat-box border-start border-secondary">
+                    <span class="stat-value text-success">Active</span>
+                    <span class="stat-label">Status</span>
+                </div>
+            </div>
 
-Welcome to your new app.
+            @* Butoanele de acțiune cu rutele pe care le-am definit în NavMenu *@
+            <div class="action-buttons mt-4">
+                <a href="/chat" class="btn btn-primary btn-lg w-100 mb-3 fw-bold">
+                    <i class="bi bi-chat-fill me-2"></i> Open Chats
+                </a>
+                <a href="/account/manage" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-gear-fill me-2"></i> Manage Account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // În viitor, datele astea le vom lua din AuthenticationState
+    private string Username = "John Doe"; 
+    private string Email = "john.doe@domain.com";
+    private string UserAvatar = "avatar1.png"; 
+
+    // Notă: Poți adăuga aici un OnInitializedAsync pentru a trage datele reale din Claims
+}

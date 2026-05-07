@@ -1,5 +1,4 @@
-﻿@page "/"
-@page "/register"
+﻿@page "/register"
 @using ChattyBot.Shared.Contracts.DTO
 @using ChattyBot.Client.Services.ApiClients
 @inject AuthClient AuthClient
@@ -16,7 +15,7 @@
                 <DataAnnotationsValidator />
 
                 <div class="row g-0">
-                    @* COLOANA STÂNGĂ: Formular *@
+                    @* left column: Registration form *@
                     <div class="col-md-6 form-section">
                         @if (!string.IsNullOrEmpty(errorMessage))
                         {
@@ -67,7 +66,7 @@
                         </div>
                     </div>
 
-                    @* COLOANA DREAPTĂ: Selecție Avatar *@
+                    @* right column: Avatar Selection *@
                     <div class="col-md-6 avatar-section text-center d-flex flex-column justify-content-center">
                         <label class="form-label mb-4">Choose your avatar</label>
                         <div class="avatar-grid">
