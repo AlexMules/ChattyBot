@@ -7,19 +7,19 @@
                     @if (context.User.Identity?.IsAuthenticated != true)
                     {
                         <div class="alert alert-warning m-4">
-                            Nu ești logat. Te rugăm să te <a href="login">autentifici</a> pentru a continua.
+                            You are not logged in. Please <a href="login" class="alert-link">log in</a> to continue!
                         </div>
                     }
                     else
                     {
-                        <p role="alert">Nu ai permisiuni pentru a vedea această pagină.</p>
+                        <p role="alert">You do not have permission to view this page.</p>
                     }
                 </NotAuthorized>
 
                 <Authorizing>
                     <div class="text-center mt-5">
                         <div class="spinner-border" role="status"></div>
-                        <p>Se verifică identitatea...</p>
+                        <p>Verifying identity...</p>
                     </div>
                 </Authorizing>
 
@@ -30,7 +30,7 @@
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Ups! Nu am găsit nimic la această adresă.</p>
+                <p role="alert">Sorry, there's nothing here!</p>
             </LayoutView>
         </NotFound>
     </Router>

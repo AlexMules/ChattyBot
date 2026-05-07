@@ -9,52 +9,50 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
-
         <AuthorizeView>
             <Authorized>
-                @* 1. Profilul utilizatorului (Home-ul nou) *@
+                @* --- AFȘAT DOAR CÂND UTILIZATORUL ESTE LOGAT --- *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="home" Match="NavLinkMatch.All">
-                        <span class="bi bi-person-circle" aria-hidden="true"></span> Profile
+                        <span class="bi bi-custom-profile" aria-hidden="true"></span> Profile
                     </NavLink>
                 </div>
 
-                @* 2. Secțiunea de Chat *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="chat">
-                        <span class="bi bi-chat-dots-fill" aria-hidden="true"></span> Chats
+                        <span class="bi bi-custom-chats" aria-hidden="true"></span> Chats
                     </NavLink>
                 </div>
 
-                @* 3. Administrare Cont *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="account/manage">
-                        <span class="bi bi-gear-fill" aria-hidden="true"></span> Manage Account
+                        <span class="bi bi-custom-manage" aria-hidden="true"></span> Manage Account
                     </NavLink>
                 </div>
 
-                @* 4. Logout *@
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="logout">
-                        <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
+                    @* Acest href="logout" va declanșa pagina Logout.razor care curăță token-ul *@
+                    <NavLink class="nav-link logout-link" href="logout">
+                        <span class="bi bi-custom-logout" aria-hidden="true"></span> Logout
                     </NavLink>
                 </div>
             </Authorized>
 
             <NotAuthorized>
+                @* --- AFȘAT DOAR PENTRU VIZITATORI (NE-LOGAȚI) --- *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="login">
-                        <span class="bi bi-person-badge-fill" aria-hidden="true"></span> Login
+                        <span class="bi bi-custom-login" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="register">
-                        <span class="bi bi-person-plus-fill" aria-hidden="true"></span> Register
+                        <span class="bi bi-custom-register" aria-hidden="true"></span> Register
                     </NavLink>
                 </div>
             </NotAuthorized>
         </AuthorizeView>
-
     </nav>
 </div>
 

@@ -7,16 +7,17 @@
 
     <main>
         <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <span class="me-3">Welcome, <strong>@context.User.Identity?.Name</strong>!</span>
-                    <a href="logout" class="btn btn-sm btn-outline-secondary">Logout</a>
-                </Authorized>
-                <NotAuthorized>
-                    <a href="login" class="me-2">Login</a>
-                    <a href="register">Register</a>
-                </NotAuthorized>
-            </AuthorizeView>
+            <div class="ms-auto">
+                <AuthorizeView>
+                    <Authorized>
+                        <a href="logout" class="btn btn-sm btn-outline-light">Logout</a>
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="login" class="me-3 text-decoration-none text-white-50">Login</a>
+                        <a href="register" class="btn btn-sm btn-blurple">Register</a>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
         </div>
 
         <article class="content px-4">

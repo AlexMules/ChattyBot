@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 
 @inject AuthClient AuthClient
+@inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -80,6 +81,17 @@
     private string? errorMessage;
     private bool isSubmitting = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("home");
+        }
+    }
+
     private async Task HandleLogin()
     {
         isSubmitting = true;
@@ -91,12 +103,9 @@
 
             if (result.IsSuccess && !string.IsNullOrEmpty(result.Token))
             {
-                // PASUL CRITIC: Anunțăm sistemul de autentificare că avem un token nou
-                // Facem cast la CustomAuthStateProvider pentru a accesa metoda creată de tine
                 var customAuthStateProvider = (CustomAuthStateProvider)AuthStateProvider;
                 await customAuthStateProvider.NotifyUserAuthentication(result.Token);
 
-                // Abia acum sistemul știe că ești logat, deci putem merge la Home
                 Navigation.NavigateTo("/home");
             }
             else
@@ -106,7 +115,6 @@
         }
         catch (Exception)
         {
-            // Log ex for debugging if needed
             errorMessage = "Login failed. Please check your connection and try again!";
         }
         finally

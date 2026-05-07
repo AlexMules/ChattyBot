@@ -1,8 +1,10 @@
 ﻿@page "/register"
 @using ChattyBot.Shared.Contracts.DTO
 @using ChattyBot.Client.Services.ApiClients
+
 @inject AuthClient AuthClient
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthProvider
 
 <div class="register-page-wrapper">
     <div class="card wide-card">
@@ -115,6 +117,17 @@
     private string? successMessage;
     private bool isSubmitting = false;
     private bool showPassword = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("home");
+        }
+    }
 
     private void TogglePassword() => showPassword = !showPassword;
 
