@@ -11,7 +11,7 @@
     <nav class="nav flex-column">
         <AuthorizeView>
             <Authorized>
-                @* --- AFȘAT DOAR CÂND UTILIZATORUL ESTE LOGAT --- *@
+                @* logged in users *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="home" Match="NavLinkMatch.All">
                         <span class="bi bi-custom-profile" aria-hidden="true"></span> Profile
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="nav-item px-3">
-                    @* Acest href="logout" va declanșa pagina Logout.razor care curăță token-ul *@
+                    @* logout *@
                     <NavLink class="nav-link logout-link" href="logout">
                         <span class="bi bi-custom-logout" aria-hidden="true"></span> Logout
                     </NavLink>
@@ -39,7 +39,7 @@
             </Authorized>
 
             <NotAuthorized>
-                @* --- AFȘAT DOAR PENTRU VIZITATORI (NE-LOGAȚI) --- *@
+                @* not logged users *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="login">
                         <span class="bi bi-custom-login" aria-hidden="true"></span> Login

@@ -23,6 +23,7 @@ builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthClient>();
+builder.Services.AddScoped<ManageAccountClient>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 

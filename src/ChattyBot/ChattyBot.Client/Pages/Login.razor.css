@@ -1,5 +1,4 @@
-﻿/* Fundalul paginii */
-.login-page-wrapper {
+﻿.login-page-wrapper {
     background-color: #313338;
     min-height: 100vh;
     display: flex;
@@ -9,7 +8,6 @@
     margin: -1.5rem;
 }
 
-/* Cardul principal */
 .wide-card {
     max-width: 850px;
     width: 100%;
@@ -21,7 +19,6 @@
     overflow: hidden;
 }
 
-/* Partea stângă cu Logo */
 .logo-section {
     padding: 3rem;
     display: flex;
@@ -44,7 +41,6 @@
     color: #ffffff;
 }
 
-/* Partea dreaptă cu Formular */
 .form-section {
     padding: 3rem !important;
     background-color: #2b2d31;
@@ -56,13 +52,12 @@
     color: #ffffff;
 }
 
-/* Iconițele din Input */
 .input-group {
     background-color: #1e1f22 !important;
     border: 1px solid #1e1f22;
     border-radius: 8px;
     display: flex;
-    align-items: stretch; /* Face ca elementele interne să aibă aceeași înălțime */
+    align-items: stretch; 
     overflow: hidden;
     transition: border-color 0.2s;
 }
@@ -71,27 +66,24 @@
         border-color: #5865f2;
     }
 
-/* Secțiunea ICONIȚEI - Aici facem magia */
 .input-group-text {
     background-color: transparent !important;
     border: none !important;
     color: #b5bac1;
-    /* Centrare perfectă */
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 46px; /* Lățime fixă: iconițele vor fi mereu una sub alta, perfect aliniate */
-    padding: 0 !important; /* Eliminăm padding-ul care le împingea spre dreapta */
-    font-size: 1.1rem; /* Mărim puțin iconița să fie vizibilă */
+    width: 46px; 
+    padding: 0 !important;
+    font-size: 1.1rem; 
 }
 
-/* Inputul propriu-zis */
 .form-control {
     background-color: transparent !important;
     border: none !important;
     color: #dbdee1 !important;
     height: 48px;
-    padding: 10px 10px 10px 0; /* 0 pe stânga pentru că spațiul e dat de width-ul de la iconiță */
+    padding: 10px 10px 10px 0;
     box-shadow: none !important;
 }
 
@@ -103,7 +95,6 @@
         color: #ffffff !important;
     }
 
-/* Butonul de Login */
 .btn-primary {
     background-color: #5865f2;
     border: none;

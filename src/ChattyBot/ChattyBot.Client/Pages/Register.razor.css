@@ -1,5 +1,4 @@
-﻿/* Fundalul paginii */
-.register-page-wrapper {
+﻿.register-page-wrapper {
     background-color: #313338;
     min-height: 100vh;
     display: flex;
@@ -9,7 +8,6 @@
     margin: -1.5rem;
 }
 
-/* Cardul UNIFORM */
 .wide-card {
     max-width: 900px;
     width: 100%;
@@ -50,7 +48,6 @@
     margin-bottom: 8px;
 }
 
-/* INPUT-URI */
 .form-control {
     background-color: #1e1f22 !important;
     border: 1px solid #1e1f22 !important;
@@ -66,7 +63,6 @@
         box-shadow: none !important;
     }
 
-/* ZONA PAROLĂ - REPARAȚIE OCHI */
 .input-group {
     background-color: #1e1f22 !important;
     border-radius: 4px;
@@ -84,14 +80,14 @@
     }
 
 .btn-eye {
-    background-color: #111214 !important; /* Mai negru, pentru contrast */
+    background-color: #111214 !important; 
     border: none !important;
     color: #b5bac1 !important;
     display: flex;
     align-items: center;
     padding: 0 15px !important;
     cursor: pointer;
-    border-radius: 0 4px 4px 0; /* Colțuri rotunjite doar în dreapta */
+    border-radius: 0 4px 4px 0; 
     transition: all 0.2s;
 }
 
@@ -100,7 +96,6 @@
         background-color: #000000 !important;
     }
 
-/* AVATARE - REPARAȚIE MĂRIRE */
 .avatar-grid {
     display: flex;
     flex-wrap: wrap;
@@ -119,11 +114,10 @@
     background-color: #313338;
 }
 
-    /* Efectul de mărire restabilit aici */
     .avatar-img.selected {
         border-color: #5865f2;
         box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
-        transform: scale(1.1); /* Efectul de mărire la selecție */
+        transform: scale(1.1);
     }
 
 .btn-primary {

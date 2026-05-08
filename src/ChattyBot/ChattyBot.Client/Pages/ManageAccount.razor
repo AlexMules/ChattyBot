@@ -1,0 +1,164 @@
+﻿@page "/account/manage"
+@inject ManageAccountClient AccountApi
+@inject AuthenticationStateProvider AuthProvider
+@attribute [Authorize]
+
+<div class="profile-settings-container">
+    <div class="user-profile-card p-4">
+        <h3 class="text-white mb-4">Account Settings</h3>
+
+        @* change username *@
+        <div class="details-container mb-4">
+            <h5 class="detail-label mb-2">Change Username</h5>
+            <EditForm Model="usernameModel" OnValidSubmit="HandleChangeUsername">
+                <DataAnnotationsValidator />
+                <div class="details-box">
+                    @if (!string.IsNullOrEmpty(userStatus))
+                    {
+                        <div class="alert @(userError ? "alert-danger" : "alert-success") py-2 mb-3">@userStatus</div>
+                    }
+                    <div class="mb-2">
+                        <label class="small text-white-50">New Username</label>
+                        <InputText class="form-control discord-input" @bind-Value="usernameModel.NewUsername" />
+                        <ValidationMessage For="@(() => usernameModel.NewUsername)" class="text-danger small" />
+                    </div>
+                    <button type="submit" class="btn btn-blurple mt-2" disabled="@isProcessing">Update Username</button>
+                </div>
+            </EditForm>
+        </div>
+
+        @* change email *@
+        <div class="details-container mb-4">
+            <h5 class="detail-label mb-2">Change Email Address</h5>
+            <EditForm Model="emailModel" OnValidSubmit="HandleChangeEmail">
+                <DataAnnotationsValidator />
+                <div class="details-box">
+                    @if (!string.IsNullOrEmpty(emailStatus))
+                    {
+                        <div class="alert @(emailError ? "alert-danger" : "alert-success") py-2 mb-3">@emailStatus</div>
+                    }
+                    <div class="mb-3">
+                        <label class="small text-white-50">New Email</label>
+                        <InputText type="email" class="form-control discord-input" @bind-Value="emailModel.NewEmail" />
+                        <ValidationMessage For="@(() => emailModel.NewEmail)" class="text-danger small" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-white-50">Confirm with Current Password</label>
+                        <InputText type="password" class="form-control discord-input" @bind-Value="emailModel.CurrentPassword" />
+                        <ValidationMessage For="@(() => emailModel.CurrentPassword)" class="text-danger small" />
+                    </div>
+                    <button type="submit" class="btn btn-blurple" disabled="@isProcessing">Update Email</button>
+                </div>
+            </EditForm>
+        </div>
+
+        @* change password *@
+        <div class="details-container mb-4">
+            <h5 class="detail-label mb-2">Change password</h5>
+            <EditForm Model="passwordModel" OnValidSubmit="HandleChangePassword">
+                <DataAnnotationsValidator />
+                <div class="details-box">
+                    @if (!string.IsNullOrEmpty(passStatus))
+                    {
+                        <div class="alert @(passError ? "alert-danger" : "alert-success") py-2 mb-3">@passStatus</div>
+                    }
+                    <div class="mb-3">
+                        <label class="small text-white-50">Current Password</label>
+                        <InputText type="password" class="form-control discord-input" @bind-Value="passwordModel.CurrentPassword" />
+                        <ValidationMessage For="@(() => passwordModel.CurrentPassword)" class="text-danger small" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-white-50">New Password</label>
+                        <InputText type="password" class="form-control discord-input" @bind-Value="passwordModel.NewPassword" />
+                        <ValidationMessage For="@(() => passwordModel.NewPassword)" class="text-danger small" />
+                    </div>
+                    <button type="submit" class="btn btn-blurple" disabled="@isProcessing">Change Password</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ChangeUsernameDTO usernameModel = new();
+    private ChangeEmailDTO emailModel = new();
+    private ChangePasswordDTO passwordModel = new();
+
+    private bool isProcessing = false;
+
+    private string userStatus = ""; private bool userError = false;
+    private string emailStatus = ""; private bool emailError = false;
+    private string passStatus = ""; private bool passError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        usernameModel.NewUsername = user.Identity?.Name ?? "";
+        emailModel.NewEmail = user.FindFirst(c => c.Type == System.Security.Claims.ClaimTypes.Email)?.Value
+                              ?? user.FindFirst("email")?.Value ?? "";
+    }
+
+    private void ClearStatuses()
+    {
+        userStatus = emailStatus = passStatus = "";
+    }
+
+    private async Task HandleChangeUsername()
+    {
+        isProcessing = true; 
+        ClearStatuses();
+        var result = await AccountApi.ChangeUsernameAsync(usernameModel);
+
+        userStatus = result.IsSuccess ? "Username updated!" : result.ErrorMessage;
+        userError = !result.IsSuccess;
+
+        if (result.IsSuccess)
+        {
+            await UpdateIdentity(result.Token);
+        }
+        isProcessing = false;
+    }
+
+    private async Task HandleChangeEmail()
+    {
+        isProcessing = true; 
+        ClearStatuses();
+        var result = await AccountApi.ChangeEmailAsync(emailModel);
+        
+        emailStatus = result.IsSuccess ? "Email updated successfully!" : result.ErrorMessage;
+        emailError = !result.IsSuccess;
+        
+        if (result.IsSuccess)
+        {
+            await UpdateIdentity(result.Token);
+            emailModel.CurrentPassword = "";
+        }
+        isProcessing = false;
+    }
+
+    private async Task HandleChangePassword()
+    {
+        isProcessing = true; ClearStatuses();
+        var result = await AccountApi.ChangePasswordAsync(passwordModel);
+        
+        passStatus = result.IsSuccess ? "Password changed successfully!" : result.ErrorMessage;
+        passError = !result.IsSuccess;
+        
+        if (result.IsSuccess)
+        {
+            passwordModel.CurrentPassword = passwordModel.NewPassword = "";
+        }
+        isProcessing = false;
+    }
+
+    private async Task UpdateIdentity(string token)
+    {
+        if (!string.IsNullOrEmpty(token))
+        {
+            var customStateProvider = (CustomAuthStateProvider)AuthProvider;
+            await customStateProvider.NotifyUserAuthentication(token);
+        }
+    }
+}
