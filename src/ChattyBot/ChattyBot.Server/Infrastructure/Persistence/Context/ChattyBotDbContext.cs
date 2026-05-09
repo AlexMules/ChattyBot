@@ -8,16 +8,18 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Context
         public ChattyBotDbContext(DbContextOptions<ChattyBotDbContext> options) : base(options) { }
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<Joke> Jokes => Set<Joke>();
+        public DbSet<FunFact> FunFacts => Set<FunFact>();
+        public DbSet<Quote> Quotes => Set<Quote>();
+        public DbSet<Meme> Memes => Set<Meme>();
+        public DbSet<VideoGame> VideoGames => Set<VideoGame>();
+        public DbSet<Song> Songs => Set<Song>();
+        public DbSet<TriviaQuestion> TriviaQuestions => Set<TriviaQuestion>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.Version)
-                .IsRowVersion()
-                .HasColumnType("timestamp")
-                .ValueGeneratedOnAddOrUpdate();
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ChattyBotDbContext).Assembly);
         }
     }
 }
