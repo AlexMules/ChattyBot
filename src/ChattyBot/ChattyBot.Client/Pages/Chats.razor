@@ -94,10 +94,11 @@
                 <input type="text"
                        placeholder="@(selectedChat == null ? "Select a chat to start..." : "Type a command (e.g. /joke, /help)...")"
                        @bind="newMessageText"
+                       @bind:event="oninput"
                        @onkeyup="HandleKeyUp"
                        disabled="@(selectedChat == null)" />
                
-                <button class="send-btn"
+                <button class="send-btn @(string.IsNullOrWhiteSpace(newMessageText) ? "btn-inactive" : "btn-active")"
                         @onclick="SendMessage"
                         disabled="@(selectedChat == null || string.IsNullOrWhiteSpace(newMessageText))">
                     <i class="bi bi-send-fill"></i>

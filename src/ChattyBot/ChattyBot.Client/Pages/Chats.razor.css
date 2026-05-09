@@ -1,5 +1,4 @@
 ﻿/* --- REGULI GLOBALE SCROLLBAR (GEMINI STYLE) --- */
-/* Personalizăm scrollbar-ul pentru a fi discret și modern */
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -9,7 +8,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333; /* Un gri închis care se pierde în fundal */
+    background: #333;
     border-radius: 10px;
     transition: background 0.3s;
 }
@@ -36,7 +35,7 @@
     height: 100vh;
     background-color: #121212;
     display: flex;
-    flex-direction: column; /* Esențial pentru a separa zona de scroll de zona fixă */
+    flex-direction: column;
     border-right: 1px solid #2d2d2d;
     transition: width 0.4s ease-in-out, min-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
     z-index: 100;
@@ -50,27 +49,25 @@
         pointer-events: none;
     }
 
-/* ZONA DE SUS (Scrollabilă) */
 .sidebar-top {
     display: flex;
     flex-direction: column;
     padding: 15px;
     gap: 20px;
-    flex: 1; /* Ocupă tot spațiul disponibil, împingând footer-ul jos */
-    overflow-y: auto; /* Activează scrollbar-ul doar aici */
+    flex: 1;
+    overflow-y: auto;
     width: 280px;
 }
 
-/* ZONA DE JOS (Fixă) */
 .sidebar-bottom {
     width: 280px;
     padding: 20px 15px;
     border-top: 1px solid #2d2d2d;
-    background: #121212; /* Fundal solid ca să nu se vadă conversațiile prin el */
-    flex-shrink: 0; /* Garantează că nu se micșorează niciodată */
+    background: #121212;
+    flex-shrink: 0;
 }
 
-/* HAMBURGER BUTTON */
+/* BUTOANE & INPUTS SIDEBAR */
 .hamburger-btn {
     background: transparent;
     border: none;
@@ -100,7 +97,6 @@
     transition: opacity 0.4s ease-in-out;
 }
 
-/* NEW CHAT & SEARCH */
 .new-chat-btn {
     display: flex;
     align-items: center;
@@ -145,7 +141,6 @@
     outline: none;
 }
 
-/* LISTA CONVERSATII */
 .chat-history-label {
     font-size: 0.75rem;
     color: #444;
@@ -178,7 +173,6 @@
         color: white;
     }
 
-/* GO BACK BUTTON */
 .go-back-btn {
     width: 100%;
     display: flex;
@@ -255,7 +249,7 @@
 /* MESSAGES CONTAINER */
 .messages-container {
     flex: 1;
-    overflow-y: auto; /* Activează scrollbar-ul personalizat aici */
+    overflow-y: auto;
     padding: 30px 15%;
     display: flex;
     flex-direction: column;
@@ -303,6 +297,50 @@
     text-align: right;
 }
 
+/* --- EMPTY STATE ACTUALIZAT (VIBRANT) --- */
+.empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: -40px;
+    /* Eliminat opacitatea scăzută */
+}
+
+.empty-icon {
+    font-size: 7rem; /* Puțin mai mare */
+    margin-bottom: 25px;
+    /* Efect de glow mov sub robot pentru un aspect premium */
+    filter: drop-shadow(0px 0px 15px rgba(111, 66, 193, 0.4));
+    animation: pulseRobot 3s infinite ease-in-out;
+}
+
+.empty-state p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff; /* Alb curat pentru contrast maxim */
+    max-width: 500px;
+    line-height: 1.4;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Mică animație de respirație pentru robot */
+@keyframes pulseRobot {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* FOOTER & INPUT */
 .chat-footer {
     padding: 20px 15% 40px;
@@ -342,16 +380,44 @@
 .send-btn {
     background: transparent;
     border: none;
-    color: #6f42c1;
+    font-size: 1.3rem;
+    padding: 5px 10px;
+    transition: all 0.2s ease; /* Animație fină pentru culori și mărime */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-size: 1.2rem;
-    transition: transform 0.2s;
 }
 
-    .send-btn:disabled {
+    /* Când nu s-a scris nimic sau chat-ul nu e selectat */
+    .send-btn:disabled, .btn-inactive {
         color: #444 !important;
-        pointer-events: none;
+        cursor: not-allowed !important;
+        transform: scale(1) !important;
     }
+
+/* Când butonul este gata de acțiune (are text) */
+.btn-active {
+    color: #6f42c1 !important; /* Movul tău specific */
+    filter: drop-shadow(0 0 5px rgba(111, 66, 193, 0.4));
+}
+
+    /* Efect de Hover (când treci cu mouse-ul) */
+    .btn-active:hover {
+        color: #8e44ad !important; /* Un mov un pic mai deschis */
+        transform: scale(1.15) rotate(-5deg); /* Crește un pic și se înclină jucăuș */
+    }
+
+    /* Efect de Active (când apeși efectiv pe el) */
+    .btn-active:active {
+        transform: scale(0.9); /* Se "comprimă" la click, dând feedback tactil */
+        filter: drop-shadow(0 0 2px rgba(111, 66, 193, 0.8));
+    }
+
+/* Ne asigurăm că pictograma send e aliniată bine */
+.send-btn i {
+    display: inline-block;
+}
 
 /* MODAL */
 .modal-overlay {
