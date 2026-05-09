@@ -9,7 +9,7 @@ namespace ChattyBot.Server.Domain.Entities
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public MessageSender Sender { get; set; }
 
-        public int ConversationId { get; set; }
-        public ChatConversation Conversation { get; set; } = null!;
+        public int ChatConversationId { get; set; }
+        public ChatConversation ChatConversation { get; set; } = null!;
     }
 }

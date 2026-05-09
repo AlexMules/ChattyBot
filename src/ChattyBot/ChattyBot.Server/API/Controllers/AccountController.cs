@@ -1,8 +1,8 @@
 ﻿using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
+using ChattyBot.Server.Infrastructure.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace ChattyBot.Server.Api.Controllers
 {
@@ -21,29 +21,22 @@ namespace ChattyBot.Server.Api.Controllers
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
         {
-            var result = await _accountService.ChangePasswordAsync(GetUserId(), dto);
+            var result = await _accountService.ChangePasswordAsync(User.GetUserId(), dto);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("change-username")]
         public async Task<IActionResult> ChangeUsername([FromBody] ChangeUsernameDTO dto)
         {
-            var result = await _accountService.ChangeUsernameAsync(GetUserId(), dto);
+            var result = await _accountService.ChangeUsernameAsync(User.GetUserId(), dto);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("change-email")]
         public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDTO dto)
         {
-            var result = await _accountService.ChangeEmailAsync(GetUserId(), dto);
+            var result = await _accountService.ChangeEmailAsync(User.GetUserId(), dto);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
-        }
-
-        // helper method to extract user ID from JWT claims
-        private int GetUserId()
-        {
-            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
-            return claim != null ? int.Parse(claim.Value) : 0;
         }
     }
 }
