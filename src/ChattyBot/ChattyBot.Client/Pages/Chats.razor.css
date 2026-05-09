@@ -9,7 +9,7 @@
     position: relative;
 }
 
-/* SIDEBAR - ASCUNDERE TOTALĂ */
+/* SIDEBAR - ANIMAȚIE LENTĂ ȘI CORECTĂ */
 .sidebar {
     width: 280px;
     min-width: 280px;
@@ -17,12 +17,17 @@
     display: flex;
     flex-direction: column;
     border-right: 1px solid #2d2d2d;
-    transition: all 0.2s ease-in-out;
+    transition: width 0.4s ease-in-out, min-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
     z-index: 100;
+    overflow: hidden;
 }
 
     .sidebar.hidden {
-        display: none !important; /* HIDE DE TOT */
+        width: 0;
+        min-width: 0;
+        border: none;
+        opacity: 0;
+        pointer-events: none;
     }
 
 .sidebar-top {
@@ -31,7 +36,7 @@
     padding: 15px;
     gap: 20px;
     flex: 1;
-    overflow-y: auto;
+    width: 280px;
 }
 
 /* HAMBURGER BUTTON */
@@ -61,6 +66,7 @@
     background: #1a1a1a;
     border-radius: 5px;
     border: 1px solid #333;
+    transition: opacity 0.4s ease-in-out;
 }
 
 /* NEW CHAT & SEARCH */
@@ -143,6 +149,7 @@
 
 /* GO BACK - FIXAT JOS */
 .sidebar-bottom {
+    width: 280px;
     padding: 20px 15px;
     border-top: 1px solid #2d2d2d;
     background: #121212;
@@ -161,10 +168,6 @@
     white-space: nowrap;
 }
 
-    .go-back-btn:hover {
-        opacity: 0.8;
-    }
-
 /* MAIN AREA */
 .chat-main {
     flex: 1;
@@ -174,7 +177,7 @@
     min-width: 0;
 }
 
-/* HEADER - CENTRARE PERFECTĂ PE 3 COLOANE */
+/* HEADER */
 .chat-header {
     display: grid;
     grid-template-columns: 150px 1fr 150px;
@@ -183,7 +186,7 @@
     height: 65px;
     background: #121212;
     border-bottom: 1px solid #2d2d2d;
-    transition: padding-left 0.2s ease;
+    transition: padding-left 0.4s ease-in-out;
 }
 
     .chat-header.shifted {
@@ -204,6 +207,11 @@
     justify-content: flex-end;
 }
 
+.bot-name, .current-chat-title {
+    white-space: nowrap;
+    transition: all 0.4s ease-in-out;
+}
+
 .bot-name {
     color: #6f42c1;
     font-weight: bold;
@@ -216,7 +224,7 @@
     color: #eee;
 }
 
-/* MESSAGES */
+/* MESSAGES CONTAINER */
 .messages-container {
     flex: 1;
     overflow-y: auto;
@@ -267,7 +275,7 @@
     text-align: right;
 }
 
-/* FOOTER */
+/* FOOTER & INPUT DEZACTIVAT */
 .chat-footer {
     padding: 20px 15% 40px;
 }
@@ -279,17 +287,30 @@
     border-radius: 30px;
     padding: 5px 25px;
     align-items: center;
+    transition: all 0.3s ease;
 }
 
-    .input-wrapper input {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: white;
-        padding: 12px;
-        outline: none;
-        font-size: 1rem;
+.input-disabled {
+    background-color: #161616 !important;
+    border-color: #222 !important;
+    opacity: 0.6;
+    cursor: not-allowed !important;
+}
+
+    .input-disabled input,
+    .input-disabled button {
+        cursor: not-allowed !important;
     }
+
+.input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 12px;
+    outline: none;
+    font-size: 1rem;
+}
 
 .send-btn {
     background: transparent;
@@ -297,9 +318,15 @@
     color: #6f42c1;
     cursor: pointer;
     font-size: 1.2rem;
+    transition: transform 0.2s;
 }
 
-/* MODAL */
+    .send-btn:disabled {
+        color: #444 !important;
+        pointer-events: none;
+    }
+
+/* MODAL - Aici am adăugat fix-ul pentru New Chat */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -321,6 +348,13 @@
     width: 350px;
 }
 
+    /* FIX: Culoarea pentru titlul New Chat */
+    .custom-modal h3 {
+        color: #ffffff !important;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
     .custom-modal input {
         width: 100%;
         padding: 10px;
@@ -328,6 +362,7 @@
         background: #111;
         border: 1px solid #333;
         color: white;
+        outline: none;
     }
 
 .modal-actions {

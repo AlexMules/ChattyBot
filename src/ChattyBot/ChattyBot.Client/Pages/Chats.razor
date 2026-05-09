@@ -89,10 +89,16 @@
         </div>
 
         <footer class="chat-footer">
-            <div class="input-wrapper">
-                <input type="text" placeholder="Type a command (e.g. /joke, /help)..."
-                       @bind="newMessageText" @onkeyup="HandleKeyUp" />
-                <button class="send-btn" @onclick="SendMessage">
+            <div class="input-wrapper @(selectedChat == null ? "input-disabled" : "")">
+                <input type="text"
+                       placeholder="@(selectedChat == null ? "Select a chat to start..." : "Type a command (e.g. /joke, /help)...")"
+                       @bind="newMessageText"
+                       @onkeyup="HandleKeyUp"
+                       disabled="@(selectedChat == null)" />
+               
+                <button class="send-btn"
+                        @onclick="SendMessage"
+                        disabled="@(selectedChat == null)">
                     <i class="bi bi-send-fill"></i>
                 </button>
             </div>
@@ -104,7 +110,7 @@
 {
     <div class="modal-overlay">
         <div class="custom-modal">
-            <h3>New Conversation</h3>
+            <h3>New Chat</h3>
             <input type="text" @bind="newChatTitle" placeholder="Chat name..." autofocus />
             <div class="modal-actions">
                 <button class="btn-cancel" @onclick="() => showNewChatModal = false">Cancel</button>
