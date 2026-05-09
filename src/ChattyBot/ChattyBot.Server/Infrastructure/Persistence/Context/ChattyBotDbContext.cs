@@ -15,6 +15,8 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Context
         public DbSet<VideoGame> VideoGames => Set<VideoGame>();
         public DbSet<Song> Songs => Set<Song>();
         public DbSet<TriviaQuestion> TriviaQuestions => Set<TriviaQuestion>();
+        public DbSet<ChatConversation> ChatConversations => Set<ChatConversation>();
+        public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
