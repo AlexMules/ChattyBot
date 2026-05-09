@@ -1,0 +1,172 @@
+﻿@page "/chat"
+@layout EmptyLayout
+@inject NavigationManager Nav
+
+<div class="chat-container">
+    <aside class="sidebar @(isSidebarHidden ? "hidden" : "")">
+        <div class="sidebar-top">
+            <div class="toggle-area">
+                <button class="hamburger-btn" @onclick="ToggleSidebar">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+
+            <button class="new-chat-btn" @onclick="OpenNewChatModal">
+                <i class="bi bi-pencil-square"></i>
+                <span>New Chat</span>
+            </button>
+
+            <div class="search-wrapper">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search chat..."
+                       @bind="searchQuery" @bind:event="oninput" />
+            </div>
+
+            <div class="chat-history-label">Recent Conversations</div>
+            
+            <div class="chat-list">
+                @foreach (var chat in FilteredConversations)
+                {
+                    <div class="chat-item @(selectedChat?.Id == chat.Id ? "active" : "")" @onclick="() => SelectChat(chat)">
+                        <i class="bi bi-chat-left-text"></i>
+                        <span>@chat.Title</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="sidebar-bottom">
+            <button class="go-back-btn" @onclick='() => Nav.NavigateTo("/home")'>
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Go Back to Profile</span>
+            </button>
+        </div>
+    </aside>
+
+    @if (isSidebarHidden)
+    {
+        <button class="hamburger-btn floating-toggle" @onclick="ToggleSidebar">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    }
+
+    <main class="chat-main">
+        <header class="chat-header @(isSidebarHidden ? "shifted" : "")">
+            <div class="header-left">
+                <span class="bot-name">ChattyBot</span>
+            </div>
+            <div class="header-center">
+                <h4 class="current-chat-title">@(selectedChat?.Title ?? "Select a conversation")</h4>
+            </div>
+            <div class="header-right">
+            </div>
+        </header>
+
+        <div class="messages-container">
+            @if (selectedChat != null)
+            {
+                @foreach (var msg in selectedChat.Messages)
+                {
+                    <div class="message-row @(msg.Sender == MessageSender.User ? "user-row" : "bot-row")">
+                        <div class="message-bubble">
+                            @msg.Content
+                            <span class="msg-time">@msg.Timestamp.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="bot-welcome-placeholder">🤖</div>
+                    <p>Select or create a new chat to start messaging</p>
+                </div>
+            }
+        </div>
+
+        <footer class="chat-footer">
+            <div class="input-wrapper">
+                <input type="text" placeholder="Type a command (e.g. /joke, /help)..."
+                       @bind="newMessageText" @onkeyup="HandleKeyUp" />
+                <button class="send-btn" @onclick="SendMessage">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </div>
+        </footer>
+    </main>
+</div>
+
+@if (showNewChatModal)
+{
+    <div class="modal-overlay">
+        <div class="custom-modal">
+            <h3>New Conversation</h3>
+            <input type="text" @bind="newChatTitle" placeholder="Chat name..." autofocus />
+            <div class="modal-actions">
+                <button class="btn-cancel" @onclick="() => showNewChatModal = false">Cancel</button>
+                <button class="btn-confirm" @onclick="CreateNewChat">Create</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isSidebarHidden = false;
+    private bool showNewChatModal = false;
+    private string searchQuery = "";
+    private string newChatTitle = "";
+    private string newMessageText = "";
+    
+    private List<ChatConversation> conversations = new()
+    {
+        new ChatConversation { Id = 1, Title = "General Discussion", Messages = new() {
+            new ChatMessage { Content = "Hello! How can I help you today?", Sender = MessageSender.Bot },
+            new ChatMessage { Content = "Tell me a joke.", Sender = MessageSender.User }
+        }},
+        new ChatConversation { Id = 2, Title = "Gaming News", Messages = new() }
+    };
+
+    private ChatConversation? selectedChat;
+
+    private IEnumerable<ChatConversation> FilteredConversations =>
+        conversations.Where(c => c.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+
+    private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
+    
+    private void OpenNewChatModal()
+    {
+        newChatTitle = "";
+        showNewChatModal = true;
+    }
+
+    private void CreateNewChat()
+    {
+        if (!string.IsNullOrWhiteSpace(newChatTitle))
+        {
+            var nc = new ChatConversation { Id = conversations.Count + 1, Title = newChatTitle };
+            conversations.Add(nc);
+            selectedChat = nc;
+            showNewChatModal = false;
+        }
+    }
+
+    private void SelectChat(ChatConversation chat) => selectedChat = chat;
+
+    private void SendMessage()
+    {
+        if (selectedChat != null && !string.IsNullOrWhiteSpace(newMessageText))
+        {
+            selectedChat.Messages.Add(new ChatMessage { Content = newMessageText, Sender = MessageSender.User });
+            newMessageText = "";
+        }
+    }
+
+    private void HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") SendMessage();
+    }
+}
