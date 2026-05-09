@@ -1,5 +1,4 @@
-﻿/* --- REGULI GLOBALE SCROLLBAR (GEMINI STYLE) --- */
-::-webkit-scrollbar {
+﻿::-webkit-scrollbar {
     width: 6px;
 }
 
@@ -17,7 +16,6 @@
         background: #444;
     }
 
-/* CONTAINER PRINCIPAL */
 .chat-container {
     display: flex;
     height: 100vh;
@@ -28,7 +26,6 @@
     position: relative;
 }
 
-/* SIDEBAR - STRUCTURĂ FLEXIBILĂ */
 .sidebar {
     width: 280px;
     min-width: 280px;
@@ -37,7 +34,7 @@
     display: flex;
     flex-direction: column;
     border-right: 1px solid #2d2d2d;
-    transition: width 0.4s ease-in-out, min-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
+    transition: width 0.4s ease, min-width 0.4s ease, opacity 0.3s ease;
     z-index: 100;
 }
 
@@ -67,7 +64,6 @@
     flex-shrink: 0;
 }
 
-/* BUTOANE & INPUTS SIDEBAR */
 .hamburger-btn {
     background: transparent;
     border: none;
@@ -94,7 +90,7 @@
     background: #1a1a1a;
     border-radius: 5px;
     border: 1px solid #333;
-    transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.4s;
 }
 
 .new-chat-btn {
@@ -186,20 +182,15 @@
     white-space: nowrap;
 }
 
-    .go-back-btn:hover {
-        opacity: 0.8;
-    }
-
-/* MAIN AREA */
 .chat-main {
     flex: 1;
     display: flex;
     flex-direction: column;
     background-color: #1a1a1a;
     min-width: 0;
+    height: 100vh;
 }
 
-/* HEADER */
 .chat-header {
     display: grid;
     grid-template-columns: 150px 1fr 150px;
@@ -208,30 +199,16 @@
     height: 65px;
     background: #121212;
     border-bottom: 1px solid #2d2d2d;
-    transition: padding-left 0.4s ease-in-out;
+    transition: padding-left 0.4s;
+    flex-shrink: 0;
 }
 
     .chat-header.shifted {
         padding-left: 75px;
     }
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
 .header-center {
     text-align: center;
-}
-
-.header-right {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.bot-name, .current-chat-title {
-    white-space: nowrap;
-    transition: all 0.4s ease-in-out;
 }
 
 .bot-name {
@@ -244,9 +221,10 @@
     margin: 0;
     font-size: 0.95rem;
     color: #eee;
+    white-space: nowrap;
 }
 
-/* MESSAGES CONTAINER */
+/* messages container */
 .messages-container {
     flex: 1;
     overflow-y: auto;
@@ -254,7 +232,15 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
+    transition: opacity 0.2s ease;
+    opacity: 1;
+    scroll-behavior: smooth;
 }
+
+    .messages-container.switching {
+        opacity: 0;
+        scroll-behavior: auto;
+    }
 
 .message-row {
     display: flex;
@@ -275,7 +261,6 @@
     border-radius: 18px;
     background: #252525;
     line-height: 1.5;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .user-row .message-bubble {
@@ -297,7 +282,6 @@
     text-align: right;
 }
 
-/* --- EMPTY STATE ACTUALIZAT (VIBRANT) --- */
 .empty-state {
     flex: 1;
     display: flex;
@@ -306,44 +290,24 @@
     justify-content: center;
     text-align: center;
     margin-top: -40px;
-    /* Eliminat opacitatea scăzută */
 }
 
 .empty-icon {
-    font-size: 7rem; /* Puțin mai mare */
+    font-size: 7rem;
     margin-bottom: 25px;
-    /* Efect de glow mov sub robot pentru un aspect premium */
     filter: drop-shadow(0px 0px 15px rgba(111, 66, 193, 0.4));
-    animation: pulseRobot 3s infinite ease-in-out;
 }
 
 .empty-state p {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #ffffff; /* Alb curat pentru contrast maxim */
-    max-width: 500px;
-    line-height: 1.4;
+    color: #ffffff;
     text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
 }
 
-/* Mică animație de respirație pentru robot */
-@keyframes pulseRobot {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* FOOTER & INPUT */
 .chat-footer {
     padding: 20px 15% 40px;
+    flex-shrink: 0; 
 }
 
 .input-wrapper {
@@ -357,14 +321,13 @@
 }
 
 .input-disabled {
-    background-color: #161616 !important;
-    border-color: #222 !important;
+    background-color: #161616;
     opacity: 0.6;
-    cursor: not-allowed !important;
+    cursor: not-allowed;
 }
 
-    .input-disabled input, .input-disabled button {
-        cursor: not-allowed !important;
+    .input-disabled * {
+        cursor: not-allowed;
     }
 
 .input-wrapper input {
@@ -374,52 +337,35 @@
     color: white;
     padding: 12px;
     outline: none;
-    font-size: 1rem;
 }
 
 .send-btn {
     background: transparent;
     border: none;
     font-size: 1.3rem;
-    padding: 5px 10px;
-    transition: all 0.2s ease; /* Animație fină pentru culori și mărime */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: all 0.2s;
     cursor: pointer;
+    color: #444;
 }
 
-    /* Când nu s-a scris nimic sau chat-ul nu e selectat */
-    .send-btn:disabled, .btn-inactive {
-        color: #444 !important;
-        cursor: not-allowed !important;
-        transform: scale(1) !important;
-    }
-
-/* Când butonul este gata de acțiune (are text) */
 .btn-active {
-    color: #6f42c1 !important; /* Movul tău specific */
+    color: #6f42c1;
     filter: drop-shadow(0 0 5px rgba(111, 66, 193, 0.4));
 }
 
-    /* Efect de Hover (când treci cu mouse-ul) */
     .btn-active:hover {
-        color: #8e44ad !important; /* Un mov un pic mai deschis */
-        transform: scale(1.15) rotate(-5deg); /* Crește un pic și se înclină jucăuș */
+        transform: scale(1.15) rotate(-5deg);
+        color: #8e44ad;
     }
 
-    /* Efect de Active (când apeși efectiv pe el) */
     .btn-active:active {
-        transform: scale(0.9); /* Se "comprimă" la click, dând feedback tactil */
-        filter: drop-shadow(0 0 2px rgba(111, 66, 193, 0.8));
+        transform: scale(0.9);
     }
 
-/* Ne asigurăm că pictograma send e aliniată bine */
 .send-btn i {
     display: inline-block;
 }
 
-/* MODAL */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -442,7 +388,7 @@
 }
 
     .custom-modal h3 {
-        color: #ffffff !important;
+        color: #ffffff;
         margin-bottom: 20px;
         font-weight: bold;
     }
