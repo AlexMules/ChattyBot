@@ -1,6 +1,7 @@
 ﻿@page "/chat"
 @layout EmptyLayout
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <div class="chat-container">
     <aside class="sidebar @(isSidebarHidden ? "hidden" : "")">
@@ -66,7 +67,7 @@
             </div>
         </header>
 
-        <div class="messages-container">
+        <div id="messagesList" class="messages-container">
             @if (selectedChat != null)
             {
                 @foreach (var msg in selectedChat.Messages)
@@ -98,7 +99,7 @@
                
                 <button class="send-btn"
                         @onclick="SendMessage"
-                        disabled="@(selectedChat == null)">
+                        disabled="@(selectedChat == null || string.IsNullOrWhiteSpace(newMessageText))">
                     <i class="bi bi-send-fill"></i>
                 </button>
             </div>
@@ -129,17 +130,20 @@
     
     private List<ChatConversation> conversations = new()
     {
-        new ChatConversation { Id = 1, Title = "General Discussion", Messages = new() {
-            new ChatMessage { Content = "Hello! How can I help you today?", Sender = MessageSender.Bot },
-            new ChatMessage { Content = "Tell me a joke.", Sender = MessageSender.User }
+        new ChatConversation { Id = 1, Title = "General Discussion", CreatedAt = DateTime.Now.AddHours(-1), Messages = new() {
+            new ChatMessage { Content = "Hello! How can I help you today?", Sender = MessageSender.Bot, Timestamp = DateTime.Now.AddHours(-1) },
+            new ChatMessage { Content = "Tell me a joke.", Sender = MessageSender.User, Timestamp = DateTime.Now.AddMinutes(-30) }
         }},
-        new ChatConversation { Id = 2, Title = "Gaming News", Messages = new() }
+        new ChatConversation { Id = 2, Title = "Gaming News", CreatedAt = DateTime.Now.AddHours(-2), Messages = new() }
     };
 
     private ChatConversation? selectedChat;
 
+    // Ordonăm mereu descrescător după ID sau Dată pentru ca cele noi să fie sus
     private IEnumerable<ChatConversation> FilteredConversations =>
-        conversations.Where(c => c.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+        conversations
+            .Where(c => c.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(c => c.CreatedAt);
 
     private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
     
@@ -149,30 +153,71 @@
         showNewChatModal = true;
     }
 
-    private void CreateNewChat()
+    private async Task CreateNewChat()
     {
         if (!string.IsNullOrWhiteSpace(newChatTitle))
         {
-            var nc = new ChatConversation { Id = conversations.Count + 1, Title = newChatTitle };
-            conversations.Add(nc);
+            var nc = new ChatConversation
+            {
+                Id = conversations.Any() ? conversations.Max(c => c.Id) + 1 : 1,
+                Title = newChatTitle,
+                CreatedAt = DateTime.Now
+            };
+            
+            // Inserăm la indexul 0 pentru a apărea direct prima în listă
+            conversations.Insert(0, nc);
             selectedChat = nc;
             showNewChatModal = false;
+            
+            await ScrollToBottom();
         }
     }
 
-    private void SelectChat(ChatConversation chat) => selectedChat = chat;
+    private async Task SelectChat(ChatConversation chat)
+    {
+        selectedChat = chat;
+        StateHasChanged();
+        await ScrollToBottom();
+    }
 
-    private void SendMessage()
+    private async Task SendMessage()
     {
         if (selectedChat != null && !string.IsNullOrWhiteSpace(newMessageText))
         {
-            selectedChat.Messages.Add(new ChatMessage { Content = newMessageText, Sender = MessageSender.User });
+            selectedChat.Messages.Add(new ChatMessage
+            {
+                Content = newMessageText,
+                Sender = MessageSender.User,
+                Timestamp = DateTime.Now
+            });
+            
             newMessageText = "";
+            StateHasChanged();
+            await ScrollToBottom();
+
+            // Simulare răspuns Bot
+            await Task.Delay(800);
+            selectedChat.Messages.Add(new ChatMessage
+            {
+                Content = "I'm a mockup bot. Soon I will connect to the database!",
+                Sender = MessageSender.Bot,
+                Timestamp = DateTime.Now
+            });
+            
+            StateHasChanged();
+            await ScrollToBottom();
         }
     }
 
-    private void HandleKeyUp(KeyboardEventArgs e)
+    private async Task HandleKeyUp(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter") SendMessage();
+        if (e.Key == "Enter") await SendMessage();
+    }
+
+    private async Task ScrollToBottom()
+    {
+        // Așteptăm randarea DOM-ului înainte de a cere JS-ului să facă scroll
+        await Task.Delay(10);
+        await JS.InvokeVoidAsync("scrollToBottom", "messagesList");
     }
 }

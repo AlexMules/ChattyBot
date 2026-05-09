@@ -1,4 +1,24 @@
-﻿/* CONTAINER PRINCIPAL */
+﻿/* --- REGULI GLOBALE SCROLLBAR (GEMINI STYLE) --- */
+/* Personalizăm scrollbar-ul pentru a fi discret și modern */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333; /* Un gri închis care se pierde în fundal */
+    border-radius: 10px;
+    transition: background 0.3s;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #444;
+    }
+
+/* CONTAINER PRINCIPAL */
 .chat-container {
     display: flex;
     height: 100vh;
@@ -9,17 +29,17 @@
     position: relative;
 }
 
-/* SIDEBAR - ANIMAȚIE LENTĂ ȘI CORECTĂ */
+/* SIDEBAR - STRUCTURĂ FLEXIBILĂ */
 .sidebar {
     width: 280px;
     min-width: 280px;
+    height: 100vh;
     background-color: #121212;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Esențial pentru a separa zona de scroll de zona fixă */
     border-right: 1px solid #2d2d2d;
     transition: width 0.4s ease-in-out, min-width 0.4s ease-in-out, opacity 0.3s ease-in-out;
     z-index: 100;
-    overflow: hidden;
 }
 
     .sidebar.hidden {
@@ -30,13 +50,24 @@
         pointer-events: none;
     }
 
+/* ZONA DE SUS (Scrollabilă) */
 .sidebar-top {
     display: flex;
     flex-direction: column;
     padding: 15px;
     gap: 20px;
-    flex: 1;
+    flex: 1; /* Ocupă tot spațiul disponibil, împingând footer-ul jos */
+    overflow-y: auto; /* Activează scrollbar-ul doar aici */
     width: 280px;
+}
+
+/* ZONA DE JOS (Fixă) */
+.sidebar-bottom {
+    width: 280px;
+    padding: 20px 15px;
+    border-top: 1px solid #2d2d2d;
+    background: #121212; /* Fundal solid ca să nu se vadă conversațiile prin el */
+    flex-shrink: 0; /* Garantează că nu se micșorează niciodată */
 }
 
 /* HAMBURGER BUTTON */
@@ -147,14 +178,7 @@
         color: white;
     }
 
-/* GO BACK - FIXAT JOS */
-.sidebar-bottom {
-    width: 280px;
-    padding: 20px 15px;
-    border-top: 1px solid #2d2d2d;
-    background: #121212;
-}
-
+/* GO BACK BUTTON */
 .go-back-btn {
     width: 100%;
     display: flex;
@@ -167,6 +191,10 @@
     font-weight: bold;
     white-space: nowrap;
 }
+
+    .go-back-btn:hover {
+        opacity: 0.8;
+    }
 
 /* MAIN AREA */
 .chat-main {
@@ -227,7 +255,7 @@
 /* MESSAGES CONTAINER */
 .messages-container {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: auto; /* Activează scrollbar-ul personalizat aici */
     padding: 30px 15%;
     display: flex;
     flex-direction: column;
@@ -275,7 +303,7 @@
     text-align: right;
 }
 
-/* FOOTER & INPUT DEZACTIVAT */
+/* FOOTER & INPUT */
 .chat-footer {
     padding: 20px 15% 40px;
 }
@@ -297,8 +325,7 @@
     cursor: not-allowed !important;
 }
 
-    .input-disabled input,
-    .input-disabled button {
+    .input-disabled input, .input-disabled button {
         cursor: not-allowed !important;
     }
 
@@ -326,7 +353,7 @@
         pointer-events: none;
     }
 
-/* MODAL - Aici am adăugat fix-ul pentru New Chat */
+/* MODAL */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -348,7 +375,6 @@
     width: 350px;
 }
 
-    /* FIX: Culoarea pentru titlul New Chat */
     .custom-modal h3 {
         color: #ffffff !important;
         margin-bottom: 20px;
