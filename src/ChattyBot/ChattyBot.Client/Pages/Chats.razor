@@ -9,6 +9,7 @@
 @inject IJSRuntime JS
 @inject ChatConversationClient ConvClient
 @inject ChatMessageClient MsgClient
+@inject AuthenticationStateProvider AuthProvider
 
 <div class="chat-container">
     <aside class="sidebar @(isSidebarHidden ? "hidden" : "")">
@@ -35,12 +36,25 @@
             <div class="chat-history-label">Recent Conversations</div>
             
             <div class="chat-list">
-                @foreach (var chat in FilteredConversations)
+                @if (isLoadingConversations)
                 {
-                    <div class="chat-item @(selectedChat?.Id == chat.Id ? "active" : "")" @onclick="() => SelectChat(chat)">
-                        <i class="bi bi-chat-left-text"></i>
-                        <span>@chat.Title</span>
-                    </div>
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        <div class="chat-item skeleton-item">
+                            <div class="skeleton-icon"></div>
+                            <div class="skeleton-text"></div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    @foreach (var chat in FilteredConversations)
+                    {
+                        <div class="chat-item @(selectedChat?.Id == chat.Id ? "active" : "")" @onclick="() => SelectChat(chat)">
+                            <i class="bi bi-chat-left-text"></i>
+                            <span>@chat.Title</span>
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -78,8 +92,15 @@
             {
                 @foreach (var msg in currentMessages)
                 {
-                    @* Comparam cu string-ul "User" deoarece asa vine din DTO *@
-                    <div class="message-row @(msg.Sender == "User" ? "user-row" : "bot-row")">
+                    bool isUser = msg.Sender == "User";
+            
+                    <div class="message-row @(isUser ? "user-row" : "bot-row")">
+                        @* avatar *@
+                        <img src="@(isUser ? currentUserAvatarUrl : "images/bot.png")"
+                             class="message-avatar"
+                             alt="avatar" />
+
+                        @* message bubble *@
                         <div class="message-bubble">
                             @msg.Content
                             <span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span>
@@ -133,9 +154,11 @@
     private bool isSidebarHidden = false;
     private bool showNewChatModal = false;
     private bool isSwitchingChat = false;
+    private bool isLoadingConversations = true;
     private string searchQuery = "";
     private string newChatTitle = "";
     private string newMessageText = "";
+    private string currentUserAvatarUrl = "images/avatar1.png"; //fallback avatar, ideally should come from user profile data
 
     private List<ChatConversationDTO> conversations = new();
     private List<ChatMessageDTO> currentMessages = new();
@@ -148,7 +171,24 @@
 
     protected override async Task OnInitializedAsync()
     {
-        conversations = await ConvClient.GetConversationsAsync();
+        isLoadingConversations = true;
+        try
+        {
+            var authState = await AuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            var avatarClaim = user.FindFirst("avatarPath");
+            if (avatarClaim != null && !string.IsNullOrEmpty(avatarClaim.Value))
+            {
+                currentUserAvatarUrl = avatarClaim.Value;
+            }
+
+            conversations = await ConvClient.GetConversationsAsync();
+        }
+        finally
+        {
+            isLoadingConversations = false;
+        }
     }
 
     private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
