@@ -96,7 +96,7 @@
             
                     <div class="message-row @(isUser ? "user-row" : "bot-row")">
                         @* avatar *@
-                        <img src="@(isUser ? currentUserAvatarUrl : "images/bot.png")"
+                        <img src="@(isUser ? $"images/{userAvatar}" : "images/bot.png")"
                              class="message-avatar"
                              alt="avatar" />
 
@@ -158,7 +158,7 @@
     private string searchQuery = "";
     private string newChatTitle = "";
     private string newMessageText = "";
-    private string currentUserAvatarUrl = "images/avatar1.png"; //fallback avatar, ideally should come from user profile data
+    private string userAvatar = "avatar1.png"; //fallback avatar, ideally should come from user profile data
 
     private List<ChatConversationDTO> conversations = new();
     private List<ChatMessageDTO> currentMessages = new();
@@ -177,10 +177,10 @@
             var authState = await AuthProvider.GetAuthenticationStateAsync();
             var user = authState.User;
 
-            var avatarClaim = user.FindFirst("avatarPath");
-            if (avatarClaim != null && !string.IsNullOrEmpty(avatarClaim.Value))
+            var avatarClaim = user.FindFirst("avatar")?.Value;
+            if (!string.IsNullOrEmpty(avatarClaim))
             {
-                currentUserAvatarUrl = avatarClaim.Value;
+                userAvatar = avatarClaim;
             }
 
             conversations = await ConvClient.GetConversationsAsync();
