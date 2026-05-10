@@ -1,7 +1,14 @@
 ﻿@page "/chat"
 @layout EmptyLayout
+@attribute [Authorize]
+
+@using ChattyBot.Client.Services.ApiClients
+@using ChattyBot.Shared.Contracts.DTO
+
 @inject NavigationManager Nav
 @inject IJSRuntime JS
+@inject ChatConversationClient ConvClient
+@inject ChatMessageClient MsgClient
 
 <div class="chat-container">
     <aside class="sidebar @(isSidebarHidden ? "hidden" : "")">
@@ -69,12 +76,13 @@
         <div id="messagesList" class="messages-container @(isSwitchingChat ? "switching" : "")">
             @if (selectedChat != null)
             {
-                @foreach (var msg in selectedChat.Messages)
+                @foreach (var msg in currentMessages)
                 {
-                    <div class="message-row @(msg.Sender == MessageSender.User ? "user-row" : "bot-row")">
+                    @* Comparam cu string-ul "User" deoarece asa vine din DTO *@
+                    <div class="message-row @(msg.Sender == "User" ? "user-row" : "bot-row")">
                         <div class="message-bubble">
                             @msg.Content
-                            <span class="msg-time">@msg.Timestamp.ToString("HH:mm")</span>
+                            <span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span>
                         </div>
                     </div>
                 }
@@ -129,19 +137,19 @@
     private string newChatTitle = "";
     private string newMessageText = "";
 
-    private List<ChatConversation> conversations = new()
-    {
-        new ChatConversation { Id = 1, Title = "General Discussion", CreatedAt = DateTime.Now.AddHours(-1), Messages = new() {
-            new ChatMessage { Content = "Hello! How can I help you today?", Sender = MessageSender.Bot, Timestamp = DateTime.Now.AddHours(-1) }
-        }}
-    };
+    private List<ChatConversationDTO> conversations = new();
+    private List<ChatMessageDTO> currentMessages = new();
+    private ChatConversationDTO? selectedChat;
 
-    private ChatConversation? selectedChat;
-
-    private IEnumerable<ChatConversation> FilteredConversations =>
+    private IEnumerable<ChatConversationDTO> FilteredConversations =>
         conversations
             .Where(c => c.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(c => c.CreatedAt);
+
+    protected override async Task OnInitializedAsync()
+    {
+        conversations = await ConvClient.GetConversationsAsync();
+    }
 
     private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
 
@@ -155,40 +163,34 @@
     {
         if (!string.IsNullOrWhiteSpace(newChatTitle))
         {
-            var nc = new ChatConversation
+            var dto = new CreateChatDTO(newChatTitle);
+            var result = await ConvClient.CreateConversationAsync(dto);
+
+            if (result != null)
             {
-                Id = conversations.Any() ? conversations.Max(c => c.Id) + 1 : 1,
-                Title = newChatTitle,
-                CreatedAt = DateTime.Now,
-                Messages = new()
-            };
-
-            conversations.Insert(0, nc);
-            selectedChat = nc;
-            showNewChatModal = false;
-
-            await ScrollToBottom(true);
+                conversations.Insert(0, result);
+                showNewChatModal = false;
+                await SelectChat(result);
+            }
         }
     }
 
-    private async Task SelectChat(ChatConversation chat)
+    private async Task SelectChat(ChatConversationDTO chat)
     {
         if (selectedChat?.Id == chat.Id || isSwitchingChat) return;
 
         isSwitchingChat = true;
         StateHasChanged();
 
-        // Wait for fade out to complete before switching chat
-        await Task.Delay(250);
+        currentMessages = await MsgClient.GetChatHistoryAsync(chat.Id);
 
-        selectedChat = chat; 
+        selectedChat = chat;
         StateHasChanged();
 
         await ScrollToBottom(true);
+        await Task.Delay(250);
 
-        await Task.Delay(150);
-
-        isSwitchingChat = false; 
+        isSwitchingChat = false;
         StateHasChanged();
     }
 
@@ -196,23 +198,31 @@
     {
         if (selectedChat != null && !string.IsNullOrWhiteSpace(newMessageText))
         {
-            selectedChat.Messages.Add(new ChatMessage { Content = newMessageText, Sender = MessageSender.User, Timestamp = DateTime.Now });
+            var dto = new SendMessageDTO(newMessageText);
             newMessageText = "";
-            StateHasChanged();
-            await ScrollToBottom(false);
 
-            await Task.Delay(800);
-            selectedChat.Messages.Add(new ChatMessage { Content = "I'm a bot! Soon I'll be connected to the DB.", Sender = MessageSender.Bot, Timestamp = DateTime.Now });
-            StateHasChanged();
-            await ScrollToBottom(false);
+            var newMessages = await MsgClient.SendMessageAsync(selectedChat.Id, dto);
+
+            if (newMessages != null && newMessages.Any())
+            {
+                currentMessages.AddRange(newMessages);
+                StateHasChanged();
+                await ScrollToBottom(false);
+            }
         }
     }
 
-    private async Task HandleKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await SendMessage(); }
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendMessage();
+        }
+    }
 
     private async Task ScrollToBottom(bool instant)
     {
-        await Task.Delay(20);
+        await Task.Delay(50);
         await JS.InvokeVoidAsync("scrollToBottom", "messagesList");
     }
 }

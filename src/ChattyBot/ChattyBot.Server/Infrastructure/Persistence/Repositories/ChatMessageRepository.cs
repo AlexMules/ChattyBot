@@ -14,7 +14,7 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
         public async Task<List<ChatMessage>> GetChatMessagesByConversationIdAsync(int conversationId)
         {
             return await _context.ChatMessages
-                .Where(m => m.ChatConversationId == conversationId)
+                .Where(m => m.ConversationId == conversationId)
                 .OrderBy(m => m.Timestamp)
                 .ToListAsync();
         }
@@ -29,7 +29,7 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
         public async Task DeleteAllChatMessagesInConversationAsync(int conversationId)
         {
             var messages = await _context.ChatMessages
-                .Where(m => m.ChatConversationId == conversationId)
+                .Where(m => m.ConversationId == conversationId)
                 .ToListAsync();
 
             _context.ChatMessages.RemoveRange(messages);

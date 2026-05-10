@@ -5,6 +5,6 @@ namespace ChattyBot.Server.Application.Interfaces
     public interface IChatMessageService
     {
         Task<List<ChatMessageDTO>> GetChatMessagesByConversationIdAsync(int userId, int chatId);
-        Task<ChatMessageDTO> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto);
+        Task<List<ChatMessageDTO>> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto);
     }
 }

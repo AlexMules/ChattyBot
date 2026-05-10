@@ -51,6 +51,8 @@ builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountManagerService, AccountManagerService>();
+builder.Services.AddScoped<IChatConversationService, ChatConversationService>();
+builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

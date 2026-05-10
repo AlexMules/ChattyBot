@@ -1,4 +1,7 @@
 ﻿@page "/logout"
+
+@attribute [Authorize]
+
 @inject AuthenticationStateProvider AuthProvider
 @inject NavigationManager Navigation
 

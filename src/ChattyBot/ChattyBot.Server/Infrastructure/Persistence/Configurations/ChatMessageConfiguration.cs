@@ -19,7 +19,7 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Configurations
             builder.Property(m => m.Sender)
                 .IsRequired();
 
-            builder.HasOne(m => m.Conversation)
+            builder.HasOne(m => m.ChatConversation)
                 .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ConversationId)
                 .OnDelete(DeleteBehavior.Cascade); // cascade delete messages when a conversation is deleted

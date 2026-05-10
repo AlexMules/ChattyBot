@@ -25,8 +25,8 @@ namespace ChattyBot.Server.Api.Controllers
             {
                 var userId = User.GetUserId();
                 if (userId == 0)
-                { 
-                    return Unauthorized(); 
+                {
+                    return Unauthorized();
                 }
 
                 var messages = await _messageService.GetChatMessagesByConversationIdAsync(userId, chatId);
@@ -39,7 +39,7 @@ namespace ChattyBot.Server.Api.Controllers
         }
 
         [HttpPost("{chatId}/send")]
-        public async Task<ActionResult<ChatMessageDTO>> SendMessage(int chatId, [FromBody] SendMessageDTO dto)
+        public async Task<ActionResult<List<ChatMessageDTO>>> SendMessage(int chatId, [FromBody] SendMessageDTO dto)
         {
             try
             {

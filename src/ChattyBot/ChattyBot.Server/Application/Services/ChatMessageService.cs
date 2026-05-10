@@ -33,43 +33,48 @@ namespace ChattyBot.Server.Application.Services
                 m.Timestamp)).ToList();
         }
 
-        public async Task<ChatMessageDTO> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto)
+        public async Task<List<ChatMessageDTO>> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto)
         {
             if (!await _conversationRepo.IsUserOwnerAsync(userId, chatId))
             {
-                throw new UnauthorizedAccessException("This action is not permitted.");
+                throw new UnauthorizedAccessException("You do not have access to this conversation.");
             }
 
             var userMsg = new ChatMessage
             {
-                ChatConversationId = chatId, 
+                ConversationId = chatId,
                 Content = dto.Content,
                 Sender = MessageSender.User,
                 Timestamp = DateTime.UtcNow
             };
+            var savedUser = await _messageRepo.AddChatMessageAsync(userMsg);
 
-            var saved = await _messageRepo.AddChatMessageAsync(userMsg);
+            // mockup response method, MUST REPLACE with real bot logic later
+            var savedBot = await GenerateBotResponseAsync(chatId, dto.Content);
 
-            // mockup response, MUST REPLACE with real bot logic later
-            await GenerateBotResponseAsync(chatId, dto.Content);
-
-            return new ChatMessageDTO(saved.Id, saved.Content, "User", saved.Timestamp);
+            return new List<ChatMessageDTO>
+                {
+                    new ChatMessageDTO(savedUser.Id, savedUser.Content, savedUser.Sender.ToString(), savedUser.Timestamp),
+                    new ChatMessageDTO(savedBot.Id, savedBot.Content, savedBot.Sender.ToString(), savedBot.Timestamp)
+                };
         }
 
         // mockup response method, MUST REPLACE with real bot logic later
-        private async Task GenerateBotResponseAsync(int chatId, string userMessage)
+        private async Task<ChatMessage> GenerateBotResponseAsync(int chatId, string userMessage)
         {
             string botText = userMessage.ToLower().Contains("joke")
                 ? "Why don't scientists trust atoms? Because they make up everything!"
                 : "Message received by ChattyBot!";
 
-            await _messageRepo.AddChatMessageAsync(new ChatMessage
+            var botMsg = new ChatMessage
             {
-                ChatConversationId = chatId, 
+                ConversationId = chatId,
                 Content = botText,
                 Sender = MessageSender.Bot,
                 Timestamp = DateTime.UtcNow.AddMilliseconds(500)
-            });
+            };
+
+            return await _messageRepo.AddChatMessageAsync(botMsg);
         }
     }
 }

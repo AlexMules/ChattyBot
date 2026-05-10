@@ -24,6 +24,8 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<AuthClient>();
 builder.Services.AddScoped<ManageAccountClient>();
+builder.Services.AddScoped<ChatConversationClient>();
+builder.Services.AddScoped<ChatMessageClient>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
