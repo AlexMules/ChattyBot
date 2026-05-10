@@ -123,10 +123,7 @@
                              alt="avatar" />
 
                         @* message bubble *@
-                        <div class="message-bubble">
-                            @msg.Content
-                            <span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span>
-                        </div>
+                        <div class="message-bubble">@((MarkupString)msg.Content)<span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span></div>
                     </div>
                 }
             }

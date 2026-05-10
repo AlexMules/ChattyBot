@@ -10,11 +10,17 @@ namespace ChattyBot.Server.Application.Services
     {
         private readonly IChatMessageRepository _messageRepo;
         private readonly IChatConversationRepository _conversationRepo;
+        private readonly BotEngine.BotEngine _botEngine;
 
-        public ChatMessageService(IChatMessageRepository messageRepo, IChatConversationRepository conversationRepo)
+        public ChatMessageService(
+            IChatMessageRepository messageRepo, 
+            IChatConversationRepository conversationRepo,
+            BotEngine.BotEngine botEngine
+            )
         {
             _messageRepo = messageRepo;
             _conversationRepo = conversationRepo;
+            _botEngine = botEngine;
         }
 
         public async Task<List<ChatMessageDTO>> GetChatMessagesByConversationIdAsync(int userId, int chatId)
@@ -35,46 +41,42 @@ namespace ChattyBot.Server.Application.Services
 
         public async Task<List<ChatMessageDTO>> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto)
         {
+            await EnsureUserOwnsConversationAsync(userId, chatId);
+
+            var userMessageDto = await CreateSaveAndMapMessageAsync(chatId, dto.Content, MessageSender.User);
+            string botResponseText = await _botEngine.ResolveAndExecuteAsync(dto.Content);
+            botResponseText = botResponseText.Trim();
+            var botMessageDto = await CreateSaveAndMapMessageAsync(chatId, botResponseText, MessageSender.Bot);
+
+            return new List<ChatMessageDTO> { userMessageDto, botMessageDto };
+        }
+
+        private async Task EnsureUserOwnsConversationAsync(int userId, int chatId)
+        {
             if (!await _conversationRepo.IsUserOwnerAsync(userId, chatId))
             {
                 throw new UnauthorizedAccessException("You do not have access to this conversation.");
             }
-
-            var userMsg = new ChatMessage
-            {
-                ConversationId = chatId,
-                Content = dto.Content,
-                Sender = MessageSender.User,
-                Timestamp = DateTime.UtcNow
-            };
-            var savedUser = await _messageRepo.AddChatMessageAsync(userMsg);
-
-            // mockup response method, MUST REPLACE with real bot logic later
-            var savedBot = await GenerateBotResponseAsync(chatId, dto.Content);
-
-            return new List<ChatMessageDTO>
-                {
-                    new ChatMessageDTO(savedUser.Id, savedUser.Content, savedUser.Sender.ToString(), savedUser.Timestamp),
-                    new ChatMessageDTO(savedBot.Id, savedBot.Content, savedBot.Sender.ToString(), savedBot.Timestamp)
-                };
         }
 
-        // mockup response method, MUST REPLACE with real bot logic later
-        private async Task<ChatMessage> GenerateBotResponseAsync(int chatId, string userMessage)
+        private async Task<ChatMessageDTO> CreateSaveAndMapMessageAsync(int chatId, string content, MessageSender sender)
         {
-            string botText = userMessage.ToLower().Contains("joke")
-                ? "Why don't scientists trust atoms? Because they make up everything!"
-                : "Message received by ChattyBot!";
-
-            var botMsg = new ChatMessage
+            var message = new ChatMessage
             {
                 ConversationId = chatId,
-                Content = botText,
-                Sender = MessageSender.Bot,
-                Timestamp = DateTime.UtcNow.AddMilliseconds(500)
+                Content = content,
+                Sender = sender,
+                Timestamp = DateTime.UtcNow
             };
 
-            return await _messageRepo.AddChatMessageAsync(botMsg);
+            var savedMessage = await _messageRepo.AddChatMessageAsync(message);
+
+            return new ChatMessageDTO(
+                savedMessage.Id,
+                savedMessage.Content,
+                savedMessage.Sender.ToString(),
+                savedMessage.Timestamp
+            );
         }
     }
 }
