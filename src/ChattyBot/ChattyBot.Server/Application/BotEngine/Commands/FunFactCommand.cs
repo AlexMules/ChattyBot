@@ -1,5 +1,7 @@
 ﻿using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
-using System.Text;
+using ChattyBot.Shared.Contracts;
+using ChattyBot.Shared.Contracts.Enums;
+using System.Text.Json;
 
 namespace ChattyBot.Server.Application.BotEngine.Commands
 {
@@ -15,21 +17,24 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             _funFactRepo = funFactRepo;
         }
 
-        public async Task<string> ExecuteAsync(string? parameters = null)
+        public async Task<BotResponse> ExecuteAsync(string? parameters = null)
         {
             var fact = await _funFactRepo.GetRandomAsync();
 
             if (fact == null)
             {
-                return "I couldn't find any interesting facts right now. Try again later!";
+                return new BotResponse("I couldn't find any interesting facts right now. Try again later!", MessageType.Text);
             }
 
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine(fact.Content);
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"<i>Source: <a href='{fact.SourceUrl}' target='_blank'>Click here</a></i>");
+            var payload = new
+            {
+                Text = fact.Content,
+                SourceUrl = fact.SourceUrl
+            };
 
-            return stringBuilder.ToString();
+            string jsonContent = JsonSerializer.Serialize(payload);
+
+            return new BotResponse(jsonContent, MessageType.FunFact);
         }
     }
 }

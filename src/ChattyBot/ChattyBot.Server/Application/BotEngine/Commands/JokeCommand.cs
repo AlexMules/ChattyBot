@@ -1,4 +1,6 @@
 ﻿using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
+using ChattyBot.Shared.Contracts.Enums;
+using ChattyBot.Shared.Contracts;
 
 namespace ChattyBot.Server.Application.BotEngine.Commands
 {
@@ -13,11 +15,19 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             _jokeRepo = jokeRepo;
         }
 
-        public async Task<string> ExecuteAsync(string? parameters = null)
+        public async Task<BotResponse> ExecuteAsync(string? parameters = null)
         {
             var joke = await _jokeRepo.GetRandomAsync();
 
-            return joke?.Content ?? "I'm fresh out of jokes today. Try again later!";
+            if (joke == null)
+            {
+                return new BotResponse
+                (
+                    "I'm fresh out of jokes today. Try again later!",
+                    MessageType.Text
+                );
+            }
+            return new BotResponse(joke.Content, MessageType.Text);
         }
     }
 }

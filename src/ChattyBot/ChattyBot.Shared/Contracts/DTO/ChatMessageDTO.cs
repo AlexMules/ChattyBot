@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ChattyBot.Shared.Contracts.Enums;
 
 namespace ChattyBot.Shared.Contracts.DTO
 {
-    public record ChatMessageDTO(int Id, string Content, string Sender, DateTime Timestamp);
+    public record ChatMessageDTO(
+        int Id,
+        string Content,
+        MessageType Type,
+        string Sender,
+        DateTime Timestamp);
 }

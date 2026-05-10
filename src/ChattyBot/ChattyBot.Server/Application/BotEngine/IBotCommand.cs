@@ -1,9 +1,11 @@
-﻿namespace ChattyBot.Server.Application.BotEngine
+﻿using ChattyBot.Shared.Contracts;
+
+namespace ChattyBot.Server.Application.BotEngine
 {
     public interface IBotCommand
     {
         string CommandTrigger { get; }
-        Task<string> ExecuteAsync(string? parameters = null);
         string Description { get; }
+        Task<BotResponse> ExecuteAsync(string? parameters = null);
     }
 }

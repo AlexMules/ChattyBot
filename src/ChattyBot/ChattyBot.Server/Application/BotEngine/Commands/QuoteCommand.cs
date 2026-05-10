@@ -1,5 +1,7 @@
 ﻿using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
-using System.Text;
+using ChattyBot.Shared.Contracts;
+using ChattyBot.Shared.Contracts.Enums;
+using System.Text.Json;
 
 namespace ChattyBot.Server.Application.BotEngine.Commands
 {
@@ -15,27 +17,25 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             _quoteRepo = quoteRepo;
         }
 
-        public async Task<string> ExecuteAsync(string? parameters = null)
+        public async Task<BotResponse> ExecuteAsync(string? parameters = null)
         {
             var quote = await _quoteRepo.GetRandomAsync();
 
             if (quote == null)
             {
-                return "My book of wisdom is currently empty. Try again later!";
+                return new BotResponse("My book of wisdom is currently empty. Try again later!", MessageType.Text);
             }
 
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"\"{quote.Text}\"");
-            stringBuilder.AppendLine();
-            stringBuilder.AppendLine($"— <b>{quote.Author}</b>");
-
-            if (!string.IsNullOrWhiteSpace(quote.SourceUrl))
+            var payload = new
             {
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"<i>Source: <a href='{quote.SourceUrl}' target='_blank'>Read more</a></i>");
-            }
+                Text = quote.Text,
+                Author = quote.Author,
+                SourceUrl = quote.SourceUrl
+            };
 
-            return stringBuilder.ToString();
+            string jsonContent = JsonSerializer.Serialize(payload);
+
+            return new BotResponse(jsonContent, MessageType.Quote);
         }
     }
 }

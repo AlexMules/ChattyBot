@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using ChattyBot.Shared.Contracts;
+using ChattyBot.Shared.Contracts.Enums;
+using System.Text.Json;
 
 namespace ChattyBot.Server.Application.BotEngine.Commands
 {
@@ -14,21 +16,20 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             _serviceProvider = serviceProvider;
         }
 
-        public Task<string> ExecuteAsync(string? parameters = null)
+        public Task<BotResponse> ExecuteAsync(string? parameters = null)
         {
-            var allCommands = _serviceProvider.GetServices<IBotCommand>()
-                                .OrderBy(c => c.CommandTrigger);
+            var commandsList = _serviceProvider.GetServices<IBotCommand>()
+                                .OrderBy(c => c.CommandTrigger)
+                                .Select(c => new
+                                {
+                                    Trigger = c.CommandTrigger,
+                                    Description = c.Description
+                                })
+                                .ToList();
 
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Here are the commands I can help you with:");
-            stringBuilder.AppendLine();
+            string jsonContent = JsonSerializer.Serialize(commandsList);
 
-            foreach (var command in allCommands)
-            {
-                stringBuilder.AppendLine($"<b>{command.CommandTrigger}</b> - {command.Description}");
-            }
-
-            return Task.FromResult(stringBuilder.ToString());
+            return Task.FromResult(new BotResponse(jsonContent, MessageType.Help));
         }
     }
 }

@@ -3,6 +3,7 @@ using ChattyBot.Server.Domain.Entities;
 using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
+using ChattyBot.Shared.Contracts.Enums;
 
 namespace ChattyBot.Server.Application.Services
 {
@@ -13,10 +14,9 @@ namespace ChattyBot.Server.Application.Services
         private readonly BotEngine.BotEngine _botEngine;
 
         public ChatMessageService(
-            IChatMessageRepository messageRepo, 
+            IChatMessageRepository messageRepo,
             IChatConversationRepository conversationRepo,
-            BotEngine.BotEngine botEngine
-            )
+            BotEngine.BotEngine botEngine)
         {
             _messageRepo = messageRepo;
             _conversationRepo = conversationRepo;
@@ -25,28 +25,37 @@ namespace ChattyBot.Server.Application.Services
 
         public async Task<List<ChatMessageDTO>> GetChatMessagesByConversationIdAsync(int userId, int chatId)
         {
-            if (!await _conversationRepo.IsUserOwnerAsync(userId, chatId))
-            {
-                throw new UnauthorizedAccessException("You do not have access to this conversation!");
-            }
+            await EnsureUserOwnsConversationAsync(userId, chatId);
 
             var messages = await _messageRepo.GetChatMessagesByConversationIdAsync(chatId);
 
             return messages.Select(m => new ChatMessageDTO(
                 m.Id,
                 m.Content,
+                m.Type,
                 m.Sender.ToString(),
-                m.Timestamp)).ToList();
+                m.Timestamp
+            )).ToList();
         }
 
         public async Task<List<ChatMessageDTO>> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto)
         {
             await EnsureUserOwnsConversationAsync(userId, chatId);
 
-            var userMessageDto = await CreateSaveAndMapMessageAsync(chatId, dto.Content, MessageSender.User);
-            string botResponseText = await _botEngine.ResolveAndExecuteAsync(dto.Content);
-            botResponseText = botResponseText.Trim();
-            var botMessageDto = await CreateSaveAndMapMessageAsync(chatId, botResponseText, MessageSender.Bot);
+            var userMessageDto = await CreateSaveAndMapMessageAsync(
+                chatId,
+                dto.Content,
+                MessageSender.User,
+                MessageType.Text);
+
+            var botResponse = await _botEngine.ResolveAndExecuteAsync(dto.Content);
+
+            var botMessageDto = await CreateSaveAndMapMessageAsync(
+                chatId,
+                botResponse.Content.Trim(),
+                MessageSender.Bot,
+                botResponse.Type
+            );
 
             return new List<ChatMessageDTO> { userMessageDto, botMessageDto };
         }
@@ -59,14 +68,21 @@ namespace ChattyBot.Server.Application.Services
             }
         }
 
-        private async Task<ChatMessageDTO> CreateSaveAndMapMessageAsync(int chatId, string content, MessageSender sender)
+        private async Task<ChatMessageDTO> CreateSaveAndMapMessageAsync(
+            int chatId,
+            string content,
+            MessageSender sender,
+            MessageType type,
+            string? sourceUrl = null,
+            string? author = null)
         {
             var message = new ChatMessage
             {
                 ConversationId = chatId,
                 Content = content,
                 Sender = sender,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                Type = type     
             };
 
             var savedMessage = await _messageRepo.AddChatMessageAsync(message);
@@ -74,6 +90,7 @@ namespace ChattyBot.Server.Application.Services
             return new ChatMessageDTO(
                 savedMessage.Id,
                 savedMessage.Content,
+                savedMessage.Type,
                 savedMessage.Sender.ToString(),
                 savedMessage.Timestamp
             );

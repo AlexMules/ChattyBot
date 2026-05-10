@@ -1,4 +1,7 @@
 ﻿using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
+using ChattyBot.Shared.Contracts;
+using ChattyBot.Shared.Contracts.Enums;
+using System.Text.Json;
 
 namespace ChattyBot.Server.Application.BotEngine.Commands
 {
@@ -14,16 +17,23 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             _memeRepo = memeRepo;
         }
 
-        public async Task<string> ExecuteAsync(string? parameters = null)
+        public async Task<BotResponse> ExecuteAsync(string? parameters = null)
         {
             var meme = await _memeRepo.GetRandomAsync();
 
             if (meme == null)
             {
-                return "I ran out of memes. Try again later!";
+                return new BotResponse("I ran out of memes. Try again later!", MessageType.Text);
             }
 
-            return $"<img src='{meme.ImagePath}' alt='Meme' />";
+            var payload = new
+            {
+                Url = meme.ImagePath
+            };
+
+            string jsonContent = JsonSerializer.Serialize(payload);
+
+            return new BotResponse(jsonContent, MessageType.Image);
         }
     }
 }

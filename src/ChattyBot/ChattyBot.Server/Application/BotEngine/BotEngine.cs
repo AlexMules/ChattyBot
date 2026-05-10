@@ -1,4 +1,7 @@
-﻿namespace ChattyBot.Server.Application.BotEngine
+﻿using ChattyBot.Shared.Contracts;
+using ChattyBot.Shared.Contracts.Enums;
+
+namespace ChattyBot.Server.Application.BotEngine
 {
     public class BotEngine
     {
@@ -9,21 +12,20 @@
             _commands = commands;
         }
 
-        public async Task<string> ResolveAndExecuteAsync(string input)
+        public async Task<BotResponse> ResolveAndExecuteAsync(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
             {
-                return "Please enter a command. Type /help to see what I can do!";
+                return new BotResponse("Please enter a command. Type /help to see what I can do!", MessageType.Text);
             }
 
             input = input.Trim();
 
             if (!input.StartsWith("/"))
             {
-                return "Invalid format! All commands must start with a '/'. Example: /joke";
+                return new BotResponse("Invalid format! All commands must start with a '/'. Example: /joke", MessageType.Text);
             }
 
-            // parsing command and parameters
             var parts = input.Split(' ', 2);
             var trigger = parts[0].ToLower();
             var parameters = parts.Length > 1 ? parts[1] : null;
@@ -32,7 +34,7 @@
 
             if (command == null)
             {
-                return $"I don't recognize the command '{trigger}'. Type /help to see the full list!";
+                return new BotResponse($"I don't recognize the command '{trigger}'. Type /help to see the full list!", MessageType.Text);
             }
 
             return await command.ExecuteAsync(parameters);

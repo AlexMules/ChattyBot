@@ -3,7 +3,6 @@
 @attribute [Authorize]
 
 @using ChattyBot.Client.Services.ApiClients
-@using ChattyBot.Shared.Contracts.DTO
 
 @inject NavigationManager Nav
 @inject IJSRuntime JS
@@ -123,7 +122,115 @@
                              alt="avatar" />
 
                         @* message bubble *@
-                        <div class="message-bubble">@((MarkupString)msg.Content)<span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span></div>
+                        <div class="message-bubble">
+                            @switch (msg.Type)
+                            {
+                                case MessageType.Image:
+                                    try
+                                    {
+                                        var imgData = System.Text.Json.JsonSerializer.Deserialize<ImagePayload>(msg.Content);
+                                        <div class="chat-image-wrapper">
+                                            <img src="@imgData?.Url" class="chat-meme-img" alt="@imgData?.AltText" />
+                                        </div>
+                                    }
+                                    catch
+                                    {
+                                        <div class="text-content">Image load error.</div>
+                                    }
+                                    break;
+
+                                case MessageType.Quote:
+                                    try
+                                    {
+                                        var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                                        var quoteData = System.Text.Json.JsonSerializer.Deserialize<QuotePayload>(msg.Content, options);
+                
+                                        @* MAGIA AICI: white-space: normal; ignoră spațiile din codul sursă *@
+                                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; white-space: normal;">
+                                            <div style="font-style: italic; margin: 0; text-align: left;">"@quoteData?.Text"</div>
+                                            <div style="margin: 0; text-align: left;">— <strong>@quoteData?.Author</strong></div>
+                    
+                                            @if (!string.IsNullOrWhiteSpace(quoteData?.SourceUrl))
+                                            {
+                                                <div style="font-size: 0.85rem; color: #9aa0a6; margin: 0; text-align: left;">
+                                                    Source: <a href="@quoteData.SourceUrl" target="_blank" class="chat-link">Click here</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    catch
+                                    {
+                                        <div class="text-content" style="text-align: left;">@((MarkupString)msg.Content)</div>
+                                    }
+                                    break;
+
+                                case MessageType.FunFact:
+                                    try
+                                    {
+                                        var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                                        var factData = System.Text.Json.JsonSerializer.Deserialize<FunFactPayload>(msg.Content, options);
+                
+                                        @* MAGIA AICI: white-space: normal; *@
+                                        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; white-space: normal;">
+                                            <div style="margin: 0; text-align: left;">@factData?.Text</div>
+                    
+                                            @if (!string.IsNullOrWhiteSpace(factData?.SourceUrl))
+                                            {
+                                                <div style="font-size: 0.85rem; color: #9aa0a6; margin: 0; text-align: left;">
+                                                    Source: <a href="@factData.SourceUrl" target="_blank" class="chat-link">Click here</a>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    catch
+                                    {
+                                        <div class="text-content" style="text-align: left;">@((MarkupString)msg.Content)</div>
+                                    }
+                                    break;
+
+                                case MessageType.Trivia:
+                                    <div class="trivia-placeholder">
+                                        <i class="bi bi-controller"></i> Trivia Question Incoming...
+                                    </div>
+                                    break;
+
+                                case MessageType.Help:
+                                    try
+                                    {
+                                        var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                                        var commands = System.Text.Json.JsonSerializer.Deserialize<List<CommandHelpPayload>>(msg.Content, options);
+                
+                                        @* MAGIA AICI: white-space: normal; *@
+                                        <div class="text-content help-content" style="text-align: left; white-space: normal;">
+                                            <p class="help-title" style="margin-top: 0; margin-bottom: 12px;">Here are the commands I can help you with:</p>
+                    
+                                            <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                                                @if (commands != null)
+                                                {
+                                                    @foreach (var cmd in commands)
+                                                    {
+                                                        <li style="margin-bottom: 6px;">
+                                                            <strong>@cmd.Trigger</strong> — @cmd.Description
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                    catch
+                                    {
+                                        <div class="text-content" style="text-align: left;">@((MarkupString)msg.Content)</div>
+                                    }
+                                    break;
+
+                                default:
+                                    <div class="text-content">
+                                        @((MarkupString)msg.Content)
+                                    </div>
+                                    break;
+                            }
+                            <span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span>
+                        </div>
                     </div>
                 }
             }
@@ -383,4 +490,9 @@
             await SaveRename();
         }
     }
+
+    private record ImagePayload(string Url, string AltText);
+    private record QuotePayload(string Text, string Author, string SourceUrl);
+    private record FunFactPayload(string Text, string SourceUrl);
+    private record CommandHelpPayload(string Trigger, string Description);
 }
