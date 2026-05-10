@@ -72,9 +72,7 @@ namespace ChattyBot.Server.Application.Services
             int chatId,
             string content,
             MessageSender sender,
-            MessageType type,
-            string? sourceUrl = null,
-            string? author = null)
+            MessageType type)
         {
             var message = new ChatMessage
             {
