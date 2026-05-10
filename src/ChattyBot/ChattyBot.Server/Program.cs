@@ -52,6 +52,7 @@ builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 builder.Services.AddScoped<IJokeRepository, JokeRepository>();
 builder.Services.AddScoped<IFunFactRepository, FunFactRepository>();
 builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
+builder.Services.AddScoped<IMemeRepository, MemeRepository>();
 
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -63,6 +64,7 @@ builder.Services.AddScoped<IBotCommand, HelpCommand>();
 builder.Services.AddScoped<IBotCommand, JokeCommand>();
 builder.Services.AddScoped<IBotCommand, FunFactCommand>();
 builder.Services.AddScoped<IBotCommand, QuoteCommand>();
+builder.Services.AddScoped<IBotCommand, MemeCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 
