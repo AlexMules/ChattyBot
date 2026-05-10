@@ -16,6 +16,8 @@
                 return "Please enter a command. Type /help to see what I can do!";
             }
 
+            input = input.Trim();
+
             if (!input.StartsWith("/"))
             {
                 return "Invalid format! All commands must start with a '/'. Example: /joke";
