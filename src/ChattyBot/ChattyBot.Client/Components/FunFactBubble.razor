@@ -1,0 +1,41 @@
+﻿@using System.Text.Json
+
+@if (factData != null)
+{
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; white-space: normal;">
+        <div style="margin: 0; text-align: left;">@factData.Text</div>
+        
+        @if (!string.IsNullOrWhiteSpace(factData.SourceUrl))
+        {
+            <div style="font-size: 0.85rem; color: #9aa0a6; margin: 0; text-align: left;">
+                Source: <a href="@factData.SourceUrl" target="_blank" class="chat-link">Click here</a>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-content" style="text-align: left;">@((MarkupString)RawContent)</div>
+}
+
+@code {
+    [Parameter]
+    public string RawContent { get; set; } = string.Empty;
+
+    private FunFactPayload? factData;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            factData = JsonSerializer.Deserialize<FunFactPayload>(RawContent, options);
+        }
+        catch
+        {
+            factData = null;
+        }
+    }
+
+    private record FunFactPayload(string Text, string SourceUrl);
+}

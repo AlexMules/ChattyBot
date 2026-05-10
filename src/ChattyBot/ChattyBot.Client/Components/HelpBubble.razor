@@ -1,0 +1,43 @@
+﻿@using System.Text.Json
+
+@if (commands != null)
+{
+    <div class="text-content help-content" style="text-align: left; white-space: normal;">
+        <p class="help-title" style="margin-top: 0; margin-bottom: 12px;">Here are the commands I can help you with:</p>
+        
+        <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+            @foreach (var cmd in commands)
+            {
+                <li style="margin-bottom: 6px;">
+                    <strong>@cmd.Trigger</strong> — @cmd.Description
+                </li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <div class="text-content" style="text-align: left;">@((MarkupString)RawContent)</div>
+}
+
+@code {
+    [Parameter]
+    public string RawContent { get; set; } = string.Empty;
+
+    private List<CommandHelpPayload>? commands;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            commands = JsonSerializer.Deserialize<List<CommandHelpPayload>>(RawContent, options);
+        }
+        catch
+        {
+            commands = null;
+        }
+    }
+
+    private record CommandHelpPayload(string Trigger, string Description);
+}

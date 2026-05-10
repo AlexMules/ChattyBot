@@ -1,0 +1,34 @@
+﻿@using System.Text.Json
+
+@if (imgData != null)
+{
+    <div class="chat-image-wrapper">
+        <img src="@imgData.Url" class="chat-meme-img" alt="@imgData.AltText" />
+    </div>
+}
+else
+{
+    <div class="text-content">Image load error.</div>
+}
+
+@code {
+    [Parameter]
+    public string RawContent { get; set; } = string.Empty;
+
+    private ImagePayload? imgData;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            imgData = JsonSerializer.Deserialize<ImagePayload>(RawContent, options);
+        }
+        catch
+        {
+            imgData = null;
+        }
+    }
+
+    private record ImagePayload(string Url, string AltText);
+}

@@ -1,0 +1,42 @@
+﻿@using System.Text.Json
+
+@if (quoteData != null)
+{
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; white-space: normal;">
+        <div style="font-style: italic; margin: 0; text-align: left;">"@quoteData.Text"</div>
+        <div style="margin: 0; text-align: left;">— <strong>@quoteData.Author</strong></div>
+        
+        @if (!string.IsNullOrWhiteSpace(quoteData.SourceUrl))
+        {
+            <div style="font-size: 0.85rem; color: #9aa0a6; margin: 0; text-align: left;">
+                Source: <a href="@quoteData.SourceUrl" target="_blank" class="chat-link">Click here</a>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-content" style="text-align: left;">@((MarkupString)RawContent)</div>
+}
+
+@code {
+    [Parameter]
+    public string RawContent { get; set; } = string.Empty;
+
+    private QuotePayload? quoteData;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            quoteData = JsonSerializer.Deserialize<QuotePayload>(RawContent, options);
+        }
+        catch
+        {
+            quoteData = null;
+        }
+    }
+
+    private record QuotePayload(string Text, string Author, string SourceUrl);
+}
