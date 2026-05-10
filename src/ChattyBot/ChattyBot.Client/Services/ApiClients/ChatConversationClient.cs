@@ -35,5 +35,12 @@ namespace ChattyBot.Client.Services.ApiClients
             var response = await _httpClient.DeleteAsync($"api/ChatConversation/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> RenameConversationAsync(int id, RenameChatDTO dto)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/ChatConversation/{id}/rename", dto);
+
+            return response.IsSuccessStatusCode;
+        }
     }
 }

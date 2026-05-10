@@ -51,8 +51,30 @@
                     @foreach (var chat in FilteredConversations)
                     {
                         <div class="chat-item @(selectedChat?.Id == chat.Id ? "active" : "")" @onclick="() => SelectChat(chat)">
-                            <i class="bi bi-chat-left-text"></i>
-                            <span>@chat.Title</span>
+                            <div class="chat-item-content">
+                                <i class="bi bi-chat-left-text"></i>
+                                <span class="chat-title-text">@chat.Title</span>
+                            </div>
+
+                            @* 3 dots button *@
+                            <button class="chat-menu-btn" @onclick:stopPropagation="true" @onclick="() => ToggleMenu(chat.Id)">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+
+                            @* Context menu *@
+                            @if (activeMenuChatId == chat.Id)
+                            {
+                                <div class="menu-backdrop" @onclick="() => activeMenuChatId = null"></div>
+
+                                <div class="context-menu" @onclick:stopPropagation="true">
+                                    <button class="menu-opt" @onclick="() => StartRename(chat)">
+                                        <i class="bi bi-pencil"></i> Rename
+                                    </button>
+                                    <button class="menu-opt delete-opt" @onclick="() => ConfirmDelete(chat)">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            }
                         </div>
                     }
                 }
@@ -150,15 +172,37 @@
     </div>
 }
 
+@if (showRenameModal)
+{
+    <div class="modal-overlay">
+        <div class="custom-modal">
+            <h3>Rename Chat</h3>
+            <input type="text" @bind="renamedTitle" placeholder="Enter new title..." autofocus @onkeyup="HandleRenameKeyUp" />
+            <div class="modal-actions">
+                <button class="btn-cancel" @onclick="() => showRenameModal = false">Cancel</button>
+                <button class="btn-confirm" @onclick="SaveRename">Save</button>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private bool isSidebarHidden = false;
     private bool showNewChatModal = false;
     private bool isSwitchingChat = false;
     private bool isLoadingConversations = true;
+
     private string searchQuery = "";
     private string newChatTitle = "";
     private string newMessageText = "";
+
+    private int? activeMenuChatId;
+
     private string userAvatar = "avatar1.png"; //fallback avatar, ideally should come from user profile data
+
+    private bool showRenameModal = false;
+    private string renamedTitle = "";
+    private ChatConversationDTO? chatToRename;
 
     private List<ChatConversationDTO> conversations = new();
     private List<ChatMessageDTO> currentMessages = new();
@@ -264,5 +308,82 @@
     {
         await Task.Delay(50);
         await JS.InvokeVoidAsync("scrollToBottom", "messagesList");
+    }
+
+    private void ToggleMenu(int chatId)
+    {
+        if (activeMenuChatId == chatId)
+        {
+            activeMenuChatId = null;
+        }
+        else
+        {
+            activeMenuChatId = chatId;
+        }
+    }
+
+    private async Task ConfirmDelete(ChatConversationDTO chat)
+    {
+        activeMenuChatId = null;
+        
+        var success = await ConvClient.DeleteConversationAsync(chat.Id);
+
+        if (success)
+        {
+            conversations.RemoveAll(c => c.Id == chat.Id);
+            
+            if (selectedChat?.Id == chat.Id)
+            {
+                selectedChat = null;
+                currentMessages.Clear();
+            }
+            StateHasChanged();
+        }
+    }
+
+    private void StartRename(ChatConversationDTO chat)
+    {
+        activeMenuChatId = null; 
+        chatToRename = chat;
+        renamedTitle = chat.Title; 
+        showRenameModal = true;
+    }
+
+    private async Task SaveRename()
+    {
+        if (chatToRename != null && !string.IsNullOrWhiteSpace(renamedTitle) && renamedTitle != chatToRename.Title)
+        {
+            var dto = new RenameChatDTO(renamedTitle);
+            var success = await ConvClient.RenameConversationAsync(chatToRename.Id, dto);
+
+            if (success)
+            {
+                var index = conversations.IndexOf(chatToRename);
+            
+                if (index != -1)
+                {
+                    var updatedChat = chatToRename with { Title = renamedTitle };
+                    conversations[index] = updatedChat;
+                    if (selectedChat?.Id == updatedChat.Id)
+                    {
+                        selectedChat = updatedChat;
+                    }
+                }
+                showRenameModal = false;
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            showRenameModal = false;
+        }
+    }
+
+    private async Task HandleRenameKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SaveRename();
+        }
     }
 }

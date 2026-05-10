@@ -11,5 +11,6 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Interfaces
         Task UpdateConversationAsync(ChatConversation conversation);
         Task DeleteConversationAsync(int id);
         Task<bool> IsUserOwnerAsync(int userId, int chatId);
+        Task<bool> UpdateTitleAsync(int chatId, string newTitle);
     }
 }

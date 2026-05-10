@@ -40,5 +40,22 @@ namespace ChattyBot.Server.Application.Services
         {
             return await _repo.IsUserOwnerAsync(userId, chatId);
         }
+
+        public async Task<bool?> RenameConversationAsync(int userId, int chatId, string newTitle)
+        {
+            var conversation = await _repo.GetChatConversationByIdAsync(chatId);
+
+            if (conversation == null)
+            {
+                return null;
+            }
+            if (conversation.UserId != userId)
+            {
+                return false;
+            }
+
+            var success = await _repo.UpdateTitleAsync(chatId, newTitle);
+            return success;
+        }
     }
 }

@@ -61,5 +61,19 @@ namespace ChattyBot.Server.Api.Controllers
             var result = await _conversationService.DeleteChatConversationAsync(id);
             return result ? NoContent() : NotFound();
         }
+
+        [HttpPut("{id}/rename")]
+        public async Task<IActionResult> Rename(int id, [FromBody] RenameChatDTO dto)
+        {
+            var userId = User.GetUserId();
+            var result = await _conversationService.RenameConversationAsync(userId, id, dto.NewTitle);
+
+            return result switch
+            {
+                true => Ok(),
+                false => Forbid(),
+                null => NotFound()
+            };
+        }
     }
 }

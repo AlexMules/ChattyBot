@@ -1,5 +1,4 @@
-﻿/* --- SCROLLBAR --- */
-::-webkit-scrollbar {
+﻿::-webkit-scrollbar {
     width: 6px;
 }
 
@@ -17,7 +16,6 @@
         background: #444;
     }
 
-/* --- LAYOUT PRINCIPAL --- */
 .chat-container {
     display: flex;
     height: 100vh;
@@ -28,7 +26,7 @@
     position: relative;
 }
 
-/* --- SIDEBAR --- */
+/* sidebar settings */
 .sidebar {
     width: 280px;
     min-width: 280px;
@@ -67,7 +65,6 @@
     flex-shrink: 0;
 }
 
-/* --- BUTOANE SIDEBAR --- */
 .hamburger-btn {
     background: transparent;
     border: none;
@@ -76,6 +73,7 @@
     flex-direction: column;
     gap: 4px;
     padding: 10px;
+    width: fit-content;
 }
 
 .bar {
@@ -93,6 +91,7 @@
     background: #1a1a1a;
     border-radius: 5px;
     border: 1px solid #333;
+    transition: opacity 0.4s;
 }
 
 .new-chat-btn {
@@ -139,7 +138,6 @@
     outline: none;
 }
 
-/* --- LISTA CONVERSATII --- */
 .chat-history-label {
     font-size: 0.75rem;
     color: #444;
@@ -154,11 +152,13 @@
 }
 
 .chat-item {
-    padding: 12px;
+    position: relative;
+    padding: 10px 12px;
     border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
     transition: 0.2s;
 }
@@ -172,6 +172,86 @@
         color: white;
     }
 
+.chat-item-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.chat-title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-menu-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    padding: 4px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+.chat-item:hover .chat-menu-btn, .chat-item.active .chat-menu-btn {
+    opacity: 1;
+}
+
+.chat-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.context-menu {
+    position: absolute;
+    right: 10px;
+    top: 45px;
+    background: #282a2d; 
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    z-index: 1000;
+    min-width: 170px;
+    padding: 6px 0;
+    border: 1px solid #3c4043;
+}
+
+.menu-opt {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #e8eaed;
+    padding: 10px 16px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .menu-opt:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .menu-opt i {
+        color: #9aa0a6;
+        font-size: 1.1rem;
+    }
+
+.delete-opt:hover {
+    background: rgba(234, 67, 53, 0.1);
+    color: #f28b82;
+}
+
+    .delete-opt:hover i {
+        color: #f28b82;
+    }
+
 .go-back-btn {
     width: 100%;
     display: flex;
@@ -182,9 +262,9 @@
     color: #ff4d4d;
     cursor: pointer;
     font-weight: bold;
+    white-space: nowrap;
 }
 
-/* --- SKELETON LOADER --- */
 .skeleton-item {
     background-color: rgba(255, 255, 255, 0.03) !important;
     pointer-events: none;
@@ -215,7 +295,6 @@
     }
 }
 
-/* --- ZONA CENTRALA CHAT --- */
 .chat-main {
     flex: 1;
     display: flex;
@@ -251,9 +330,9 @@
     color: #eee;
     margin: 0;
     text-align: center;
+    white-space: nowrap;
 }
 
-/* --- MESAJE SI AVATARE --- */
 .messages-container {
     flex: 1;
     overflow-y: auto;
@@ -270,19 +349,19 @@
 
 .message-row {
     display: flex;
-    align-items: flex-end; /* Avatarul sta la baza bulei */
+    align-items: flex-end;
     gap: 12px;
     max-width: 85%;
 }
 
 .user-row {
     align-self: flex-end;
-    flex-direction: row-reverse; /* Avatarul trece in dreapta */
+    flex-direction: row-reverse;
 }
 
 .bot-row {
     align-self: flex-start;
-    flex-direction: row; /* Avatarul ramane in stanga */
+    flex-direction: row;
 }
 
 .message-avatar {
@@ -290,7 +369,7 @@
     height: 35px;
     border-radius: 50%;
     object-fit: cover;
-    flex-shrink: 0; /* Previne turtirea pozei */
+    flex-shrink: 0;
     border: 1px solid rgba(255,255,255,0.1);
 }
 
@@ -323,7 +402,6 @@
     text-align: right;
 }
 
-/* --- EMPTY STATE --- */
 .empty-state {
     flex: 1;
     display: flex;
@@ -344,7 +422,6 @@
     color: #ffffff;
 }
 
-/* --- FOOTER & INPUT --- */
 .chat-footer {
     padding: 20px 15% 40px;
     flex-shrink: 0;
@@ -357,6 +434,7 @@
     border-radius: 30px;
     padding: 5px 25px;
     align-items: center;
+    transition: all 0.3s ease;
 }
 
 .input-disabled {
@@ -384,6 +462,7 @@
 
 .btn-active {
     color: #6f42c1;
+    filter: drop-shadow(0 0 5px rgba(111, 66, 193, 0.4));
 }
 
     .btn-active:hover {
@@ -391,7 +470,6 @@
         color: #8e44ad;
     }
 
-/* --- MODAL --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -413,6 +491,12 @@
     width: 350px;
 }
 
+    .custom-modal h3 {
+        color: #ffffff;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
     .custom-modal input {
         width: 100%;
         padding: 10px;
@@ -420,6 +504,7 @@
         background: #111;
         border: 1px solid #333;
         color: white;
+        outline: none;
     }
 
 .modal-actions {
@@ -444,4 +529,15 @@
     padding: 8px 20px;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.menu-backdrop {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent; 
+    z-index: 999; 
+    cursor: default;
 }
