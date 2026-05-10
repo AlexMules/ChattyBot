@@ -1,5 +1,4 @@
-﻿using ChattyBot.Shared.Contracts;
-using ChattyBot.Shared.Contracts.Enums;
+﻿using ChattyBot.Shared.Contracts.Enums;
 
 namespace ChattyBot.Server.Application.BotEngine
 {

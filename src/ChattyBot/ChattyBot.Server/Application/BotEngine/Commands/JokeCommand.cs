@@ -1,6 +1,5 @@
 ﻿using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
 using ChattyBot.Shared.Contracts.Enums;
-using ChattyBot.Shared.Contracts;
 
 namespace ChattyBot.Server.Application.BotEngine.Commands
 {

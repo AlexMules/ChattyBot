@@ -1,6 +1,4 @@
-﻿using ChattyBot.Shared.Contracts;
-
-namespace ChattyBot.Server.Application.BotEngine
+﻿namespace ChattyBot.Server.Application.BotEngine
 {
     public interface IBotCommand
     {
