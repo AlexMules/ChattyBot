@@ -115,37 +115,40 @@
                         <img src="@(isUser ? $"images/{userAvatar}" : "images/bot.png")"
                              class="message-avatar" alt="avatar" />
 
-                        <div class="message-bubble @(msg.Type != MessageType.Text ? "special-bubble" : "")">
+                        @* Logica pentru clase dinamice *@
+                        @{
+                            var bubbleClass = "message-bubble";
+                            if (!isUser)
+                            {
+                                if (msg.Type == MessageType.Trivia) bubbleClass += " trivia-mode";
+                                if (msg.Type == MessageType.Image) bubbleClass += " image-mode";
+                            }
+                        }
+
+                        <div class="@bubbleClass">
                             @switch (msg.Type)
                             {
                                 case MessageType.Image:
                                     <ImageBubble RawContent="@msg.Content" />
                                     break;
-
                                 case MessageType.Quote:
                                     <QuoteBubble RawContent="@msg.Content" />
                                     break;
-
                                 case MessageType.FunFact:
                                     <FunFactBubble RawContent="@msg.Content" />
                                     break;
-
                                 case MessageType.Help:
                                     <HelpBubble RawContent="@msg.Content" />
                                     break;
-
                                 case MessageType.Videogame:
                                     <VideoGameBubble RawContent="@msg.Content" />
                                     break;
-
                                 case MessageType.Music:
                                     <MusicBubble RawContent="@msg.Content" />
                                     break;
-
                                 case MessageType.Trivia:
                                     <TriviaBubble RawContent="@msg.Content" OnAnswerProvided="UnblockChat" />
                                     break;
-
                                 default:
                                     <div class="text-content">@((MarkupString)msg.Content)</div>
                                     break;
