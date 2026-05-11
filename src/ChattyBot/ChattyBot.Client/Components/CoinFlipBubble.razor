@@ -1,14 +1,16 @@
 ﻿@using System.Text.Json
 
-<div class="coin-container">
-    <div class="coin @(isAnimating ? "flipping" : "") @(finalResult?.ToLower())">
-        <div class="side heads">H</div>
-        <div class="side tails">T</div>
+<div class="coin-container-scene">
+    <div class="coin-fixed-area">
+        <div id="coin" class="@GetAnimationClass()">
+            <div class="side-a">H</div>
+            <div class="side-b">T</div>
+        </div>
     </div>
 
     @if (!isAnimating && !string.IsNullOrEmpty(finalResult))
     {
-        <div class="coin-text">It's <b>@finalResult</b>!</div>
+        <div class="coin-label">It's <b>@finalResult</b>!</div>
     }
 </div>
 
@@ -19,36 +21,35 @@
     private string? finalResult;
     private bool isAnimating = false;
 
-    private record CoinPayload(string Result);
+    private string GetAnimationClass()
+    {
+        if (isAnimating) return finalResult == "Heads" ? "heads-anim" : "tails-anim";
+        return finalResult == "Heads" ? "static-heads" : "static-tails";
+    }
 
     protected override async Task OnParametersSetAsync()
     {
         try
         {
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            var data = JsonSerializer.Deserialize<CoinPayload>(RawContent, options);
+            var data = JsonSerializer.Deserialize<JsonElement>(RawContent);
+            string result = data.GetProperty("Result").GetString() ?? "";
 
-            if (data != null)
+            if (result != finalResult)
             {
-                finalResult = data.Result;
-
+                finalResult = result;
                 if (IsNew && !isAnimating)
                 {
-                    await StartAnimation();
+                    isAnimating = true;
+                    StateHasChanged();
+                    await Task.Delay(3000);
+                    isAnimating = false;
+                    StateHasChanged();
                 }
             }
         }
-        catch { isAnimating = false; }
-    }
-
-    private async Task StartAnimation()
-    {
-        isAnimating = true;
-        StateHasChanged();
-
-        await Task.Delay(2000);
-
-        isAnimating = false;
-        StateHasChanged();
+        catch
+        {
+            isAnimating = false;
+        }
     }
 }
