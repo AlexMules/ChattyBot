@@ -1,0 +1,30 @@
+﻿.chat-meme-img {
+    max-width: 450px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 5px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+    .chat-meme-img:hover {
+        transform: scale(1.05);
+    }
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 8px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+    img:hover {
+        transform: scale(1.03);
+        transition: transform 0.2s ease-in-out;
+    }

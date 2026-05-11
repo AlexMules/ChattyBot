@@ -586,53 +586,9 @@
     cursor: default;
 }
 
-.chat-meme-img {
-    max-width: 450px;
-    max-height: 400px;
-    width: auto;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-    margin: 5px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease;
-    cursor: pointer;
-}
-
-    .chat-meme-img:hover {
-        transform: scale(1.05);
-    }
-
 .text-content {
     text-align: left;
     line-height: 1.5;
-}
-
-.chat-quote-container {
-    text-align: left;
-    line-height: 1.5;
-}
-
-.quote-text {
-    font-style: italic;
-    margin-bottom: 15px;
-}
-
-.quote-author {
-    margin-bottom: 15px;
-}
-
-.fact-text {
-    white-space: pre-wrap;
-    text-align: left;
-    margin-bottom: 15px;
-}
-
-.source-link {
-    font-size: 0.85rem;
-    color: #9aa0a6;
-    display: block;
-    text-align: left;
 }
 
 .chat-link {
@@ -646,18 +602,6 @@
         color: #8e44ad;
         text-decoration: underline;
     }
-
-.trivia-placeholder {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    background: #1e1e1e;
-    border: 1px dashed #6f42c1;
-    border-radius: 12px;
-    color: #6f42c1;
-    font-weight: bold;
-}
 
 .bot-row .message-bubble.trivia-mode {
     background: transparent !important;

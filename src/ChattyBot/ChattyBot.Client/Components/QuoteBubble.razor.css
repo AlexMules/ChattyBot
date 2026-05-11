@@ -1,0 +1,13 @@
+﻿.chat-quote-container {
+    text-align: left;
+    line-height: 1.5;
+}
+
+.quote-text {
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.quote-author {
+    margin-bottom: 15px;
+}
