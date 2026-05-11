@@ -1,0 +1,70 @@
+﻿.duel-container {
+    text-align: center;
+    padding: 10px;
+}
+
+.duel-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.duel-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.duel-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #888;
+}
+
+.duel-vs {
+    font-weight: 900;
+    font-style: italic;
+    color: #6f42c1;
+}
+
+.die-bot {
+    border-color: #ff4d4d !important;
+}
+
+.duel-result {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: bounceIn 0.5s ease;
+}
+
+    .duel-result.win {
+        color: #28a745;
+    }
+
+    .duel-result.loss {
+        color: #dc3545;
+    }
+
+    .duel-result.draw {
+        color: #ffc107;
+    }
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
