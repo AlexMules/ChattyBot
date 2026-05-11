@@ -1,8 +1,89 @@
-﻿<div class="trivia-placeholder" style="display: flex; align-items: center; gap: 10px; padding: 15px; background: #1e1e1e; border: 1px dashed #6f42c1; border-radius: 12px; color: #6f42c1; font-weight: bold;">
-    <i class="bi bi-controller"></i> Trivia Question Incoming...
-</div>
+﻿@using ChattyBot.Shared.Contracts.DTO
+@using ChattyBot.Client.Services.ApiClients
+@using System.Text.Json
+@inject TriviaClient TriviaApi
+
+@if (data != null)
+{
+    <div class="trivia-container">
+        <div class="trivia-question">
+            @data.QuestionText
+        </div>
+
+        <div class="options-list">
+            @for (int i = 0; i < data.Options.Count; i++)
+            {
+                int index = i;
+                <button @onclick="() => HandleOptionClick(index)"
+                        disabled="@(isProcessing || result != null)"
+                        class="@GetButtonClass(index)">
+                    @data.Options[i]
+                </button>
+            }
+        </div>
+
+        @if (result != null)
+        {
+            <div class="feedback-area @(result.IsCorrect ? "feedback-correct" : "feedback-wrong")">
+                @if (result.IsCorrect)
+                {
+                    <span><i class="bi bi-check-circle-fill"></i> Correct!</span>
+                }
+                else
+                {
+                    <span><i class="bi bi-x-circle-fill"></i> Wrong! The correct answer is: @data.Options[result.CorrectIndex]</span>
+                }
+            </div>
+        }
+    </div>
+}
 
 @code {
-    [Parameter]
-    public string RawContent { get; set; } = string.Empty;
+    [Parameter] public string RawContent { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnAnswerProvided { get; set; }
+
+    private TriviaQuestionDTO? data;
+    private TriviaCheckResponseDTO? result;
+    private int? selectedIndex;
+    private bool isProcessing = false;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            data = JsonSerializer.Deserialize<TriviaQuestionDTO>(RawContent,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            result = null;
+            selectedIndex = null;
+        }
+        catch { data = null; }
+    }
+
+    private async Task HandleOptionClick(int index)
+    {
+        if (isProcessing || result != null) return;
+        isProcessing = true;
+        selectedIndex = index;
+
+        result = await TriviaApi.VerifyAnswerAsync(new TriviaCheckRequestDTO(data!.QuestionId, index));
+
+        if (result != null) await OnAnswerProvided.InvokeAsync();
+        isProcessing = false;
+    }
+
+    private string GetButtonClass(int index)
+    {
+        string classes = "option-btn";
+
+        if (result == null) return classes;
+
+        if (index == result.CorrectIndex)
+            classes += " correct";
+        else if (index == selectedIndex && !result.IsCorrect)
+            classes += " wrong";
+        else
+            classes += " faded";
+
+        return classes;
+    }
 }

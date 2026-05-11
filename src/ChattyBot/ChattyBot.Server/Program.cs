@@ -56,12 +56,14 @@ builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
 builder.Services.AddScoped<IMemeRepository, MemeRepository>();
 builder.Services.AddScoped<IVideoGameRepository, VideoGameRepository>();
 builder.Services.AddScoped<ISongRepository, SongRepository>();
+builder.Services.AddScoped<ITriviaRepository, TriviaRepository>();
 
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountManagerService, AccountManagerService>();
 builder.Services.AddScoped<IChatConversationService, ChatConversationService>();
 builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
+builder.Services.AddScoped<ITriviaService, TriviaService>();
 
 builder.Services.AddScoped<IBotCommand, HelpCommand>();
 builder.Services.AddScoped<IBotCommand, JokeCommand>();
@@ -70,6 +72,7 @@ builder.Services.AddScoped<IBotCommand, QuoteCommand>();
 builder.Services.AddScoped<IBotCommand, MemeCommand>();
 builder.Services.AddScoped<IBotCommand, VideoGameCommand>();
 builder.Services.AddScoped<IBotCommand, MusicCommand>();
+builder.Services.AddScoped<IBotCommand, TriviaCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 

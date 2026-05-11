@@ -55,16 +55,13 @@
                                 <span class="chat-title-text">@chat.Title</span>
                             </div>
 
-                            @* 3 dots button *@
                             <button class="chat-menu-btn" @onclick:stopPropagation="true" @onclick="() => ToggleMenu(chat.Id)">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
 
-                            @* Context menu *@
                             @if (activeMenuChatId == chat.Id)
                             {
                                 <div class="menu-backdrop" @onclick="() => activeMenuChatId = null"></div>
-
                                 <div class="context-menu" @onclick:stopPropagation="true">
                                     <button class="menu-opt" @onclick="() => StartRename(chat)">
                                         <i class="bi bi-pencil"></i> Rename
@@ -88,18 +85,17 @@
         </div>
     </aside>
 
-    @if (isSidebarHidden)
-    {
-        <button class="hamburger-btn floating-toggle" @onclick="ToggleSidebar">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-    }
-
     <main class="chat-main">
         <header class="chat-header @(isSidebarHidden ? "shifted" : "")">
             <div class="header-left">
+                @if (isSidebarHidden)
+                {
+                    <button class="hamburger-btn" @onclick="ToggleSidebar" style="margin-right: 15px;">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                }
                 <span class="bot-name">ChattyBot</span>
             </div>
             <div class="header-center">
@@ -116,13 +112,10 @@
                     bool isUser = msg.Sender == "User";
             
                     <div class="message-row @(isUser ? "user-row" : "bot-row")">
-                        @* avatar *@
                         <img src="@(isUser ? $"images/{userAvatar}" : "images/bot.png")"
-                             class="message-avatar"
-                             alt="avatar" />
+                             class="message-avatar" alt="avatar" />
 
-                        @* message bubble *@
-                        <div class="message-bubble">
+                        <div class="message-bubble @(msg.Type != MessageType.Text ? "special-bubble" : "")">
                             @switch (msg.Type)
                             {
                                 case MessageType.Image:
@@ -150,13 +143,11 @@
                                     break;
 
                                 case MessageType.Trivia:
-                                    <TriviaBubble RawContent="@msg.Content" />
+                                    <TriviaBubble RawContent="@msg.Content" OnAnswerProvided="UnblockChat" />
                                     break;
 
                                 default:
-                                    <div class="text-content" style="text-align: left;">
-                                        @((MarkupString)msg.Content)
-                                    </div>
+                                    <div class="text-content">@((MarkupString)msg.Content)</div>
                                     break;
                             }
                             <span class="msg-time">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</span>
@@ -174,17 +165,17 @@
         </div>
 
         <footer class="chat-footer">
-            <div class="input-wrapper @(selectedChat == null ? "input-disabled" : "")">
+            <div class="input-wrapper @(selectedChat == null || _isChatBlocked ? "input-disabled" : "")">
                 <input type="text"
-                       placeholder="@(selectedChat == null ? "Select a chat to start..." : "Type a command (e.g. /joke, /help)...")"
+                       placeholder="@GetPlaceholderText()"
                        @bind="newMessageText"
                        @bind:event="oninput"
                        @onkeyup="HandleKeyUp"
-                       disabled="@(selectedChat == null)" />
+                       disabled="@(selectedChat == null || _isChatBlocked)" />
                
-                <button class="send-btn @(string.IsNullOrWhiteSpace(newMessageText) ? "btn-inactive" : "btn-active")"
+                <button class="send-btn @(IsSendDisabled ? "btn-inactive" : "btn-active")"
                         @onclick="SendMessage"
-                        disabled="@(selectedChat == null || string.IsNullOrWhiteSpace(newMessageText))">
+                        disabled="@IsSendDisabled">
                     <i class="bi bi-send-fill"></i>
                 </button>
             </div>
@@ -192,6 +183,7 @@
     </main>
 </div>
 
+@* Modals *@
 @if (showNewChatModal)
 {
     <div class="modal-overlay">
@@ -225,14 +217,13 @@
     private bool showNewChatModal = false;
     private bool isSwitchingChat = false;
     private bool isLoadingConversations = true;
+    private bool _isChatBlocked = false;
 
     private string searchQuery = "";
     private string newChatTitle = "";
     private string newMessageText = "";
-
     private int? activeMenuChatId;
-
-    private string userAvatar = "avatar1.png"; //fallback avatar, ideally should come from user profile data
+    private string userAvatar = "avatar1.png";
 
     private bool showRenameModal = false;
     private string renamedTitle = "";
@@ -241,6 +232,8 @@
     private List<ChatConversationDTO> conversations = new();
     private List<ChatMessageDTO> currentMessages = new();
     private ChatConversationDTO? selectedChat;
+
+    private bool IsSendDisabled => selectedChat == null || _isChatBlocked || string.IsNullOrWhiteSpace(newMessageText);
 
     private IEnumerable<ChatConversationDTO> FilteredConversations =>
         conversations
@@ -253,93 +246,87 @@
         try
         {
             var authState = await AuthProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            var avatarClaim = user.FindFirst("avatar")?.Value;
-            if (!string.IsNullOrEmpty(avatarClaim))
-            {
-                userAvatar = avatarClaim;
-            }
-
+            userAvatar = authState.User.FindFirst("avatar")?.Value ?? "avatar1.png";
             conversations = await ConvClient.GetConversationsAsync();
         }
-        finally
-        {
-            isLoadingConversations = false;
-        }
+        finally { isLoadingConversations = false; }
+    }
+
+    private string GetPlaceholderText()
+    {
+        if (selectedChat == null) return "Select a chat to start...";
+        if (_isChatBlocked) return "Please answer the trivia question...";
+        return "Type a command (e.g. /trivia, /help)...";
     }
 
     private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
 
-    private void OpenNewChatModal()
-    {
-        newChatTitle = "";
-        showNewChatModal = true;
-    }
+    private void OpenNewChatModal() { newChatTitle = ""; showNewChatModal = true; }
 
     private async Task CreateNewChat()
     {
-        if (!string.IsNullOrWhiteSpace(newChatTitle))
+        if (string.IsNullOrWhiteSpace(newChatTitle)) return;
+        var result = await ConvClient.CreateConversationAsync(new CreateChatDTO(newChatTitle));
+        if (result != null)
         {
-            var dto = new CreateChatDTO(newChatTitle);
-            var result = await ConvClient.CreateConversationAsync(dto);
-
-            if (result != null)
-            {
-                conversations.Insert(0, result);
-                showNewChatModal = false;
-                await SelectChat(result);
-            }
+            conversations.Insert(0, result);
+            showNewChatModal = false;
+            await SelectChat(result);
         }
     }
 
     private async Task SelectChat(ChatConversationDTO chat)
     {
-        if (selectedChat?.Id == chat.Id || isSwitchingChat)
-        {
-            return;
-        }
+        if (selectedChat?.Id == chat.Id || isSwitchingChat) return;
 
         isSwitchingChat = true;
+        _isChatBlocked = false;
         StateHasChanged();
 
         currentMessages = await MsgClient.GetChatHistoryAsync(chat.Id);
-
         selectedChat = chat;
-        StateHasChanged();
 
+        var lastMsg = currentMessages.LastOrDefault();
+        if (lastMsg != null && lastMsg.Sender == "Bot" && lastMsg.Type == MessageType.Trivia)
+        {
+            _isChatBlocked = true;
+        }
+
+        StateHasChanged();
         await ScrollToBottom(true);
-        await Task.Delay(250);
-
         isSwitchingChat = false;
-        StateHasChanged();
     }
 
     private async Task SendMessage()
     {
-        if (selectedChat != null && !string.IsNullOrWhiteSpace(newMessageText))
+        if (selectedChat == null || string.IsNullOrWhiteSpace(newMessageText) || _isChatBlocked) return;
+
+        var messageToSend = newMessageText;
+        newMessageText = "";
+
+        var newMessages = await MsgClient.SendMessageAsync(selectedChat.Id, new SendMessageDTO(messageToSend));
+
+        if (newMessages != null && newMessages.Any())
         {
-            var dto = new SendMessageDTO(newMessageText);
-            newMessageText = "";
-
-            var newMessages = await MsgClient.SendMessageAsync(selectedChat.Id, dto);
-
-            if (newMessages != null && newMessages.Any())
+            currentMessages.AddRange(newMessages);
+            
+            if (newMessages.Any(m => m.Type == MessageType.Trivia))
             {
-                currentMessages.AddRange(newMessages);
-                StateHasChanged();
-                await ScrollToBottom(false);
+                _isChatBlocked = true;
             }
+
+            StateHasChanged();
+            await ScrollToBottom(false);
         }
     }
 
-    private async Task HandleKeyUp(KeyboardEventArgs e)
+    private void UnblockChat()
     {
-        if (e.Key == "Enter")
-        {
-            await SendMessage();
-        }
+        _isChatBlocked = false;
+        StateHasChanged();
     }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await SendMessage(); }
 
     private async Task ScrollToBottom(bool instant)
     {
@@ -347,80 +334,40 @@
         await JS.InvokeVoidAsync("scrollToBottom", "messagesList");
     }
 
-    private void ToggleMenu(int chatId)
-    {
-        if (activeMenuChatId == chatId)
-        {
-            activeMenuChatId = null;
-        }
-        else
-        {
-            activeMenuChatId = chatId;
-        }
-    }
+    private void ToggleMenu(int chatId) => activeMenuChatId = (activeMenuChatId == chatId) ? null : chatId;
 
     private async Task ConfirmDelete(ChatConversationDTO chat)
     {
         activeMenuChatId = null;
-        
-        var success = await ConvClient.DeleteConversationAsync(chat.Id);
-
-        if (success)
+        if (await ConvClient.DeleteConversationAsync(chat.Id))
         {
             conversations.RemoveAll(c => c.Id == chat.Id);
-            
-            if (selectedChat?.Id == chat.Id)
-            {
-                selectedChat = null;
-                currentMessages.Clear();
-            }
+            if (selectedChat?.Id == chat.Id) { selectedChat = null; currentMessages.Clear(); }
             StateHasChanged();
         }
     }
 
     private void StartRename(ChatConversationDTO chat)
     {
-        activeMenuChatId = null; 
-        chatToRename = chat;
-        renamedTitle = chat.Title; 
-        showRenameModal = true;
+        activeMenuChatId = null; chatToRename = chat; renamedTitle = chat.Title; showRenameModal = true;
     }
 
     private async Task SaveRename()
     {
-        if (chatToRename != null && !string.IsNullOrWhiteSpace(renamedTitle) && renamedTitle != chatToRename.Title)
+        if (chatToRename != null && !string.IsNullOrWhiteSpace(renamedTitle))
         {
-            var dto = new RenameChatDTO(renamedTitle);
-            var success = await ConvClient.RenameConversationAsync(chatToRename.Id, dto);
-
-            if (success)
+            if (await ConvClient.RenameConversationAsync(chatToRename.Id, new RenameChatDTO(renamedTitle)))
             {
-                var index = conversations.IndexOf(chatToRename);
-            
+                var index = conversations.FindIndex(c => c.Id == chatToRename.Id);
                 if (index != -1)
                 {
-                    var updatedChat = chatToRename with { Title = renamedTitle };
-                    conversations[index] = updatedChat;
-                    if (selectedChat?.Id == updatedChat.Id)
-                    {
-                        selectedChat = updatedChat;
-                    }
+                    conversations[index] = chatToRename with { Title = renamedTitle };
+                    if (selectedChat?.Id == chatToRename.Id) selectedChat = conversations[index];
                 }
                 showRenameModal = false;
-                StateHasChanged();
             }
-        }
-        else
-        {
-            showRenameModal = false;
         }
     }
 
-    private async Task HandleRenameKeyUp(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
-        {
-            await SaveRename();
-        }
-    }
+    private async Task HandleRenameKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await SaveRename(); }
 }

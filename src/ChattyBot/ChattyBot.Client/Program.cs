@@ -26,6 +26,7 @@ builder.Services.AddScoped<AuthClient>();
 builder.Services.AddScoped<ManageAccountClient>();
 builder.Services.AddScoped<ChatConversationClient>();
 builder.Services.AddScoped<ChatMessageClient>();
+builder.Services.AddScoped<TriviaClient>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 

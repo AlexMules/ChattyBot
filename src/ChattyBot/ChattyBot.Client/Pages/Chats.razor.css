@@ -1,4 +1,5 @@
-﻿::-webkit-scrollbar {
+﻿/* --- SCROLLBAR (Original) --- */
+::-webkit-scrollbar {
     width: 6px;
 }
 
@@ -16,6 +17,7 @@
         background: #444;
     }
 
+/* --- LAYOUT (Original) --- */
 .chat-container {
     display: flex;
     height: 100vh;
@@ -26,7 +28,7 @@
     position: relative;
 }
 
-/* sidebar settings */
+/* --- SIDEBAR (Original) --- */
 .sidebar {
     width: 280px;
     min-width: 280px;
@@ -65,6 +67,7 @@
     flex-shrink: 0;
 }
 
+/* --- BUTTONS & TOGGLES (Original) --- */
 .hamburger-btn {
     background: transparent;
     border: none;
@@ -115,6 +118,7 @@
         color: #6f42c1;
     }
 
+/* --- SEARCH (Original) --- */
 .search-wrapper {
     position: relative;
     display: flex;
@@ -138,6 +142,7 @@
     outline: none;
 }
 
+/* --- CHAT LIST (Original) --- */
 .chat-history-label {
     font-size: 0.75rem;
     color: #444;
@@ -206,6 +211,7 @@
     color: white;
 }
 
+/* --- CONTEXT MENU (Original) --- */
 .context-menu {
     position: absolute;
     right: 10px;
@@ -265,6 +271,7 @@
     white-space: nowrap;
 }
 
+/* --- SKELETON (Original) --- */
 .skeleton-item {
     background-color: rgba(255, 255, 255, 0.03) !important;
     pointer-events: none;
@@ -295,6 +302,7 @@
     }
 }
 
+/* --- CHAT MAIN (Original) --- */
 .chat-main {
     flex: 1;
     display: flex;
@@ -333,6 +341,7 @@
     white-space: nowrap;
 }
 
+/* --- MESSAGES (Original) --- */
 .messages-container {
     flex: 1;
     overflow-y: auto;
@@ -381,21 +390,28 @@
     white-space: pre-wrap;
 }
 
-    .message-bubble ::deep img {
-        max-width: 450px !important;
-        max-height: 400px !important;
-        width: auto !important;
-        height: auto !important;
-        border-radius: 8px;
-        display: block;
-        margin: 8px 0;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
+/* NOU: Stil pentru bulele care conțin carduri (Trivia/Music/Joc) */
+.special-bubble {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    max-width: 400px;
+}
 
-        .message-bubble ::deep img:hover {
-            transform: scale(1.03);
-            transition: transform 0.2s ease-in-out;
-        }
+.message-bubble ::deep img {
+    max-width: 450px !important;
+    max-height: 400px !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 8px;
+    display: block;
+    margin: 8px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+    .message-bubble ::deep img:hover {
+        transform: scale(1.03);
+        transition: transform 0.2s ease-in-out;
+    }
 
 .user-row .message-bubble {
     background: #6f42c1;
@@ -419,6 +435,7 @@
     text-align: right;
 }
 
+/* --- EMPTY STATE (Original) --- */
 .empty-state {
     flex: 1;
     display: flex;
@@ -439,6 +456,7 @@
     color: #ffffff;
 }
 
+/* --- FOOTER & INPUT (Original) --- */
 .chat-footer {
     padding: 20px 15% 40px;
     flex-shrink: 0;
@@ -454,9 +472,27 @@
     transition: all 0.3s ease;
 }
 
+/* ACTUALIZAT: Starea de chat blocat */
 .input-disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: 0.6;
+    background: #0d0d0d !important;
+    border-color: #ff4d4d44 !important;
+    cursor: not-allowed !important;
+    animation: trivia-pulse 2s infinite;
+}
+
+@keyframes trivia-pulse {
+    0% {
+        border-color: #ff4d4d22;
+    }
+
+    50% {
+        border-color: #ff4d4d66;
+    }
+
+    100% {
+        border-color: #ff4d4d22;
+    }
 }
 
 .input-wrapper input {
@@ -467,6 +503,12 @@
     padding: 12px;
     outline: none;
 }
+
+    /* NOU: Cursorul pentru input când e dezactivat */
+    .input-wrapper input:disabled {
+        cursor: not-allowed;
+        color: #555;
+    }
 
 .send-btn {
     background: transparent;
@@ -487,6 +529,7 @@
         color: #8e44ad;
     }
 
+/* --- MODALS (Original) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -548,6 +591,7 @@
     cursor: pointer;
 }
 
+/* --- UTILS (Original) --- */
 .menu-backdrop {
     position: fixed;
     top: 0;
