@@ -6,7 +6,7 @@
     @if (hasError)
     {
         <div class="dice-error">
-            <i class="bi bi-exclamation-triangle"></i> Failed to roll dice.
+            <i class="bi bi-exclamation-triangle"></i> Dice data error.
         </div>
     }
     else
@@ -27,19 +27,21 @@
 
 @code {
     [Parameter] public string RawContent { get; set; } = string.Empty;
+    [Parameter] public bool IsNew { get; set; } = false;
 
     private int[] finalValues = new int[2];
     private int[] displayValues = new int[2];
-    private bool isRolling = true;
+    private bool isRolling = false;
     private bool hasError = false;
     private Timer? rollTimer;
     private int animationTicks = 0;
+
+    private record DicePayload(int Die1, int Die2);
 
     protected override void OnParametersSet()
     {
         try
         {
-            hasError = false;
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var data = JsonSerializer.Deserialize<DicePayload>(RawContent, options);
 
@@ -47,18 +49,24 @@
             {
                 finalValues[0] = data.Die1;
                 finalValues[1] = data.Die2;
-                StartRollAnimation();
-            }
-            else
-            {
-                hasError = true;
-                isRolling = false;
+                
+                if (IsNew && animationTicks == 0)
+                {
+                    StartRollAnimation();
+                }
+                else
+                {
+                    displayValues[0] = finalValues[0];
+                    displayValues[1] = finalValues[1];
+                    isRolling = false;
+                }
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             hasError = true;
             isRolling = false;
+            Console.WriteLine($"[Dice] Deserialization failed: {ex.Message}");
         }
     }
 
@@ -89,6 +97,4 @@
     }
 
     public void Dispose() => rollTimer?.Dispose();
-
-    private record DicePayload(int Die1, int Die2);
 }

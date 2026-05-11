@@ -111,12 +111,11 @@
                 @foreach (var msg in currentMessages)
                 {
                     bool isUser = msg.Sender == "User";
-            
+                    
                     <div class="message-row @(isUser ? "user-row" : "bot-row")">
                         <img src="@(isUser ? $"images/{userAvatar}" : "images/bot.png")"
                              class="message-avatar" alt="avatar" />
 
-                        @* Logica pentru clase dinamice *@
                         @{
                             var bubbleClass = "message-bubble";
                             if (!isUser)
@@ -153,7 +152,8 @@
                                                   OnAnswerProvided="UnblockChat" />
                                     break;
                                 case MessageType.Dice:
-                                    <DiceBubble RawContent="@msg.Content" />
+                                    <DiceBubble RawContent="@msg.Content"
+                                                IsNew="@_newlyArrivedMessageIds.Contains(msg.Id)" />
                                     break;
                                 default:
                                     <div class="text-content">@((MarkupString)msg.Content)</div>
@@ -234,6 +234,8 @@
     private int? activeMenuChatId;
     private string userAvatar = "avatar1.png";
 
+    private HashSet<int> _newlyArrivedMessageIds = new();
+
     private bool showRenameModal = false;
     private string renamedTitle = "";
     private ChatConversationDTO? chatToRename;
@@ -265,7 +267,7 @@
     {
         if (selectedChat == null) return "Select a chat to start...";
         if (_isChatBlocked) return "Please answer the trivia question...";
-        return "Type a command (e.g. /trivia, /help)...";
+        return "Type a command (e.g. /help, /joke)...";
     }
 
     private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
@@ -290,6 +292,8 @@
 
         isSwitchingChat = true;
         _isChatBlocked = false;
+        
+        _newlyArrivedMessageIds.Clear();
         StateHasChanged();
 
         currentMessages = await MsgClient.GetChatHistoryAsync(chat.Id);
@@ -308,17 +312,12 @@
                     _isChatBlocked = true;
                 }
             }
-            catch
-            {
-                _isChatBlocked = false;
-            }
+            catch { _isChatBlocked = false; }
         }
 
         StateHasChanged();
         await ScrollToBottom(true);
-    
         isSwitchingChat = false;
-        StateHasChanged();
     }
 
     private async Task SendMessage()
@@ -332,13 +331,17 @@
 
         if (newMessages != null && newMessages.Any())
         {
-            currentMessages.AddRange(newMessages);
-            
-            if (newMessages.Any(m => m.Type == MessageType.Trivia))
+            foreach (var m in newMessages)
             {
-                _isChatBlocked = true;
+                _newlyArrivedMessageIds.Add(m.Id);
+
+                if (m.Type == MessageType.Trivia)
+                {
+                    _isChatBlocked = true;
+                }
             }
 
+            currentMessages.AddRange(newMessages);
             StateHasChanged();
             await ScrollToBottom(false);
         }
