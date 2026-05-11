@@ -12,7 +12,7 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                return new BotResponse("Please provide some text. Usage: /morse [text]", MessageType.Text);
+                return new BotResponse("Please provide some text. Usage: /morse text", MessageType.Text);
             }
 
             string translated = MorseTranslator.ToMorse(parameters);

@@ -13,7 +13,7 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             {
                 return new BotResponse
                 (
-                    "Please provide some text to reverse. Example: /reverse [text]",
+                    "Please provide some text to reverse. Usage: /reverse text",
                     MessageType.Text
                 );
             }
