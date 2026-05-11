@@ -11,6 +11,7 @@
         Videogame = 6,
         Music = 7, 
         Dice = 8,
-        DiceDuel = 9
+        DiceDuel = 9,
+        CoinFlip = 10
     }
 }

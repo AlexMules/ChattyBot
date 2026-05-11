@@ -1,0 +1,54 @@
+﻿@using System.Text.Json
+
+<div class="coin-container">
+    <div class="coin @(isAnimating ? "flipping" : "") @(finalResult?.ToLower())">
+        <div class="side heads">H</div>
+        <div class="side tails">T</div>
+    </div>
+
+    @if (!isAnimating && !string.IsNullOrEmpty(finalResult))
+    {
+        <div class="coin-text">It's <b>@finalResult</b>!</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string RawContent { get; set; } = string.Empty;
+    [Parameter] public bool IsNew { get; set; } = false;
+
+    private string? finalResult;
+    private bool isAnimating = false;
+
+    private record CoinPayload(string Result);
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var data = JsonSerializer.Deserialize<CoinPayload>(RawContent, options);
+
+            if (data != null)
+            {
+                finalResult = data.Result;
+
+                if (IsNew && !isAnimating)
+                {
+                    await StartAnimation();
+                }
+            }
+        }
+        catch { isAnimating = false; }
+    }
+
+    private async Task StartAnimation()
+    {
+        isAnimating = true;
+        StateHasChanged();
+
+        await Task.Delay(2000);
+
+        isAnimating = false;
+        StateHasChanged();
+    }
+}

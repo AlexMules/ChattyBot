@@ -159,6 +159,10 @@
                                     <DiceDuelBubble RawContent="@msg.Content"
                                                     IsNew="@_newlyArrivedMessageIds.Contains(msg.Id)" />
                                     break;
+                                case MessageType.CoinFlip:
+                                    <CoinFlipBubble RawContent="@msg.Content"
+                                                    IsNew="@_newlyArrivedMessageIds.Contains(msg.Id)" />
+                                    break;
                                 default:
                                     <div class="text-content">@((MarkupString)msg.Content)</div>
                                     break;
