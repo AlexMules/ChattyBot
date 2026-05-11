@@ -1,5 +1,4 @@
-﻿@using ChattyBot.Shared.Contracts.DTO
-@using ChattyBot.Client.Services.ApiClients
+﻿@using ChattyBot.Client.Services.ApiClients
 @using System.Text.Json
 @inject TriviaClient TriviaApi
 
@@ -41,6 +40,7 @@
 @code {
     [Parameter] public string RawContent { get; set; } = string.Empty;
     [Parameter] public EventCallback OnAnswerProvided { get; set; }
+    [Parameter] public int MessageId { get; set; }
 
     private TriviaQuestionDTO? data;
     private TriviaCheckResponseDTO? result;
@@ -51,10 +51,22 @@
     {
         try
         {
-            data = JsonSerializer.Deserialize<TriviaQuestionDTO>(RawContent,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            result = null;
-            selectedIndex = null;
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            data = JsonSerializer.Deserialize<TriviaQuestionDTO>(RawContent, options);
+
+            if (data?.UserAnswerIndex != null && data.CorrectAnswerIndex != null)
+            {
+                selectedIndex = data.UserAnswerIndex;
+                result = new TriviaCheckResponseDTO(
+                    data.UserAnswerIndex == data.CorrectAnswerIndex,
+                    data.CorrectAnswerIndex.Value
+                );
+            }
+            else
+            {
+                result = null;
+                selectedIndex = null;
+            }
         }
         catch { data = null; }
     }
@@ -65,9 +77,13 @@
         isProcessing = true;
         selectedIndex = index;
 
-        result = await TriviaApi.VerifyAnswerAsync(new TriviaCheckRequestDTO(data!.QuestionId, index));
+        var request = new TriviaCheckRequestDTO(data!.QuestionId, index, MessageId);
+        result = await TriviaApi.VerifyAnswerAsync(request);
 
-        if (result != null) await OnAnswerProvided.InvokeAsync();
+        if (result != null)
+        {
+            await OnAnswerProvided.InvokeAsync();
+        }
         isProcessing = false;
     }
 

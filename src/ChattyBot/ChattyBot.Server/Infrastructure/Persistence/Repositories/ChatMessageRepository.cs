@@ -35,5 +35,16 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
             _context.ChatMessages.RemoveRange(messages);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<ChatMessage?> GetByIdAsync(int id)
+        {
+            return await _context.ChatMessages.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(ChatMessage message)
+        {
+            _context.ChatMessages.Update(message);
+            await _context.SaveChangesAsync();
+        }
     }
 }

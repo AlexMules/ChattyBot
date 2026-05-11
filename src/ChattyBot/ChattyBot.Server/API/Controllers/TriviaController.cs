@@ -22,7 +22,7 @@ namespace ChattyBot.Server.API.Controllers
         {
             try
             {
-                var result = await _triviaService.VerifyAnswerAsync(request);
+                var result = await _triviaService.VerifyAnswerAsync(request, request.MessageId);
                 return Ok(result);
             }
             catch (KeyNotFoundException ex)

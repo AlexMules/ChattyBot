@@ -1,4 +1,4 @@
 ﻿namespace ChattyBot.Shared.Contracts.DTO
 {
-    public record TriviaCheckRequestDTO(int QuestionId, int AnswerIndex);
+    public record TriviaCheckRequestDTO(int QuestionId, int AnswerIndex, int MessageId);
 }

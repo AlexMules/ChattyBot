@@ -6,6 +6,6 @@ namespace ChattyBot.Server.Application.Interfaces
     public interface ITriviaService
     {
         Task<TriviaQuestionDTO?> GetQuestionAsync(TriviaCategory? category = null);
-        Task<TriviaCheckResponseDTO> VerifyAnswerAsync(TriviaCheckRequestDTO request);
+        Task<TriviaCheckResponseDTO> VerifyAnswerAsync(TriviaCheckRequestDTO request, int messageId);
     }
 }

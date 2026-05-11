@@ -3,6 +3,7 @@
 @attribute [Authorize]
 
 @using ChattyBot.Client.Services.ApiClients
+@using System.Text.Json
 
 @inject NavigationManager Nav
 @inject IJSRuntime JS
@@ -147,7 +148,9 @@
                                     <MusicBubble RawContent="@msg.Content" />
                                     break;
                                 case MessageType.Trivia:
-                                    <TriviaBubble RawContent="@msg.Content" OnAnswerProvided="UnblockChat" />
+                                    <TriviaBubble RawContent="@msg.Content"
+                                                  MessageId="@msg.Id"
+                                                  OnAnswerProvided="UnblockChat" />
                                     break;
                                 default:
                                     <div class="text-content">@((MarkupString)msg.Content)</div>
@@ -292,12 +295,27 @@
         var lastMsg = currentMessages.LastOrDefault();
         if (lastMsg != null && lastMsg.Sender == "Bot" && lastMsg.Type == MessageType.Trivia)
         {
-            _isChatBlocked = true;
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var triviaData = JsonSerializer.Deserialize<TriviaQuestionDTO>(lastMsg.Content, options);
+
+                if (triviaData?.UserAnswerIndex == null)
+                {
+                    _isChatBlocked = true;
+                }
+            }
+            catch
+            {
+                _isChatBlocked = false;
+            }
         }
 
         StateHasChanged();
         await ScrollToBottom(true);
+    
         isSwitchingChat = false;
+        StateHasChanged();
     }
 
     private async Task SendMessage()
