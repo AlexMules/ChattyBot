@@ -77,6 +77,7 @@ builder.Services.AddScoped<IBotCommand, MorseCommand>();
 builder.Services.AddScoped<IBotCommand, ReverseCommand>();
 builder.Services.AddScoped<IBotCommand, EncryptCommand>();
 builder.Services.AddScoped<IBotCommand, DiceCommand>();
+builder.Services.AddScoped<IBotCommand, DiceDuelCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 

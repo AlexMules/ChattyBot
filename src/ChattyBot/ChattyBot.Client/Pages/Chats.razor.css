@@ -741,3 +741,74 @@
     font-weight: bold;
     animation: fade-in 0.5s ease-in;
 }
+
+::deep .duel-container {
+    text-align: center;
+    padding: 10px;
+}
+
+::deep .duel-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+::deep .duel-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+::deep .duel-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #888;
+}
+
+::deep .duel-vs {
+    font-weight: 900;
+    font-style: italic;
+    color: #6f42c1;
+}
+
+::deep .die-bot {
+    border-color: #ff4d4d !important;
+}
+
+::deep .duel-result {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    animation: bounceIn 0.5s ease;
+}
+
+    ::deep .duel-result.win {
+        color: #28a745;
+    }
+
+    ::deep .duel-result.loss {
+        color: #dc3545;
+    }
+
+    ::deep .duel-result.draw {
+        color: #ffc107;
+    }
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

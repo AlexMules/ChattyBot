@@ -10,6 +10,7 @@
         Help = 5,
         Videogame = 6,
         Music = 7, 
-        Dice = 8
+        Dice = 8,
+        DiceDuel = 9
     }
 }

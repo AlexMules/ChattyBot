@@ -1,0 +1,119 @@
+﻿@using System.Timers
+@using System.Text.Json
+@implements IDisposable
+
+<div class="duel-container">
+    <div class="duel-grid">
+        <div class="duel-side">
+            <span class="duel-label">YOU</span>
+            <div class="die @(isRolling ? "die-rolling" : "")">@displayValues[0]</div>
+        </div>
+        
+        <div class="duel-vs">VS</div>
+
+        <div class="duel-side">
+            <span class="duel-label">BOT</span>
+            <div class="die @(isRolling ? "die-rolling" : "die-bot")">@displayValues[1]</div>
+        </div>
+    </div>
+
+    @if (!isRolling && !hasError)
+    {
+        <div class="duel-result @resultClass">
+            @resultText
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string RawContent { get; set; } = string.Empty;
+    [Parameter] public bool IsNew { get; set; } = false;
+
+    private int[] finalValues = new int[2];
+    private int[] displayValues = new int[2];
+    private bool isRolling = false;
+    private bool hasError = false;
+    private string resultText = "";
+    private string resultClass = "";
+    private Timer? rollTimer;
+
+    private record DiceDuelPayload(int UserRoll, int BotRoll);
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var data = JsonSerializer.Deserialize<DiceDuelPayload>(RawContent, options);
+
+            if (data != null)
+            {
+                finalValues[0] = data.UserRoll;
+                finalValues[1] = data.BotRoll;
+                CalculateResult();
+
+                if (IsNew && !isRolling)
+                {
+                    StartDuelAnimation();
+                }
+                else
+                {
+                    StopAnimation();
+                }
+            }
+        }
+        catch 
+        { 
+            hasError = true; 
+            isRolling = false; 
+        }
+    }
+
+    private void CalculateResult()
+    {
+        if (finalValues[0] > finalValues[1])
+        {
+            resultText = "You win!";
+            resultClass = "win";
+        }
+        else if (finalValues[1] > finalValues[0])
+        {
+            resultText = "ChattyBot wins!";
+            resultClass = "loss";
+        }
+        else
+        {
+            resultText = "It's a draw!";
+            resultClass = "draw";
+        }
+    }
+
+    private void StartDuelAnimation()
+    {
+        isRolling = true;
+        int ticks = 0;
+        rollTimer?.Stop();
+        rollTimer = new Timer(80);
+        rollTimer.Elapsed += async (s, e) =>
+        {
+            displayValues[0] = Random.Shared.Next(1, 7);
+            displayValues[1] = Random.Shared.Next(1, 7);
+            if (++ticks > 15)
+            {
+                StopAnimation();
+            }
+            await InvokeAsync(StateHasChanged);
+        };
+        rollTimer.Start();
+    }
+
+    private void StopAnimation()
+    {
+        rollTimer?.Stop();
+        displayValues[0] = finalValues[0];
+        displayValues[1] = finalValues[1];
+        isRolling = false;
+    }
+
+    public void Dispose() => rollTimer?.Dispose();
+}
