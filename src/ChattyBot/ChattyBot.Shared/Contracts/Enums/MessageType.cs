@@ -7,6 +7,7 @@
         Quote = 2,
         Trivia = 3,
         FunFact = 4,
-        Help = 5
+        Help = 5,
+        Videogame = 6
     }
 }

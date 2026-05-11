@@ -141,6 +141,10 @@
                                     <HelpBubble RawContent="@msg.Content" />
                                     break;
 
+                                case MessageType.Videogame:
+                                    <VideoGameBubble RawContent="@msg.Content" />
+                                    break;
+
                                 case MessageType.Trivia:
                                     <TriviaBubble RawContent="@msg.Content" />
                                     break;
@@ -287,7 +291,10 @@
 
     private async Task SelectChat(ChatConversationDTO chat)
     {
-        if (selectedChat?.Id == chat.Id || isSwitchingChat) return;
+        if (selectedChat?.Id == chat.Id || isSwitchingChat)
+        {
+            return;
+        }
 
         isSwitchingChat = true;
         StateHasChanged();

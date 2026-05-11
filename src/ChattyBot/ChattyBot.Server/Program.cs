@@ -2,6 +2,7 @@ using ChattyBot.Server.Application.BotEngine;
 using ChattyBot.Server.Application.BotEngine.Commands;
 using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Server.Application.Services;
+using ChattyBot.Server.Commands;
 using ChattyBot.Server.Infrastructure.Persistence.Context;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
 using ChattyBot.Server.Infrastructure.Persistence.Repositories;
@@ -53,6 +54,7 @@ builder.Services.AddScoped<IJokeRepository, JokeRepository>();
 builder.Services.AddScoped<IFunFactRepository, FunFactRepository>();
 builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
 builder.Services.AddScoped<IMemeRepository, MemeRepository>();
+builder.Services.AddScoped<IVideoGameRepository, VideoGameRepository>();
 
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -65,6 +67,7 @@ builder.Services.AddScoped<IBotCommand, JokeCommand>();
 builder.Services.AddScoped<IBotCommand, FunFactCommand>();
 builder.Services.AddScoped<IBotCommand, QuoteCommand>();
 builder.Services.AddScoped<IBotCommand, MemeCommand>();
+builder.Services.AddScoped<IBotCommand, VideoGameCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 

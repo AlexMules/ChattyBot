@@ -1,0 +1,56 @@
+﻿@using System.Text.Json
+
+@if (gameData != null)
+{
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; white-space: normal;">
+        
+        @if (!string.IsNullOrEmpty(gameData.ImagePath))
+        {
+            @* game image *@
+            <img src="@gameData.ImagePath"
+                 style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); margin-bottom: 4px;"
+                 alt="Game Poster" />
+        }
+        
+        <div style="text-align: left;">
+            @* game title *@
+            <h5 style="margin: 0 0 4px 0; color: #6f42c1; font-weight: bold; font-size: 1.1rem;">
+                @gameData.Title
+            </h5>
+            
+            @* game description *@
+            <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; color: #d0d0d0;">
+                @gameData.Description
+            </p>
+        </div>
+    </div>
+}
+else
+{
+    @* fallback in case the game data cannot be read *@
+    <div style="text-align: left; color: #ff4d4d; font-size: 0.8rem;">
+        [Error loading game data]
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string RawContent { get; set; } = string.Empty;
+
+    private GamePayload? gameData;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            gameData = JsonSerializer.Deserialize<GamePayload>(RawContent, options);
+        }
+        catch
+        {
+            gameData = null;
+        }
+    }
+
+    private record GamePayload(string Title, string Description, string ImagePath);
+}
