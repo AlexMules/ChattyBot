@@ -2,6 +2,7 @@
 using ChattyBot.Server.Domain.Entities;
 using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Shared.Contracts.Enums;
+using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
 using System.Text.Json;
 
 namespace ChattyBot.Server.Commands

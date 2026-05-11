@@ -3,5 +3,5 @@ using ChattyBot.Server.Domain.Enums;
 
 namespace ChattyBot.Server.Infrastructure.Persistence.Interfaces
 {
-    public interface IVideoGameRepository : ICategorizedRandomRepository<VideoGame, GameCategory> { }
+    public interface ISongRepository : ICategorizedRandomRepository<Song, MusicCategory> { }
 }

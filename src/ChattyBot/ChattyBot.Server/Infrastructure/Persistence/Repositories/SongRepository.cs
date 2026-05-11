@@ -2,12 +2,11 @@
 using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Server.Infrastructure.Persistence.Context;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
-using ChattyBot.Server.Infrastructure.Persistence.Repositories;
 
 namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
 {
-    public class VideoGameRepository : BaseCategorizedRepository<VideoGame, GameCategory>, IVideoGameRepository
+    public class SongRepository : BaseCategorizedRepository<Song, MusicCategory>, ISongRepository
     {
-        public VideoGameRepository(ChattyBotDbContext context) : base(context) { }
+        public SongRepository(ChattyBotDbContext context) : base(context) { }
     }
 }
