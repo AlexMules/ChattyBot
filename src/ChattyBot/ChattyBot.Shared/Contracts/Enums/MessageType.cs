@@ -9,6 +9,7 @@
         FunFact = 4,
         Help = 5,
         Videogame = 6,
-        Music = 7
+        Music = 7, 
+        Dice = 8
     }
 }

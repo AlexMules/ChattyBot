@@ -685,3 +685,59 @@
     background: #2d2d2d;
     color: #eee;
 }
+
+::deep .dice-bubble-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+::deep .dice-display {
+    display: flex;
+    gap: 15px;
+}
+
+::deep .die {
+    width: 45px;
+    height: 45px;
+    background: #ffffff;
+    color: #1a1a1a;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border: 2px solid #6f42c1;
+    user-select: none;
+}
+
+::deep .die-rolling {
+    animation: die-shake 0.15s infinite;
+    background: #f0f0f0;
+    border-color: #8e44ad;
+}
+
+@keyframes die-shake {
+    0% {
+        transform: rotate(5deg) translate(1px, 1px);
+    }
+
+    50% {
+        transform: rotate(-5deg) translate(-1px, -1px);
+    }
+
+    100% {
+        transform: rotate(5deg) translate(1px, 1px);
+    }
+}
+
+::deep .dice-result-text {
+    font-size: 0.9rem;
+    color: #6f42c1;
+    font-weight: bold;
+    animation: fade-in 0.5s ease-in;
+}

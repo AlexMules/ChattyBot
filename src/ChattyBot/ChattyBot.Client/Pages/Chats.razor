@@ -152,6 +152,9 @@
                                                   MessageId="@msg.Id"
                                                   OnAnswerProvided="UnblockChat" />
                                     break;
+                                case MessageType.Dice:
+                                    <DiceBubble RawContent="@msg.Content" />
+                                    break;
                                 default:
                                     <div class="text-content">@((MarkupString)msg.Content)</div>
                                     break;

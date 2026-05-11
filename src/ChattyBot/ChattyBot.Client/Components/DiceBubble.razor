@@ -1,0 +1,94 @@
+﻿@using System.Timers
+@using System.Text.Json
+@implements IDisposable
+
+<div class="dice-bubble-wrapper">
+    @if (hasError)
+    {
+        <div class="dice-error">
+            <i class="bi bi-exclamation-triangle"></i> Failed to roll dice.
+        </div>
+    }
+    else
+    {
+        <div class="dice-display">
+            <div class="die @(isRolling ? "die-rolling" : "")">@displayValues[0]</div>
+            <div class="die @(isRolling ? "die-rolling" : "")">@displayValues[1]</div>
+        </div>
+        
+        @if (!isRolling)
+        {
+            <div class="dice-result-text">
+                You rolled a @(finalValues[0] + finalValues[1])!
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public string RawContent { get; set; } = string.Empty;
+
+    private int[] finalValues = new int[2];
+    private int[] displayValues = new int[2];
+    private bool isRolling = true;
+    private bool hasError = false;
+    private Timer? rollTimer;
+    private int animationTicks = 0;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            hasError = false;
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var data = JsonSerializer.Deserialize<DicePayload>(RawContent, options);
+
+            if (data != null)
+            {
+                finalValues[0] = data.Die1;
+                finalValues[1] = data.Die2;
+                StartRollAnimation();
+            }
+            else
+            {
+                hasError = true;
+                isRolling = false;
+            }
+        }
+        catch (Exception)
+        {
+            hasError = true;
+            isRolling = false;
+        }
+    }
+
+    private void StartRollAnimation()
+    {
+        isRolling = true;
+        animationTicks = 0;
+        
+        rollTimer?.Stop();
+        rollTimer = new Timer(80);
+        rollTimer.Elapsed += async (s, e) =>
+        {
+            displayValues[0] = Random.Shared.Next(1, 7);
+            displayValues[1] = Random.Shared.Next(1, 7);
+            animationTicks++;
+            
+            if (animationTicks > 12)
+            {
+                rollTimer.Stop();
+                displayValues[0] = finalValues[0];
+                displayValues[1] = finalValues[1];
+                isRolling = false;
+            }
+            
+            await InvokeAsync(StateHasChanged);
+        };
+        rollTimer.Start();
+    }
+
+    public void Dispose() => rollTimer?.Dispose();
+
+    private record DicePayload(int Die1, int Die2);
+}
