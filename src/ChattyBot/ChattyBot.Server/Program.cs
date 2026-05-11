@@ -74,6 +74,7 @@ builder.Services.AddScoped<IBotCommand, VideoGameCommand>();
 builder.Services.AddScoped<IBotCommand, MusicCommand>();
 builder.Services.AddScoped<IBotCommand, TriviaCommand>();
 builder.Services.AddScoped<IBotCommand, MorseCommand>();
+builder.Services.AddScoped<IBotCommand, ReverseCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 
