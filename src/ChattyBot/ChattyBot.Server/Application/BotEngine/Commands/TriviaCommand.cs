@@ -1,5 +1,4 @@
 ﻿using ChattyBot.Server.Application.Interfaces;
-using ChattyBot.Server.Domain.Entities;
 using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Shared.Contracts.Enums;
 using System.Text.Json;
