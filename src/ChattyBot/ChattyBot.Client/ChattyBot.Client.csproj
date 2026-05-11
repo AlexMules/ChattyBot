@@ -20,7 +20,7 @@
 
 	<ItemGroup>
 		<Folder Include="wwwroot\images\memes\" />
-		<Folder Include="wwwroot\images\videogames\" />
+		<Folder Include="wwwroot\images\games\" />
 	</ItemGroup>
 
 </Project>

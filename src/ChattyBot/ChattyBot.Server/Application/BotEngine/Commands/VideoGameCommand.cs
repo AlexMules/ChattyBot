@@ -11,7 +11,7 @@ namespace ChattyBot.Server.Commands
         private readonly IVideoGameRepository _repository;
 
         public string CommandTrigger => "/videogame";
-        public string Description => "Get a random game recommendation! Options: -action-adventure, -fps, -rpg, -simulation";
+        public string Description => "Get a random game recommendation!|Options: -fps, -rpg, -action-adventure, -simulation";
 
         public VideoGameCommand(IVideoGameRepository repository)
         {
