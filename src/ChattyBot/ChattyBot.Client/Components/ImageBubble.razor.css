@@ -1,18 +1,22 @@
-﻿.chat-meme-img {
-    max-width: 450px;
-    max-height: 400px;
-    width: auto;
+﻿.chat-image-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-meme-img {
+    max-width: 100%; /* Se va adapta la box-ul părinte minus padding-ul */
+    max-height: 450px;
     height: auto;
-    border-radius: 8px;
+    border-radius: 6px;
     display: block;
-    margin: 5px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* O umbră mai pronunțată în interiorul box-ului */
     transition: transform 0.2s ease;
-    cursor: pointer;
 }
 
     .chat-meme-img:hover {
-        transform: scale(1.05);
+        transform: scale(1.02);
     }
 
 img {
