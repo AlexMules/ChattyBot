@@ -80,6 +80,7 @@ builder.Services.AddScoped<IBotCommand, DiceCommand>();
 builder.Services.AddScoped<IBotCommand, DiceDuelCommand>();
 builder.Services.AddScoped<IBotCommand, CoinFlipCommand>();
 builder.Services.AddScoped<IBotCommand, CalcCommand>();
+builder.Services.AddScoped<IBotCommand, RandomCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 
