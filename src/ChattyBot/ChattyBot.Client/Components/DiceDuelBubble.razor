@@ -4,6 +4,7 @@
 
 <div class="duel-container">
     <div class="duel-grid">
+        @* user die *@
         <div class="duel-side">
             <span class="duel-label">YOU</span>
             <div class="die @(isRolling ? "die-rolling" : "")">@displayValues[0]</div>
@@ -11,6 +12,7 @@
         
         <div class="duel-vs">VS</div>
 
+        @* bot die *@
         <div class="duel-side">
             <span class="duel-label">BOT</span>
             <div class="die @(isRolling ? "die-rolling" : "die-bot")">@displayValues[1]</div>
@@ -36,6 +38,7 @@
     private string resultText = "";
     private string resultClass = "";
     private Timer? rollTimer;
+    private int animationTicks = 0;
 
     private record DiceDuelPayload(int UserRoll, int BotRoll);
 
@@ -52,7 +55,7 @@
                 finalValues[1] = data.BotRoll;
                 CalculateResult();
 
-                if (IsNew && !isRolling)
+                if (IsNew && animationTicks == 0)
                 {
                     StartDuelAnimation();
                 }
@@ -62,10 +65,10 @@
                 }
             }
         }
-        catch 
-        { 
-            hasError = true; 
-            isRolling = false; 
+        catch
+        {
+            hasError = true;
+            isRolling = false;
         }
     }
 
@@ -91,14 +94,15 @@
     private void StartDuelAnimation()
     {
         isRolling = true;
-        int ticks = 0;
+        animationTicks = 0;
         rollTimer?.Stop();
         rollTimer = new Timer(80);
         rollTimer.Elapsed += async (s, e) =>
         {
             displayValues[0] = Random.Shared.Next(1, 7);
             displayValues[1] = Random.Shared.Next(1, 7);
-            if (++ticks > 15)
+            
+            if (++animationTicks > 12)
             {
                 StopAnimation();
             }
