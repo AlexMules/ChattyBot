@@ -1,0 +1,227 @@
+﻿@keyframes handShake {
+    0%, 100% {
+        transform: rotate(10deg);
+    }
+
+    50% {
+        transform: rotate(-10deg);
+    }
+}
+
+@keyframes handShakeComputer {
+    0%, 100% {
+        transform: rotateY(180deg) rotate(10deg);
+    }
+
+    50% {
+        transform: rotateY(180deg) rotate(-10deg);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.rps-container {
+    padding: 25px;
+    background: #1a1a1a;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #333;
+    overflow: hidden;
+    transform: scale(0.8);
+    position: relative;
+    min-height: 320px;
+}
+
+#hands {
+    display: flex;
+    gap: 80px;
+    justify-content: center;
+    align-items: center;
+}
+
+.hand {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    transform: rotate(10deg);
+    display: inline-block;
+}
+
+#computer-hand {
+    transform: rotateY(180deg);
+}
+
+.is-shaking#user-hand {
+    animation: handShake 0.4s infinite;
+}
+
+.is-shaking#computer-hand {
+    animation: handShakeComputer 0.4s infinite;
+}
+
+.hand > div {
+    position: absolute;
+    box-sizing: border-box;
+    border: 2px solid black;
+    background: gold;
+    transition: all 0.2s ease-in-out;
+}
+
+.fist {
+    height: 110px;
+    left: 40px;
+    top: 50px;
+    width: 90px;
+    border-radius: 20px 0 0 20px;
+    z-index: 2;
+}
+
+.finger {
+    width: 70px;
+    height: 30px;
+    border-radius: 20px;
+    left: 80px;
+    transform-origin: 0 50%;
+    z-index: 1;
+}
+
+.finger-1 {
+    top: 50px;
+}
+
+.finger-2 {
+    top: 78px;
+}
+
+.finger-3 {
+    top: 106px;
+}
+
+.finger-4 {
+    top: 134px;
+    height: 26px;
+    left: 76px;
+}
+
+div.thumb {
+    width: 35px;
+    height: 70px;
+    border-radius: 0 20px 20px 20px;
+    top: 50px;
+    left: 80px;
+    border-left: 0;
+    box-shadow: -17px 6px 0 -15px black;
+    z-index: 3;
+}
+
+div.arm {
+    width: 22px;
+    height: 70px;
+    left: 20px;
+    top: 70px;
+    border: 0;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+
+input[id^="scissors"]:checked ~ .game-area #user-hand .finger-1,
+input[id^="scissors"]:checked ~ .game-area #user-hand .finger-2 {
+    width: 130px;
+}
+
+input[id^="scissors"]:checked ~ .game-area #user-hand .finger-1 {
+    transform: rotate(-10deg);
+}
+
+input[id^="scissors"]:checked ~ .game-area #user-hand .finger-2 {
+    transform: rotate(10deg);
+}
+
+input[id$="scissors"]:checked ~ .game-area #computer-hand .finger-1,
+input[id$="scissors"]:checked ~ .game-area #computer-hand .finger-2 {
+    width: 130px;
+}
+
+input[id$="scissors"]:checked ~ .game-area #computer-hand .finger-1 {
+    transform: rotate(-10deg);
+}
+
+input[id$="scissors"]:checked ~ .game-area #computer-hand .finger-2 {
+    transform: rotate(10deg);
+}
+
+input[id^="paper"]:checked ~ .game-area #user-hand .finger-1,
+input[id^="paper"]:checked ~ .game-area #user-hand .finger-2,
+input[id^="paper"]:checked ~ .game-area #user-hand .finger-3,
+input[id^="paper"]:checked ~ .game-area #user-hand .finger-4 {
+    left: 124px;
+    width: 80px;
+    border-left: 0;
+    border-radius: 0 20px 20px 0;
+}
+
+input[id$="paper"]:checked ~ .game-area #computer-hand .finger-1,
+input[id$="paper"]:checked ~ .game-area #computer-hand .finger-2,
+input[id$="paper"]:checked ~ .game-area #computer-hand .finger-3,
+input[id$="paper"]:checked ~ .game-area #computer-hand .finger-4 {
+    left: 124px;
+    width: 80px;
+    border-left: 0;
+    border-radius: 0 20px 20px 0;
+}
+
+/* draw */
+#rock-rock:checked ~ .game-area h2::before,
+#paper-paper:checked ~ .game-area h2::before,
+#scissors-scissors:checked ~ .game-area h2::before {
+    content: "It's a Draw!";
+    color: #ffc107;
+}
+
+/* user wins */
+#rock-scissors:checked ~ .game-area h2::before,
+#paper-rock:checked ~ .game-area h2::before,
+#scissors-paper:checked ~ .game-area h2::before {
+    content: "You Win!";
+    color: #28a745;
+}
+
+/* bot wins */
+#rock-paper:checked ~ .game-area h2::before,
+#paper-scissors:checked ~ .game-area h2::before,
+#scissors-rock:checked ~ .game-area h2::before {
+    content: "ChattyBot Wins!";
+    color: #dc3545;
+}
+
+#message {
+    margin-top: 15px;
+    text-align: center;
+    animation: fadeInScale 0.4s ease-out;
+}
+
+    #message h2 {
+        font-family: 'Acme', sans-serif;
+        font-size: 2.8rem;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    #message p {
+        color: #aaa;
+        margin-top: 8px;
+        font-size: 1.1rem;
+    }

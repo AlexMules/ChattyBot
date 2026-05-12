@@ -12,6 +12,7 @@
         Music = 7, 
         Dice = 8,
         DiceDuel = 9,
-        CoinFlip = 10
+        CoinFlip = 10,
+        RpsDuel = 11
     }
 }

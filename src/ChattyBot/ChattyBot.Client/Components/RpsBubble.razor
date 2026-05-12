@@ -1,0 +1,72 @@
+﻿@using System.Text.Json
+@using ChattyBot.Shared.Contracts.Enums
+
+<div class="rps-container">
+    <input type="radio" id="@(isAnimating ? "rock-rock" : $"{userChoice}-{botChoice}")" checked style="display:none" />
+
+    <div class="game-area">
+        <div id="hands">
+            @* user hand *@
+            <div class="hand @(isAnimating ? "is-shaking" : "")" id="user-hand">
+                <div class="fist"></div>
+                <div class="finger finger-1"></div>
+                <div class="finger finger-2"></div>
+                <div class="finger finger-3"></div>
+                <div class="finger finger-4"></div>
+                <div class="thumb"></div>
+                <div class="arm"></div>
+            </div>
+
+            @* bot hand *@
+            <div class="hand @(isAnimating ? "is-shaking" : "")" id="computer-hand">
+                <div class="fist"></div>
+                <div class="finger finger-1"></div>
+                <div class="finger finger-2"></div>
+                <div class="finger finger-3"></div>
+                <div class="finger finger-4"></div>
+                <div class="thumb"></div>
+                <div class="arm"></div>
+            </div>
+        </div>
+
+        @if (!isAnimating)
+        {
+            <div id="message" class="fade-in">
+                <h2></h2>
+                <p>You: <b>@userChoice</b> vs Bot: <b>@botChoice</b></p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string RawContent { get; set; } = string.Empty;
+    [Parameter] public bool IsNew { get; set; } = false;
+
+    private string userChoice = "";
+    private string botChoice = "";
+    private bool isAnimating = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        try
+        {
+            var data = JsonDocument.Parse(RawContent).RootElement;
+            userChoice = data.GetProperty("UserChoice").GetString() ?? "rock";
+            botChoice = data.GetProperty("BotChoice").GetString() ?? "rock";
+
+            if (IsNew && !isAnimating)
+            {
+                isAnimating = true;
+                StateHasChanged();
+                await Task.Delay(2000);
+                isAnimating = false;
+                StateHasChanged();
+            }
+        }
+        catch
+        {
+            isAnimating = false;
+        }
+    }
+}
