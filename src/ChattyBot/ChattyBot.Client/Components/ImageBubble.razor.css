@@ -6,12 +6,12 @@
 }
 
 .chat-meme-img {
-    max-width: 100%; /* Se va adapta la box-ul părinte minus padding-ul */
+    max-width: 100%;
     max-height: 450px;
     height: auto;
     border-radius: 6px;
     display: block;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* O umbră mai pronunțată în interiorul box-ului */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     transition: transform 0.2s ease;
 }
 
