@@ -38,7 +38,7 @@ namespace ChattyBot.Server.Application.Services
             )).ToList();
         }
 
-        public async Task<List<ChatMessageDTO>> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto)
+        public async Task<List<ChatMessageDTO>> AddChatMessageAsync(int userId, int chatId, SendMessageDTO dto, string username)
         {
             await EnsureUserOwnsConversationAsync(userId, chatId);
 
@@ -48,7 +48,7 @@ namespace ChattyBot.Server.Application.Services
                 MessageSender.User,
                 MessageType.Text);
 
-            var botResponse = await _botEngine.ResolveAndExecuteAsync(dto.Content);
+            var botResponse = await _botEngine.ResolveAndExecuteAsync(dto.Content, username);
 
             var botMessageDto = await CreateSaveAndMapMessageAsync(
                 chatId,

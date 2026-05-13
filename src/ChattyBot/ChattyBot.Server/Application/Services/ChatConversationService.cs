@@ -18,9 +18,9 @@ namespace ChattyBot.Server.Application.Services
             return entities.Select(c => new ChatConversationDTO(c.Id, c.Title, c.CreatedAt)).ToList();
         }
 
-        public async Task<ChatConversationDTO> CreateChatConversationAsync(int userId, CreateChatDTO dto)
+        public async Task<ChatConversationDTO> CreateChatConversationAsync(int userId, string username, CreateChatDTO dto)
         {
-            var welcomeMessage = BotEngine.BotEngine.GetWelcomeMessage();
+            var welcomeMessage = BotEngine.BotEngine.GetWelcomeMessage(username);
             var now = DateTime.UtcNow;
 
             ChatMessage welcomeChatMessage = new ChatMessage

@@ -42,7 +42,10 @@ namespace ChattyBot.Server.Api.Controllers
                 return Unauthorized();
             }
 
-            var newChat = await _conversationService.CreateChatConversationAsync(userId, dto);
+            var username = User.Identity?.Name ?? "User";
+
+            var newChat = await _conversationService.CreateChatConversationAsync(userId, username, dto);
+
             return Ok(newChat);
         }
 

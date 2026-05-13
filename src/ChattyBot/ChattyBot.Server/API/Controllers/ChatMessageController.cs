@@ -49,12 +49,14 @@ namespace ChattyBot.Server.Api.Controllers
                     return Unauthorized();
                 }
 
+                var username = User.Identity?.Name ?? "User";
+
                 if (string.IsNullOrWhiteSpace(dto.Content))
                 {
                     return BadRequest("Message content cannot be empty!");
                 }
 
-                var result = await _messageService.AddChatMessageAsync(userId, chatId, dto);
+                var result = await _messageService.AddChatMessageAsync(userId, chatId, dto, username);
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)

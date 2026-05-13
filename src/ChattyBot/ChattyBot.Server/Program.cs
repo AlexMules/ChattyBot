@@ -66,6 +66,8 @@ builder.Services.AddScoped<IChatMessageService, ChatMessageService>();
 builder.Services.AddScoped<ITriviaService, TriviaService>();
 builder.Services.AddScoped<IExportService, ExportService>();
 
+builder.Services.AddScoped<BotCommandContext>();
+
 builder.Services.AddScoped<IBotCommand, HelpCommand>();
 builder.Services.AddScoped<IBotCommand, JokeCommand>();
 builder.Services.AddScoped<IBotCommand, FunFactCommand>();
