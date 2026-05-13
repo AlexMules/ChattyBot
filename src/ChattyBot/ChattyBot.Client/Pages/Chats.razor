@@ -316,23 +316,42 @@
             userAvatar = authState.User.FindFirst("avatar")?.Value ?? "avatar1.png";
             conversations = await ConvClient.GetConversationsAsync();
         }
-        finally { isLoadingConversations = false; }
+        finally 
+        { 
+            isLoadingConversations = false; 
+        }
     }
 
     private string GetPlaceholderText()
     {
-        if (selectedChat == null) return "Select a chat to start...";
-        if (_isChatBlocked) return "Please answer the trivia question...";
+        if (selectedChat == null)
+        {
+            return "Select a chat to start...";
+        }
+
+        if (_isChatBlocked)
+        {
+            return "Please answer the trivia question...";
+        }
+
         return "Type a command (e.g. /help, /joke)...";
     }
 
     private void ToggleSidebar() => isSidebarHidden = !isSidebarHidden;
 
-    private void OpenNewChatModal() { newChatTitle = ""; showNewChatModal = true; }
+    private void OpenNewChatModal() 
+    { 
+        newChatTitle = ""; 
+        showNewChatModal = true; 
+    }
 
     private async Task CreateNewChat()
     {
-        if (string.IsNullOrWhiteSpace(newChatTitle)) return;
+        if (string.IsNullOrWhiteSpace(newChatTitle))
+        {
+            return;
+        }
+
         var result = await ConvClient.CreateConversationAsync(new CreateChatDTO(newChatTitle));
         if (result != null)
         {
@@ -344,11 +363,14 @@
 
     private async Task SelectChat(ChatConversationDTO chat)
     {
-        if (selectedChat?.Id == chat.Id || isSwitchingChat) return;
+        if (selectedChat?.Id == chat.Id || isSwitchingChat)
+        {
+            return;
+        }
 
         isSwitchingChat = true;
         _isChatBlocked = false;
-        
+
         _newlyArrivedMessageIds.Clear();
         StateHasChanged();
 
@@ -368,7 +390,10 @@
                     _isChatBlocked = true;
                 }
             }
-            catch { _isChatBlocked = false; }
+            catch 
+            { 
+                _isChatBlocked = false; 
+            }
         }
 
         StateHasChanged();
@@ -378,7 +403,10 @@
 
     private async Task SendMessage()
     {
-        if (selectedChat == null || string.IsNullOrWhiteSpace(newMessageText) || _isChatBlocked) return;
+        if (selectedChat == null || string.IsNullOrWhiteSpace(newMessageText) || _isChatBlocked) 
+        {
+            return;
+        }
 
         var messageToSend = newMessageText;
         newMessageText = "";
@@ -409,7 +437,13 @@
         StateHasChanged();
     }
 
-    private async Task HandleKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await SendMessage(); }
+    private async Task HandleKeyUp(KeyboardEventArgs e) 
+    { 
+        if (e.Key == "Enter") 
+        {
+            await SendMessage();
+        }
+    }
 
     private async Task ScrollToBottom(bool instant)
     {
@@ -425,14 +459,21 @@
         if (await ConvClient.DeleteConversationAsync(chat.Id))
         {
             conversations.RemoveAll(c => c.Id == chat.Id);
-            if (selectedChat?.Id == chat.Id) { selectedChat = null; currentMessages.Clear(); }
+            if (selectedChat?.Id == chat.Id) 
+            { 
+                selectedChat = null; 
+                currentMessages.Clear(); 
+            }
             StateHasChanged();
         }
     }
 
     private void StartRename(ChatConversationDTO chat)
     {
-        activeMenuChatId = null; chatToRename = chat; renamedTitle = chat.Title; showRenameModal = true;
+        activeMenuChatId = null; 
+        chatToRename = chat; 
+        renamedTitle = chat.Title; 
+        showRenameModal = true;
     }
 
     private async Task SaveRename()
@@ -445,14 +486,23 @@
                 if (index != -1)
                 {
                     conversations[index] = chatToRename with { Title = renamedTitle };
-                    if (selectedChat?.Id == chatToRename.Id) selectedChat = conversations[index];
+                    if (selectedChat?.Id == chatToRename.Id)
+                    {
+                        selectedChat = conversations[index];
+                    }
                 }
                 showRenameModal = false;
             }
         }
     }
 
-    private async Task HandleRenameKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await SaveRename(); }
+    private async Task HandleRenameKeyUp(KeyboardEventArgs e) 
+    {
+        if (e.Key == "Enter") 
+        { 
+            await SaveRename(); 
+        } 
+    }
 
     private async Task ShowErrorToast(string message)
     {
@@ -460,7 +510,7 @@
         showToast = true;
         StateHasChanged();
 
-        await Task.Delay(4000); // Dispare după 4 secunde
+        await Task.Delay(4000);
         showToast = false;
         StateHasChanged();
     }

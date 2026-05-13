@@ -303,7 +303,7 @@
 }
 
 .skeleton-item {
-    background-color: rgba(255, 255, 255, 0.03) !important;
+    background-color: rgba(255, 255, 255, 0.03);
     pointer-events: none;
     animation: skeleton-pulse 1.5s infinite ease-in-out;
 }
@@ -426,21 +426,21 @@
 }
 
 .special-bubble {
-    background: #1a1a1a !important;
-    border: 1px solid #333 !important;
+    background: #1a1a1a;
+    border: 1px solid #333;
     max-width: 550px;
     min-width: 400px;
-    padding: 20px !important;
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .message-bubble ::deep img {
-    max-width: 450px !important;
-    max-height: 400px !important;
-    width: auto !important;
-    height: auto !important;
+    max-width: 450px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
     border-radius: 8px;
     display: block;
     margin: 8px 0;
@@ -475,7 +475,7 @@
 }
 
 .messages-container:has(.empty-state) {
-    padding: 0 !important;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -547,9 +547,9 @@
 
 .input-disabled {
     opacity: 0.6;
-    background: #0d0d0d !important;
-    border-color: #ff4d4d44 !important;
-    cursor: not-allowed !important;
+    background: #0d0d0d;
+    border-color: #ff4d4d44;
+    cursor: not-allowed;
     animation: trivia-pulse 2s infinite;
 }
 
@@ -690,24 +690,24 @@
     }
 
 .bot-row .message-bubble.trivia-mode {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
 
 .bot-row .message-bubble.image-mode {
-    padding: 20px !important;
-    background: #252525 !important;
+    padding: 20px;
+    background: #252525;
     border: 1px solid #3c4043;
     border-radius: 20px;
 }
 
 .message-bubble.image-mode ::deep img {
     display: block;
-    max-width: 100% !important;
-    height: auto !important;
-    margin: 0 !important;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
     border-radius: inherit;
 }
 

@@ -2,7 +2,6 @@
 using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Server.Infrastructure.Persistence.Context;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
-using ChattyBot.Server.Infrastructure.Persistence.Repositories;
 
 namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
 {

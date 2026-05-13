@@ -42,7 +42,7 @@
 }
 
 .form-section {
-    padding: 3rem !important;
+    padding: 3rem;
     background-color: #2b2d31;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .input-group {
-    background-color: #1e1f22 !important;
+    background-color: #1e1f22;
     border: 1px solid #1e1f22;
     border-radius: 8px;
     display: flex;
@@ -67,24 +67,24 @@
     }
 
 .input-group-text {
-    background-color: transparent !important;
-    border: none !important;
+    background-color: transparent;
+    border: none;
     color: #b5bac1;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 46px; 
-    padding: 0 !important;
+    padding: 0;
     font-size: 1.1rem; 
 }
 
 .form-control {
-    background-color: transparent !important;
-    border: none !important;
-    color: #dbdee1 !important;
+    background-color: transparent;
+    border: none;
+    color: #dbdee1;
     height: 48px;
     padding: 10px 10px 10px 0;
-    box-shadow: none !important;
+    box-shadow: none;
 }
 
     .form-control::placeholder {
@@ -92,7 +92,7 @@
     }
 
     .form-control:focus {
-        color: #ffffff !important;
+        color: #ffffff;
     }
 
 .btn-primary {

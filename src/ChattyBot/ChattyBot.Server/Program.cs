@@ -92,6 +92,7 @@ builder.Services.AddScoped<BotEngine>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 

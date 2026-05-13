@@ -50,15 +50,15 @@
     }
 
     .option-btn.correct {
-        background: #28a745 !important;
-        border-color: #28a745 !important;
+        background: #28a745;
+        border-color: #28a745;
         font-weight: bold;
         box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
     }
 
     .option-btn.wrong {
-        background: #dc3545 !important;
-        border-color: #dc3545 !important;
+        background: #dc3545;
+        border-color: #dc3545;
         opacity: 0.9;
     }
 

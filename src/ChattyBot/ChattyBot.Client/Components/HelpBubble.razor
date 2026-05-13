@@ -43,7 +43,10 @@
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             commands = JsonSerializer.Deserialize<List<CommandHelpPayload>>(RawContent, options);
         }
-        catch { commands = null; }
+        catch 
+        { 
+            commands = null; 
+        }
     }
 
     private record CommandHelpPayload(string Trigger, string Description);

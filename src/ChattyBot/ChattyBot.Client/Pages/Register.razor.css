@@ -20,7 +20,7 @@
 }
 
 .card-header {
-    background-color: transparent !important;
+    background-color: transparent;
     border-bottom: none;
     padding-top: 2rem;
 }
@@ -31,8 +31,8 @@
     }
 
 .form-section, .avatar-section {
-    background-color: #2b2d31 !important;
-    padding: 2rem !important;
+    background-color: #2b2d31;
+    padding: 2rem;
 }
 
 .form-section {
@@ -49,51 +49,51 @@
 }
 
 .form-control {
-    background-color: #1e1f22 !important;
-    border: 1px solid #1e1f22 !important;
-    color: #dbdee1 !important;
+    background-color: #1e1f22;
+    border: 1px solid #1e1f22;
+    color: #dbdee1;
     height: 45px;
     padding: 10px 15px;
-    border-radius: 4px !important;
+    border-radius: 4px;
 }
 
     .form-control.invalid, .form-control:focus {
-        background-color: #1e1f22 !important;
-        color: #ffffff !important;
-        box-shadow: none !important;
+        background-color: #1e1f22;
+        color: #ffffff;
+        box-shadow: none;
     }
 
 .input-group {
-    background-color: #1e1f22 !important;
+    background-color: #1e1f22;
     border-radius: 4px;
     border: 1px solid #1e1f22;
     display: flex;
 }
 
     .input-group:focus-within {
-        border: 1px solid #5865f2 !important;
+        border: 1px solid #5865f2;
     }
 
     .input-group .form-control {
-        border: none !important;
+        border: none;
         flex: 1;
     }
 
 .btn-eye {
-    background-color: #111214 !important; 
-    border: none !important;
-    color: #b5bac1 !important;
+    background-color: #111214; 
+    border: none;
+    color: #b5bac1;
     display: flex;
     align-items: center;
-    padding: 0 15px !important;
+    padding: 0 15px;
     cursor: pointer;
     border-radius: 0 4px 4px 0; 
     transition: all 0.2s;
 }
 
     .btn-eye:hover {
-        color: #ffffff !important;
-        background-color: #000000 !important;
+        color: #ffffff;
+        background-color: #000000;
     }
 
 .avatar-grid {

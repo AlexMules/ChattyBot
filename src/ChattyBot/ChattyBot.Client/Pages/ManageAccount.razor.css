@@ -35,17 +35,17 @@
 }
 
 .discord-input {
-    background-color: #1e1f22 !important;
-    border: 1px solid #1e1f22 !important;
+    background-color: #1e1f22;
+    border: 1px solid #1e1f22;
     border-radius: 3px;
-    color: #dbdee1 !important;
+    color: #dbdee1;
     padding: 10px;
     width: 100%;
     transition: border-color 0.2s ease;
 }
 
     .discord-input:focus {
-        border-color: #5865f2 !important; 
+        border-color: #5865f2; 
         outline: none;
         box-shadow: none;
     }

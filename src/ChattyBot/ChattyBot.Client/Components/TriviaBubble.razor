@@ -68,12 +68,18 @@
                 selectedIndex = null;
             }
         }
-        catch { data = null; }
+        catch 
+        { 
+            data = null; 
+        }
     }
 
     private async Task HandleOptionClick(int index)
     {
-        if (isProcessing || result != null) return;
+        if (isProcessing || result != null) 
+        {
+            return;
+        }
         isProcessing = true;
         selectedIndex = index;
 
@@ -91,14 +97,23 @@
     {
         string classes = "option-btn";
 
-        if (result == null) return classes;
+        if (result == null) 
+        {
+            return classes;
+        }
 
         if (index == result.CorrectIndex)
+        {
             classes += " correct";
+        }
         else if (index == selectedIndex && !result.IsCorrect)
+        {
             classes += " wrong";
+        }
         else
+        {
             classes += " faded";
+        }
 
         return classes;
     }
