@@ -34,8 +34,9 @@
     display: flex;
     flex-direction: column;
     border-right: 1px solid #2d2d2d;
-    transition: width 0.4s ease, min-width 0.4s ease, opacity 0.3s ease;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
     z-index: 100;
+    overflow: hidden;
 }
 
     .sidebar.hidden {
@@ -43,7 +44,6 @@
         min-width: 0;
         border: none;
         opacity: 0;
-        pointer-events: none;
     }
 
 .sidebar-top {
@@ -64,6 +64,26 @@
     flex-shrink: 0;
 }
 
+.sidebar-top > *:not(.toggle-area),
+.sidebar-bottom {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition-delay: 0.3s; 
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.sidebar.hidden .sidebar-top > *:not(.toggle-area),
+.sidebar.hidden .sidebar-bottom {
+    opacity: 0;
+    transform: translateY(10px);
+    transition-delay: 0s; 
+}
+
+.toggle-area {
+    transition: opacity 0.2s ease;
+    opacity: 1;
+}
+
 .hamburger-btn {
     background: transparent;
     border: none;
@@ -71,8 +91,9 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding: 10px;
+    padding: 10px; 
     width: fit-content;
+    flex-shrink: 0; 
 }
 
 .bar {
@@ -305,23 +326,30 @@
 
 .chat-header {
     display: grid;
-    grid-template-columns: 150px 1fr 150px;
+    grid-template-columns: auto 1fr auto; 
     align-items: center;
-    padding: 0 25px;
+    padding: 0 15px; 
     height: 65px;
     background: #121212;
     border-bottom: 1px solid #2d2d2d;
     flex-shrink: 0;
 }
 
-    .chat-header.shifted {
-        padding-left: 75px;
-    }
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+}
+
+.chat-header.shifted {
+    padding-left: 15px;
+}
 
 .bot-name {
     color: #6f42c1;
     font-weight: bold;
     font-size: 1.1rem;
+    white-space: nowrap;
 }
 
 .current-chat-title {
