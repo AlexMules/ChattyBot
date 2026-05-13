@@ -429,24 +429,60 @@
     text-align: right;
 }
 
-.empty-state {
-    flex: 1;
+.messages-container:has(.empty-state) {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: -40px;
+    height: 100%;
+    width: 100%;
 }
 
-.empty-icon {
-    font-size: 7rem;
-    filter: drop-shadow(0px 0px 15px rgba(111, 66, 193, 0.4));
+.empty-state-content {
+    text-align: center;
+    margin-top: -60px; 
 }
 
-.empty-state p {
-    font-size: 1.5rem;
-    font-weight: 600;
+.bot-original-icon {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 25px;
+    filter: invert(31%) sepia(94%) saturate(1134%) hue-rotate(235deg) brightness(88%) contrast(101%) drop-shadow(0 0 10px rgba(111, 66, 193, 0.4));
+    animation: floatBot 3.5s ease-in-out infinite;
+}
+
+.empty-state-content h3 {
+    font-size: 3.2rem;
+    font-weight: 850;
     color: #ffffff;
+    margin: 0;
+}
+
+.empty-state-content p {
+    font-size: 1.3rem;
+    color: #888;
+    margin-top: 12px;
+}
+
+@keyframes floatBot {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
 
 .chat-footer {
