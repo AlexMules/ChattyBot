@@ -1,6 +1,7 @@
 ﻿using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
 using System.Text.Json;
+using System.Text.Encodings.Web;
 using System.Xml.Serialization;
 
 namespace ChattyBot.Server.Application.Services
@@ -12,7 +13,7 @@ namespace ChattyBot.Server.Application.Services
             byte[] fileBytes;
             string contentType;
             string fileExtension = format.ToLower() == "xml" ? "xml" : "json";
-            string fileName = $"ChattyBot_Export_{DateTime.Now:yyyyMMdd}.{fileExtension}";
+            string fileName = $"ChattyBot_Export_{DateTime.Now:yyyyMMdd_HHmmss}.{fileExtension}";
 
             if (fileExtension == "xml")
             {
@@ -27,7 +28,8 @@ namespace ChattyBot.Server.Application.Services
                 contentType = "application/json";
                 fileBytes = JsonSerializer.SerializeToUtf8Bytes(data, new JsonSerializerOptions
                 {
-                    WriteIndented = true
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 });
             }
 

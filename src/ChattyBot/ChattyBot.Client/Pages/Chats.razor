@@ -102,7 +102,14 @@
             <div class="header-center">
                 <h4 class="current-chat-title">@(selectedChat?.Title ?? "Select a conversation")</h4>
             </div>
-            <div class="header-right"></div>
+            <div class="header-right">
+                @if (selectedChat != null)
+                {
+                    <button class="export-header-btn" @onclick="() => showExportModal = true" title="Export Chat">
+                        <i class="bi bi-file-earmark-arrow-down"></i>
+                    </button>
+                }
+            </div>
         </header>
 
         <div id="messagesList" class="messages-container @(isSwitchingChat ? "switching" : "")">
@@ -233,9 +240,38 @@
     </div>
 }
 
+@if (showExportModal)
+{
+    <div class="modal-overlay">
+        <div class="custom-modal">
+            <h3>Export Conversation</h3>
+            <p>Select the format you want to download:</p>
+            <div class="modal-actions export-grid">
+                <button class="btn-confirm" @onclick='() => HandleExport("json")'>
+                    <i class="bi bi-filetype-json"></i> JSON
+                </button>
+                <button class="btn-confirm" @onclick='() => HandleExport("xml")'>
+                    <i class="bi bi-filetype-xml"></i> XML
+                </button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" style="width: 100%" @onclick="() => showExportModal = false">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showToast)
+{
+    <div class="toast-notification">
+        <i class="bi bi-x-circle-fill"></i> @toastMessage
+    </div>
+}
+
 @code {
     private bool isSidebarHidden = false;
     private bool showNewChatModal = false;
+    private bool showExportModal = false;
     private bool isSwitchingChat = false;
     private bool isLoadingConversations = true;
     private bool _isChatBlocked = false;
@@ -245,6 +281,9 @@
     private string newMessageText = "";
     private int? activeMenuChatId;
     private string userAvatar = "avatar1.png";
+
+    private string? toastMessage;
+    private bool showToast = false;
 
     private HashSet<int> _newlyArrivedMessageIds = new();
 
@@ -409,4 +448,43 @@
     }
 
     private async Task HandleRenameKeyUp(KeyboardEventArgs e) { if (e.Key == "Enter") await SaveRename(); }
+
+    private async Task ShowErrorToast(string message)
+    {
+        toastMessage = message;
+        showToast = true;
+        StateHasChanged();
+
+        await Task.Delay(4000); // Dispare după 4 secunde
+        showToast = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleExport(string format)
+    {
+        if (selectedChat == null) 
+        {
+            return;
+        }
+    
+        showExportModal = false;
+
+        try
+        {
+            var response = await ConvClient.ExportConversationAsync(selectedChat.Id, format);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var fileStream = await response.Content.ReadAsStreamAsync();
+                var fileName = $"ChattyBot_Export_{DateTime.Now:yyyyMMdd}.{format}";
+
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+                await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            }
+        }
+        catch (Exception)
+        {
+            await ShowErrorToast("Export failed!");
+        }
+    }
 }

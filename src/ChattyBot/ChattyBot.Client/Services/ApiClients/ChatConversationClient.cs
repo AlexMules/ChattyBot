@@ -42,5 +42,10 @@ namespace ChattyBot.Client.Services.ApiClients
 
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<HttpResponseMessage> ExportConversationAsync(int id, string format)
+        {
+            return await _httpClient.GetAsync($"api/ChatConversation/{id}/export?format={format}");
+        }
     }
 }

@@ -634,3 +634,63 @@
     background: #2d2d2d;
     color: #eee;
 }
+
+.export-header-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-right: 15px;
+}
+
+    .export-header-btn:hover {
+        background: rgba(111, 66, 193, 0.2);
+        color: #fff;
+        border-color: #6f42c1;
+    }
+
+.export-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ff4d4d;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.custom-modal p {
+    color: #bbb;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.custom-modal h3 {
+    color: #ffffff;
+    margin-bottom: 15px;
+}
