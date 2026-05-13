@@ -69,5 +69,12 @@ namespace ChattyBot.Server.Infrastructure.Persistence.Repositories
             conversation.Title = newTitle;
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<ChatConversation?> GetConversationWithMessagesAsync(int chatId)
+        {
+            return await _context.ChatConversations
+                .Include(c => c.Messages)
+                .FirstOrDefaultAsync(c => c.Id == chatId);
+        }
     }
 }

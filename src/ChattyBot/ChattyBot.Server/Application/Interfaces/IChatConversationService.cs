@@ -9,5 +9,6 @@ namespace ChattyBot.Server.Application.Interfaces
         Task<bool> DeleteChatConversationAsync(int chatId);
         Task<bool> IsUserOwnerAsync(int userId, int chatId);
         Task<bool?> RenameConversationAsync(int userId, int chatId, string newTitle);
+        Task<ExportConversationDTO?> GetConversationForExportAsync(int chatId);
     }
 }

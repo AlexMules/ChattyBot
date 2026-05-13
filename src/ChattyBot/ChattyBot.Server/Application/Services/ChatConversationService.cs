@@ -71,5 +71,27 @@ namespace ChattyBot.Server.Application.Services
             var success = await _repo.UpdateTitleAsync(chatId, newTitle);
             return success;
         }
+
+        public async Task<ExportConversationDTO?> GetConversationForExportAsync(int chatId)
+        {
+            var conversation = await _repo.GetConversationWithMessagesAsync(chatId);
+
+            if (conversation == null)
+            {
+                return null;
+            }
+
+            return new ExportConversationDTO(
+                conversation.Title,
+                conversation.CreatedAt,
+                conversation.Messages
+                    .OrderBy(m => m.Timestamp)
+                    .Select(m => new ExportMessageDTO(
+                        m.Sender.ToString(),
+                        m.Content,
+                        m.Timestamp
+                    )).ToList()
+            );
+        }
     }
 }

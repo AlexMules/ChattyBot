@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using ChattyBot.Server.Application.Interfaces;
-using ChattyBot.Shared.Contracts.DTO;
+﻿using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Server.Infrastructure.Security;
+using ChattyBot.Shared.Contracts.DTO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChattyBot.Server.Api.Controllers
 {
@@ -12,10 +12,12 @@ namespace ChattyBot.Server.Api.Controllers
     public class ChatConversationController : ControllerBase
     {
         private readonly IChatConversationService _conversationService;
+        private readonly IExportService _exportService;
 
-        public ChatConversationController(IChatConversationService conversationService)
+        public ChatConversationController(IChatConversationService conversationService, IExportService exportService    )
         {
             _conversationService = conversationService;
+            _exportService = exportService;
         }
 
         [HttpGet("conversations")]
@@ -74,6 +76,31 @@ namespace ChattyBot.Server.Api.Controllers
                 false => Forbid(),
                 null => NotFound()
             };
+        }
+
+        [HttpGet("{id}/export")]
+        public async Task<IActionResult> Export(int id, [FromQuery] string format = "json")
+        {
+            var userId = User.GetUserId();
+            if (userId == 0)
+            {
+                return Unauthorized();
+            }
+
+            if (!await _conversationService.IsUserOwnerAsync(userId, id))
+            {
+                return Forbid();
+            }
+
+            var data = await _conversationService.GetConversationForExportAsync(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+
+            var export = _exportService.CreateExportFile(data, format);
+
+            return File(export.Content, export.ContentType, export.FileName);
         }
     }
 }
