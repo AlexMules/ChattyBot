@@ -1,5 +1,6 @@
 ﻿using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Server.Domain.Entities;
+using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
 
@@ -19,14 +20,27 @@ namespace ChattyBot.Server.Application.Services
 
         public async Task<ChatConversationDTO> CreateChatConversationAsync(int userId, CreateChatDTO dto)
         {
+            var welcomeMessage = BotEngine.BotEngine.GetWelcomeMessage();
+            var now = DateTime.UtcNow;
+
+            ChatMessage welcomeChatMessage = new ChatMessage
+            {
+                Sender = MessageSender.Bot,
+                Content = welcomeMessage.Content,
+                Type = welcomeMessage.Type,
+                Timestamp = now
+            };
+
             var entity = new ChatConversation
             {
                 UserId = userId,
                 Title = dto.Title,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = now,
+                Messages = new List<ChatMessage> { welcomeChatMessage }
             };
 
             var saved = await _repo.AddConversationAsync(entity);
+
             return new ChatConversationDTO(saved.Id, saved.Title, saved.CreatedAt);
         }
 

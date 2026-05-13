@@ -11,6 +11,15 @@ namespace ChattyBot.Server.Application.BotEngine
             _commands = commands;
         }
 
+        public static BotResponse GetWelcomeMessage()
+        {
+            string welcomeMessage = "Hi there! I'm ChattyBot, your personal command-driven assistant.\n\n" +
+                          "Everything I do is powered by slash commands. To discover my full range of features, just type /help.\n\n" +
+                          "Let's get started!";
+
+            return new BotResponse(welcomeMessage, MessageType.Text);
+        }
+
         public async Task<BotResponse> ResolveAndExecuteAsync(string input)
         {
             if (string.IsNullOrWhiteSpace(input))

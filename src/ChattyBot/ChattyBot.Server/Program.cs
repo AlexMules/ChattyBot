@@ -83,6 +83,7 @@ builder.Services.AddScoped<IBotCommand, CalcCommand>();
 builder.Services.AddScoped<IBotCommand, RandomCommand>();
 builder.Services.AddScoped<IBotCommand, ChooseCommand>();
 builder.Services.AddScoped<IBotCommand, RpsCommand>();
+builder.Services.AddScoped<IBotCommand, AboutCommand>();
 
 builder.Services.AddScoped<BotEngine>();
 
