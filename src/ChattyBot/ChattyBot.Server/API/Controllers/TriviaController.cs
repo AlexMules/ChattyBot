@@ -1,9 +1,11 @@
 ﻿using ChattyBot.Server.Application.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChattyBot.Server.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TriviaController : ControllerBase

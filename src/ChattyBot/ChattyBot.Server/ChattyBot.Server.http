@@ -1,6 +1,133 @@
-@ChattyBot.Server_HostAddress = http://localhost:5118
+@ChattyBot.Server_HostAddress = https://localhost:7025
+@token = YOUR_TOKEN_HERE
 
-GET {{ChattyBot.Server_HostAddress}}/weatherforecast/
-Accept: application/json
+### Register a new user
+POST {{ChattyBot.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
 
-###
+{
+  "email": "user@example.com",
+  "password": "Password123!",
+  "username": "your_username",
+  "avatarPath": "avatar1.png"
+}
+
+### Login
+POST {{ChattyBot.Server_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password123!"
+}
+
+### Change Password
+POST {{ChattyBot.Server_HostAddress}}/api/account/change-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Password123!",
+  "newPassword": "NewPassword123!"
+}
+
+### Change Username
+POST {{ChattyBot.Server_HostAddress}}/api/account/change-username
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "newUsername": "new_username"
+}
+
+### Change Email
+POST {{ChattyBot.Server_HostAddress}}/api/account/change-email
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "newEmail": "new_email@example.com",
+  "currentPassword": "NewPassword123!"
+}
+
+### Get all user's conversations
+GET {{ChattyBot.Server_HostAddress}}/api/ChatConversation/conversations
+Authorization: Bearer {{token}}
+
+### Create a new conversation
+POST {{ChattyBot.Server_HostAddress}}/api/ChatConversation
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Conversation about C#"
+}
+
+### Rename a conversation
+@chatId_Rename = 1
+PUT {{ChattyBot.Server_HostAddress}}/api/ChatConversation/{{chatId_Rename}}/rename
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "newTitle": "Renamed Conversation"
+} 
+
+### Export conversation messages
+@chatId_Export = 1
+GET {{ChattyBot.Server_HostAddress}}/api/ChatConversation/{{chatId_Export}}/export?format=json
+Authorization: Bearer {{token}}
+
+### Delete a conversation
+@chatId_Delete = 1
+DELETE {{ChattyBot.Server_HostAddress}}/api/ChatConversation/{{chatId_Delete}}
+Authorization: Bearer {{token}}
+
+### View chat history of a conversation
+@chatId_History = 1
+GET {{ChattyBot.Server_HostAddress}}/api/ChatMessage/conversation/{{chatId_History}}
+Authorization: Bearer {{token}}
+
+### Send a message in a conversation
+@chatId_SendMessage = 1
+POST {{ChattyBot.Server_HostAddress}}/api/ChatMessage/{{chatId_SendMessage}}/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "/help"
+}
+
+### Send a command and get its response
+@chatId_Command = 1
+POST {{ChattyBot.Server_HostAddress}}/api/ChatMessage/{{chatId_Command}}/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "/joke"
+}
+
+### Test message validation (empty content)
+@chatId_Validation = 1
+POST {{ChattyBot.Server_HostAddress}}/api/ChatMessage/{{chatId_Validation}}/send
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": ""
+}
+
+### Check trivia answer
+@questionId = 1
+@answerIndex = 0
+@messageId = 1
+POST {{ChattyBot.Server_HostAddress}}/api/Trivia/verify
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "questionId": {{questionId}},
+  "answerIndex": "{{answerIndex}}",
+  "messageId" : "{{messageId}}" 
+}
