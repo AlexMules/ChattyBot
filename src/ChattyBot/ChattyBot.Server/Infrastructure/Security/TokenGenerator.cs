@@ -23,7 +23,7 @@ namespace ChattyBot.Server.Infrastructure.Security
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim("avatar", user.AvatarPath ?? "avatar1.png")
+                new Claim("avatar", string.IsNullOrWhiteSpace(user.AvatarPath) ? "avatar1.png" : user.AvatarPath)
             };
 
             var jwtKey = _configuration["Jwt:Key"]
