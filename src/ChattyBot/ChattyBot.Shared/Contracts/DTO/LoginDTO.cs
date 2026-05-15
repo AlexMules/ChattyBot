@@ -9,5 +9,13 @@ namespace ChattyBot.Shared.Contracts.DTO
 
         [Required(ErrorMessage = "Password is required!")]
         public string Password { get; set; } = string.Empty;
+
+        public LoginDTO(string email, string password)
+        {
+            Email = email;
+            Password = password;
+        }
+
+        public LoginDTO() { }
     }
 }

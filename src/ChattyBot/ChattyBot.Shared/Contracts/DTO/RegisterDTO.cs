@@ -20,5 +20,15 @@ namespace ChattyBot.Shared.Contracts.DTO
         public string Username { get; set; } = string.Empty;
 
         public string AvatarPath { get; set; } = "avatar1.png";
+
+        public RegisterDTO(string email, string username, string password, string avatarPath = "avatar1.png")
+        {
+            Email = email;
+            Username = username;
+            Password = password;
+            AvatarPath = avatarPath;
+        }
+
+        public RegisterDTO() { }
     }
 }
