@@ -1,5 +1,6 @@
 using ChattyBot.Client;
 using ChattyBot.Client.Services.ApiClients;
+using ChattyBot.Client.Services.Interfaces;
 using ChattyBot.Client.Services.State;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -22,11 +23,11 @@ builder.Services.AddBlazoredSessionStorage();
 
 builder.Services.AddAuthorizationCore();
 
-builder.Services.AddScoped<AuthClient>();
-builder.Services.AddScoped<ManageAccountClient>();
-builder.Services.AddScoped<ChatConversationClient>();
-builder.Services.AddScoped<ChatMessageClient>();
-builder.Services.AddScoped<TriviaClient>();
+builder.Services.AddScoped<IAuthClient, AuthClient>();
+builder.Services.AddScoped<IManageAccountClient, ManageAccountClient>();
+builder.Services.AddScoped<IChatConversationClient, ChatConversationClient>();
+builder.Services.AddScoped<IChatMessageClient, ChatMessageClient>();
+builder.Services.AddScoped<ITriviaClient, TriviaClient>();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 

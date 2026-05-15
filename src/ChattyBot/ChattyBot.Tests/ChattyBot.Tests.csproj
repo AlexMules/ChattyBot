@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bunit" Version="2.7.2" />
     <PackageReference Include="coverlet.collector" Version="10.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChattyBot.Client\ChattyBot.Client.csproj" />
     <ProjectReference Include="..\ChattyBot.Server\ChattyBot.Server.csproj" />
     <ProjectReference Include="..\ChattyBot.Shared\ChattyBot.Shared.csproj" />
   </ItemGroup>

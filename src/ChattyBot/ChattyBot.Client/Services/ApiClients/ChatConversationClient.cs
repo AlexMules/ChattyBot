@@ -1,9 +1,10 @@
-﻿using ChattyBot.Shared.Contracts.DTO;
+﻿using ChattyBot.Client.Services.Interfaces;
+using ChattyBot.Shared.Contracts.DTO;
 using System.Net.Http.Json;
 
 namespace ChattyBot.Client.Services.ApiClients
 {
-    public class ChatConversationClient
+    public class ChatConversationClient : IChatConversationClient
     {
         private readonly HttpClient _httpClient;
 

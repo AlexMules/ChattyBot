@@ -1,9 +1,10 @@
-﻿using ChattyBot.Shared.Contracts.DTO;
+﻿using ChattyBot.Client.Services.Interfaces;
+using ChattyBot.Shared.Contracts.DTO;
 using System.Net.Http.Json;
 
 namespace ChattyBot.Client.Services.ApiClients
 {
-    public class AuthClient
+    public class AuthClient : IAuthClient
     {
         private readonly HttpClient _httpClient;
 
