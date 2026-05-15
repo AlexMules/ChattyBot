@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using System.Security.Claims;
+using Xunit;
 
 namespace ChattyBot.Client.Tests.Pages
 {
@@ -57,14 +58,51 @@ namespace ChattyBot.Client.Tests.Pages
 
             var cut = Render<Register>();
 
-            await cut.InvokeAsync(() => cut.Instance.GetType()
-                .GetMethod("HandleRegister", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                !.Invoke(cut.Instance, null));
+            cut.Find("input[placeholder='Choose a username...']").Change("TestUser");
+            cut.Find("input[placeholder='user@domain.com']").Change("testuser@domain.com");
+            cut.Find("input[placeholder='Enter new password...']").Change("Password123!");
+
+            await cut.Find("form").SubmitAsync();
 
             cut.Find(".alert-success").TextContent.Should().Contain("Account created successfully");
 
-            await Task.Delay(2100);
-            _navManager.Uri.Should().EndWith("/login");
+            cut.WaitForAssertion(() => _navManager.Uri.Should().EndWith("/login"), TimeSpan.FromSeconds(3));
+        }
+
+        [Fact]
+        public async Task HandleRegister_ShouldShowError_WhenApiReturnsFailure()
+        {
+            SetupAuthState(false);
+            var apiResult = new AuthResponseDTO { IsSuccess = false, ErrorMessage = "Email already in use" };
+            _authClientMock.RegisterAsync(Arg.Any<RegisterDTO>()).Returns(Task.FromResult(apiResult));
+
+            var cut = Render<Register>();
+
+            cut.Find("input[placeholder='Choose a username...']").Change("TestUser");
+            cut.Find("input[placeholder='user@domain.com']").Change("testuser@domain.com");
+            cut.Find("input[placeholder='Enter new password...']").Change("Password123!");
+
+            await cut.Find("form").SubmitAsync();
+
+            cut.Find(".alert-danger").TextContent.Should().Contain("Email already in use");
+            _navManager.Uri.Should().NotEndWith("/login");
+        }
+
+        [Fact]
+        public async Task HandleRegister_ShouldShowGenericError_WhenExceptionOccurs()
+        {
+            SetupAuthState(false);
+            _authClientMock.RegisterAsync(Arg.Any<RegisterDTO>()).Returns(Task.FromException<AuthResponseDTO>(new Exception("Database down")));
+
+            var cut = Render<Register>();
+
+            cut.Find("input[placeholder='Choose a username...']").Change("TestUser");
+            cut.Find("input[placeholder='user@domain.com']").Change("testuser@domain.com");
+            cut.Find("input[placeholder='Enter new password...']").Change("Password123!");
+
+            await cut.Find("form").SubmitAsync();
+
+            cut.Find(".alert-danger").TextContent.Should().Contain("Something went wrong");
         }
 
         [Fact]
@@ -77,8 +115,8 @@ namespace ChattyBot.Client.Tests.Pages
 
             var cut = Render<Register>();
 
-            cut.Find("input[placeholder='Choose a username...']").Change("AlexTest");
-            cut.Find("input[placeholder='user@domain.com']").Change("alex@test.com");
+            cut.Find("input[placeholder='Choose a username...']").Change("TestUser");
+            cut.Find("input[placeholder='user@domain.com']").Change("testuser@domain.com");
             cut.Find("input[placeholder='Enter new password...']").Change("Password123!");
 
             var submitTask = cut.Find("form").SubmitAsync();
@@ -86,7 +124,7 @@ namespace ChattyBot.Client.Tests.Pages
             cut.WaitForAssertion(() =>
             {
                 var button = cut.Find("button[type='submit']");
-                button.HasAttribute("disabled").Should().BeTrue("Butonul trebuie să fie disabled cât timp așteaptă serverul");
+                button.HasAttribute("disabled").Should().BeTrue("The button should be disabled while waiting for the server");
                 button.InnerHtml.Should().Contain("spinner-border");
             }, TimeSpan.FromSeconds(2));
 
