@@ -2,4 +2,5 @@
   <Project Path="ChattyBot.Client/ChattyBot.Client.csproj" />
   <Project Path="ChattyBot.Server/ChattyBot.Server.csproj" />
   <Project Path="ChattyBot.Shared/ChattyBot.Shared.csproj" />
+  <Project Path="ChattyBot.Tests/ChattyBot.Tests.csproj" Id="ac61e076-d74f-452d-ba1b-37c4fff87e86" />
 </Solution>

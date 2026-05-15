@@ -23,7 +23,10 @@ namespace ChattyBot.Server.Application.Services
                 ? await _triviaRepository.GetRandomAsync()
                 : await _triviaRepository.GetRandomByCategoryAsync(category.Value);
 
-            if (question == null) return null;
+            if (question == null)
+            {
+                return null;
+            }
 
             return new TriviaQuestionDTO(question.Id, question.QuestionText, question.Options);
         }
