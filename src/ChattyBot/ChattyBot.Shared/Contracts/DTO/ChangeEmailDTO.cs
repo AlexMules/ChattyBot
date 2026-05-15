@@ -11,5 +11,12 @@ namespace ChattyBot.Shared.Contracts.DTO
 
         [Required(ErrorMessage = "Current password is required!")]
         public string CurrentPassword { get; set; } = string.Empty;
+
+        public ChangeEmailDTO(string currentPassword, string newEmail)
+        {
+            CurrentPassword = currentPassword;
+            NewEmail = newEmail;
+        }
+        public ChangeEmailDTO() { }
     }
 }

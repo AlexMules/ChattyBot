@@ -12,5 +12,13 @@ namespace ChattyBot.Shared.Contracts.DTO
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$",
             ErrorMessage = "New password must contain at least one uppercase letter, one digit, and one special character!")]
         public string NewPassword { get; set; } = string.Empty;
+
+        public ChangePasswordDTO(string currentPassword, string newPassword)
+        {
+            CurrentPassword = currentPassword;
+            NewPassword = newPassword;
+        }
+
+        public ChangePasswordDTO() { }
     }
 }

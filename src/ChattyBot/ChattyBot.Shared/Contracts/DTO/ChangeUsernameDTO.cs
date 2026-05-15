@@ -7,5 +7,12 @@ namespace ChattyBot.Shared.Contracts.DTO
         [Required(ErrorMessage = "New username is required!")]
         [RegularExpression(@"^[a-zA-Z0-9_]*$", ErrorMessage = "Username can only contain letters, numbers and underscores!")]
         public string NewUsername { get; set; } = string.Empty;
+
+        public ChangeUsernameDTO(string newUsername)
+        {
+            NewUsername = newUsername;
+        }
+
+        public ChangeUsernameDTO() { }
     }
 }
