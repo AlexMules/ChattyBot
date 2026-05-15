@@ -9,6 +9,7 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
         public string CommandTrigger => "/calc";
         public string Description => "Calculates math expressions (+, -, *, /). Supports integers and decimals.";
         private static readonly Regex InvalidCharsRegex = new(@"[^0-9+\-*/().\s,]", RegexOptions.Compiled);
+        private static readonly Regex InvalidStructureRegex = new(@"[\+\-\*/]{2,}|^[+\*/]|[\+\-\*/]$|\(\)", RegexOptions.Compiled);
 
         public async Task<BotResponse> ExecuteAsync(string? parameters = null)
         {
@@ -23,6 +24,13 @@ namespace ChattyBot.Server.Application.BotEngine.Commands
             }
 
             string expression = parameters.Replace(",", ".");
+            expression = expression.Replace(" ", "");
+
+            if (InvalidStructureRegex.IsMatch(expression))
+            {
+                return new BotResponse("Error: That looks like an invalid expression structure! Check your operators.", MessageType.Text);
+            }
+
             string result = MathEngine.Compute(expression);
 
             string finalMessage = result switch
