@@ -2,6 +2,6 @@
 {
     public class BotCommandContext
     {
-        public string Username { get; set; } = "User";
+        public virtual string Username { get; set; } = "User";
     }
 }
