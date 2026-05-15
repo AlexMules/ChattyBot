@@ -5,7 +5,7 @@ namespace ChattyBot.Shared.Contracts.DTO
     public class RegisterDTO
     {
         [Required(ErrorMessage = "Email field is mandatory!")]
-        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$",
             ErrorMessage = "Please enter a valid email address! (ex: user@domain.com)")]
         public string Email { get; set; } = string.Empty;
 
