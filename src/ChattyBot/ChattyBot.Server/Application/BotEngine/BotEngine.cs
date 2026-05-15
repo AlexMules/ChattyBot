@@ -2,7 +2,7 @@
 
 namespace ChattyBot.Server.Application.BotEngine
 {
-    public class BotEngine
+    public class BotEngine : IBotEngine
     {
         private readonly IEnumerable<IBotCommand> _commands;
         private readonly BotCommandContext _context;

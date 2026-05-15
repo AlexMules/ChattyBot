@@ -4,6 +4,7 @@ using ChattyBot.Server.Domain.Enums;
 using ChattyBot.Server.Infrastructure.Persistence.Interfaces;
 using ChattyBot.Shared.Contracts.DTO;
 using ChattyBot.Shared.Contracts.Enums;
+using ChattyBot.Server.Application.BotEngine;
 
 namespace ChattyBot.Server.Application.Services
 {
@@ -11,12 +12,12 @@ namespace ChattyBot.Server.Application.Services
     {
         private readonly IChatMessageRepository _messageRepo;
         private readonly IChatConversationRepository _conversationRepo;
-        private readonly BotEngine.BotEngine _botEngine;
+        private readonly IBotEngine _botEngine;
 
         public ChatMessageService(
             IChatMessageRepository messageRepo,
             IChatConversationRepository conversationRepo,
-            BotEngine.BotEngine botEngine)
+            IBotEngine botEngine)
         {
             _messageRepo = messageRepo;
             _conversationRepo = conversationRepo;
