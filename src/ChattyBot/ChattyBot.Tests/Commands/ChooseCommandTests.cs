@@ -18,6 +18,12 @@ namespace ChattyBot.Tests.Commands
             _sut.CommandTrigger.Should().Be("/choose");
         }
 
+        [Fact]
+        public void Description_ShouldNotBeNullOrEmpty()
+        {
+            _sut.Description.Should().NotBeNullOrWhiteSpace();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]

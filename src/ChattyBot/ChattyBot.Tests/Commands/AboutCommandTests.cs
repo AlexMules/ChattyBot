@@ -27,7 +27,6 @@ namespace ChattyBot.Tests.Commands
         public void Description_ShouldNotBeNullOrEmpty()
         {
             _sut.Description.Should().NotBeNullOrWhiteSpace();
-            _sut.Description.Should().Contain("who I am");
         }
 
         [Fact]

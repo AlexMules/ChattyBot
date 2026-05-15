@@ -21,6 +21,12 @@ namespace ChattyBot.Tests.Commands
         }
 
         [Fact]
+        public void Description_ShouldNotBeNullOrEmpty()
+        {
+            _sut.Description.Should().NotBeNullOrWhiteSpace();
+        }
+
+        [Fact]
         public async Task ExecuteAsync_ShouldReturnCoinFlipMessageType()
         {
             var result = await _sut.ExecuteAsync();
