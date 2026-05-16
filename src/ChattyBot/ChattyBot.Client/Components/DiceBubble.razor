@@ -62,11 +62,10 @@
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             hasError = true;
             isRolling = false;
-            Console.WriteLine($"[Dice] Deserialization failed: {ex.Message}");
         }
     }
 
