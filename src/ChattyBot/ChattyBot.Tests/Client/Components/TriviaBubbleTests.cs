@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using System.Text.Json;
 
-namespace ChattyBot.Client.Tests.Components
+namespace ChattyBot.Tests.Client.Components
 {
     public class TriviaBubbleTests : BunitContext
     {

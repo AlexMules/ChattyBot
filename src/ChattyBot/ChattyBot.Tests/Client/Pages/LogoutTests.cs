@@ -9,7 +9,7 @@ using ChattyBot.Client.Pages;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChattyBot.Client.Tests.Pages
+namespace ChattyBot.Tests.Client.Pages
 {
     public class LogoutTests : BunitContext
     {

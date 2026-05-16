@@ -13,7 +13,7 @@ using NSubstitute;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace ChattyBot.Client.Tests.Pages
+namespace ChattyBot.Tests.Client.Pages
 {
     public class ChatTests : BunitContext
     {

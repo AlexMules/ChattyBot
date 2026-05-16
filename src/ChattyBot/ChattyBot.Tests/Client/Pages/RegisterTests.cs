@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using System.Security.Claims;
-using Xunit;
 
-namespace ChattyBot.Client.Tests.Pages
+namespace ChattyBot.Tests.Client.Pages
 {
     public class RegisterTests : BunitContext
     {

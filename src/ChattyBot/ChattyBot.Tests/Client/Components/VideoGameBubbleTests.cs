@@ -3,7 +3,7 @@ using ChattyBot.Client.Components;
 using FluentAssertions;
 using System.Text.Json;
 
-namespace ChattyBot.Client.Tests.Components
+namespace ChattyBot.Tests.Client.Components
 {
     public class VideoGameBubbleTests : BunitContext
     {

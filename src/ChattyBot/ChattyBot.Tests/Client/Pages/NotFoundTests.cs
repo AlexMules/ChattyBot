@@ -2,7 +2,7 @@
 using ChattyBot.Client.Pages; 
 using FluentAssertions;
 
-namespace ChattyBot.Client.Tests.Pages
+namespace ChattyBot.Tests.Client.Pages
 {
     public class NotFoundTests : BunitContext
     {

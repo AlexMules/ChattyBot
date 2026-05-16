@@ -11,7 +11,7 @@ using NSubstitute;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components;
 
-namespace ChattyBot.Client.Tests.Pages
+namespace ChattyBot.Tests.Client.Pages
 {
     public class LoginTests : BunitContext
     {
