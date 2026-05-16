@@ -49,12 +49,12 @@ namespace ChattyBot.Tests.Client.Pages
         [Fact]
         public void OnInitialized_ShouldLoadUserData_FromClaims()
         {
-            SetupAuthState(username: "TestUser", email: "testuser@domain.com", avatar: "avatar2.png");
+            SetupAuthState(username: "testuser", email: "testuser@domain.com", avatar: "avatar2.png");
 
             var cut = Render<Home>();
 
-            cut.Find(".welcome-on-banner").TextContent.Should().Contain("Welcome, TestUser!");
-            cut.Find(".display-name").TextContent.Should().Be("TestUser");
+            cut.Find(".welcome-on-banner").TextContent.Should().Contain("Welcome, testuser!");
+            cut.Find(".display-name").TextContent.Should().Be("testuser");
 
             cut.Find(".profile-picture").GetAttribute("src").Should().EndWith("avatar2.png");
 
