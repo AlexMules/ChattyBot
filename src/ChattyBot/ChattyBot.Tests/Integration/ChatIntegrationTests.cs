@@ -306,6 +306,72 @@ namespace ChattyBot.Tests.Integration
         }
 
         [Fact]
+        public async Task SendMessage_ShouldHandleMultipleConcurrentUsers_WithoutInterference()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+
+            int numberOfUsers = 10;
+            var tokens = new List<string>();
+            var chatIds = new List<int>();
+
+            for (int i = 0; i < numberOfUsers; i++)
+            {
+                string email = $"user{i}@test.com";
+                string password = "Password123!";
+
+                await _client.PostAsJsonAsync("/api/auth/register", new RegisterDTO(email, $"user_{i}", password));
+                var loginResp = await _client.PostAsJsonAsync("/api/auth/login", new LoginDTO(email, password));
+                var authData = await loginResp.Content.ReadFromJsonAsync<AuthResponseDTO>();
+
+                tokens.Add(authData!.Token!);
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authData.Token);
+                var chatResp = await _client.PostAsJsonAsync("/api/ChatConversation", new CreateChatDTO($"Room {i}"));
+                var chatData = await chatResp.Content.ReadFromJsonAsync<ChatConversationDTO>();
+
+                chatIds.Add(chatData!.Id);
+            }
+
+            _client.DefaultRequestHeaders.Authorization = null;
+
+            var tasks = new List<Task<HttpResponseMessage>>();
+            for (int i = 0; i < numberOfUsers; i++)
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, $"/api/ChatMessage/{chatIds[i]}/send")
+                {
+                    Content = JsonContent.Create(new SendMessageDTO($"Hello from User {i}"))
+                };
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokens[i]);
+
+
+                tasks.Add(_client.SendAsync(request));
+            }
+
+            var responses = await Task.WhenAll(tasks);
+            responses.Should().AllSatisfy(r => r.StatusCode.Should().Be(HttpStatusCode.OK));
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+
+                for (int i = 0; i < numberOfUsers; i++)
+                {
+                    var userMessages = db.ChatMessages
+                        .Where(m => m.ConversationId == chatIds[i] && m.Content.StartsWith("Hello from"))
+                        .ToList();
+
+                    userMessages.Count.Should().Be(1);
+                    userMessages.First().Content.Should().Be($"Hello from User {i}");
+                }
+            }
+        }
+
+        [Fact]
         public async Task Endpoints_ShouldReturnUnauthorized_WhenTokenIsMissing()
         {
             _client.DefaultRequestHeaders.Authorization = null;
