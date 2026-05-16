@@ -1,5 +1,5 @@
 @ChattyBot.Server_HostAddress = https://localhost:7025
-@token = YOUR_TOKEN_HERE
+@token = {{loginRequest.response.body.$.token}}
 
 ### Register a new user
 POST {{ChattyBot.Server_HostAddress}}/api/auth/register
@@ -13,6 +13,7 @@ Content-Type: application/json
 }
 
 ### Login
+# @name loginRequest
 POST {{ChattyBot.Server_HostAddress}}/api/auth/login
 Content-Type: application/json
 
@@ -128,6 +129,6 @@ Content-Type: application/json
 
 {
   "questionId": {{questionId}},
-  "answerIndex": "{{answerIndex}}",
-  "messageId" : "{{messageId}}" 
+  "answerIndex": {{answerIndex}},
+  "messageId" : {{messageId}}
 }

@@ -25,9 +25,11 @@ namespace ChattyBot.Tests.Integration
                     .AddEntityFrameworkInMemoryDatabase()
                     .BuildServiceProvider();
 
+                var uniqueDbName = $"ChattyBotDb_{Guid.NewGuid()}";
+
                 services.AddDbContext<ChattyBotDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase("ChattyBotIntegrationTestsDb")
+                    options.UseInMemoryDatabase(uniqueDbName)
                            .UseInternalServiceProvider(internalServiceProvider);
                 });
             });

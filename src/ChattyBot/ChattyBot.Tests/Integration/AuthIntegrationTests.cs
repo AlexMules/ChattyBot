@@ -140,6 +140,6 @@ namespace ChattyBot.Tests.Integration
             var response = await _client.PostAsJsonAsync("/api/auth/login", loginPayload);
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        }
+        } 
     }
 }

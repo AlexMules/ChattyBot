@@ -71,6 +71,11 @@ namespace ChattyBot.Server.Api.Controllers
         public async Task<IActionResult> Rename(int id, [FromBody] RenameChatDTO dto)
         {
             var userId = User.GetUserId();
+            if (userId == 0)
+            {
+                return Unauthorized();
+            }
+
             var result = await _conversationService.RenameConversationAsync(userId, id, dto.NewTitle);
 
             return result switch

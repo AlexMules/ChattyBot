@@ -1,12 +1,15 @@
 ﻿using ChattyBot.Server.Api.Controllers;
 using ChattyBot.Server.Application.Interfaces;
+using ChattyBot.Server.Infrastructure.Persistence.Context;
 using ChattyBot.Shared.Contracts.DTO;
 using ChattyBot.Shared.Contracts.Enums;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using System.Net;
 using System.Security.Claims;
 
 namespace ChattyBot.Tests.Server.Controllers
@@ -76,12 +79,26 @@ namespace ChattyBot.Tests.Server.Controllers
 
             var result = await _sut.GetHistory(10);
 
-            result.Result.Should().BeOfType<ForbidResult>();
+            var actionResult = result.Result.Should().BeOfType<ObjectResult>().Subject;
+            actionResult.StatusCode.Should().Be(403);
+            actionResult.Value.Should().Be("Not your chat!");
+        }
+
+        [Fact]
+        public async Task GetHistory_ShouldReturnForbidden_WhenConversationDoesNotExist()
+        {
+            _messageService.GetChatMessagesByConversationIdAsync(TestUserId, 99999)
+                .Throws(new UnauthorizedAccessException("Conversation not found or access denied!"));
+
+            var result = await _sut.GetHistory(99999);
+
+            var actionResult = result.Result.Should().BeOfType<ObjectResult>().Subject;
+            actionResult.StatusCode.Should().Be(403);
         }
 
         [Fact]
         public async Task SendMessage_ShouldReturnOk_WithMessages()
-        { 
+        {
             int chatId = 10;
             var dto = new SendMessageDTO("Hello Bot");
             var response = new List<ChatMessageDTO>
@@ -116,11 +133,12 @@ namespace ChattyBot.Tests.Server.Controllers
         {
             var dto = new SendMessageDTO("Valid content");
             _messageService.AddChatMessageAsync(TestUserId, 10, dto, TestUsername)
-                .Throws(new UnauthorizedAccessException());
+                .Throws(new UnauthorizedAccessException("Access denied!"));
 
             var result = await _sut.SendMessage(10, dto);
 
-            result.Result.Should().BeOfType<ForbidResult>();
+            var actionResult = result.Result.Should().BeOfType<ObjectResult>().Subject;
+            actionResult.StatusCode.Should().Be(403);
         }
     }
 }

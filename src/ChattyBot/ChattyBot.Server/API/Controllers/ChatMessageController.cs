@@ -34,7 +34,11 @@ namespace ChattyBot.Server.Api.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Forbid(ex.Message);
+                return StatusCode(403, ex.Message);
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound(new { message = "Conversation not found!" });
             }
         }
 
@@ -61,7 +65,7 @@ namespace ChattyBot.Server.Api.Controllers
             }
             catch (UnauthorizedAccessException ex)
             {
-                return Forbid(ex.Message);
+                return StatusCode(403, ex.Message);
             }
         }
     }

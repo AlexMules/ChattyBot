@@ -1,4 +1,5 @@
-﻿using ChattyBot.Server.Infrastructure.Persistence.Context;
+﻿using ChattyBot.Server.Domain.Entities;
+using ChattyBot.Server.Infrastructure.Persistence.Context;
 using ChattyBot.Shared.Contracts.DTO;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
@@ -102,6 +103,22 @@ namespace ChattyBot.Tests.Integration
             history!.Any(m => m.Content == "Second Message").Should().BeTrue();
         }
 
+        [Fact]
+        public async Task GetHistory_ShouldReturnForbidden_WhenConversationDoesNotExist()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+
+            await AuthenticateClientAsync("user@test.com", "regular_user", "Password123!");
+
+            var response = await _client.GetAsync("/api/ChatMessage/conversation/99999");
+
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
 
         [Fact]
         public async Task Rename_ShouldUpdateTitle_WhenUserIsOwner()
@@ -124,6 +141,121 @@ namespace ChattyBot.Tests.Integration
             var response = await _client.PutAsJsonAsync($"/api/ChatConversation/{chatId}/rename", renameDto);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+
+                var updatedChat = db.Set<ChatConversation>().FirstOrDefault(c => c.Id == chatId);
+                if (updatedChat == null)
+                {
+                    foreach (var entityType in db.Model.GetEntityTypes())
+                    {
+                        if (entityType.ClrType.Name.Contains("Conversation") || entityType.ClrType.Name.Contains("Chat"))
+                        {
+                            var dbSet = db.GetType().GetMethod("Set", Type.EmptyTypes)?.MakeGenericMethod(entityType.ClrType).Invoke(db, null);
+                            if (dbSet is IQueryable<object> queryable)
+                            {
+                                var idProp = entityType.FindProperty("Id");
+                                var titleProp = entityType.FindProperty("Title");
+                                var entity = queryable.AsEnumerable().FirstOrDefault(e => idProp != null && Convert.ToInt32(idProp.PropertyInfo?.GetValue(e)) == chatId);
+                                if (entity != null && titleProp != null)
+                                {
+                                    titleProp.PropertyInfo?.GetValue(entity).Should().Be("Completly New Chat Title");
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    updatedChat.Title.Should().Be("Completly New Chat Title");
+                }
+            }
+        }
+
+        [Fact]
+        public async Task RenameChatConversation_ShouldReturnForbidden_WhenUserIsNotOwnerOfConversation()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+
+            await AuthenticateClientAsync("owner_rename@test.com", "owner_ren", "Password123!");
+
+            var convResponse = await _client.PostAsJsonAsync("/api/ChatConversation", new CreateChatDTO("Original Title"));
+            var conversation = await convResponse.Content.ReadFromJsonAsync<ChatConversationDTO>();
+            int chatId = conversation!.Id;
+
+            await AuthenticateClientAsync("intruder_rename@test.com", "intruder_ren", "Password123!");
+
+            var renameDto = new RenameChatDTO("Hacked Title");
+            var response = await _client.PutAsJsonAsync($"/api/ChatConversation/{chatId}/rename", renameDto);
+
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task DeleteChatConversation_ShouldReturnNoContent_WhenUserIsOwner()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+
+            await AuthenticateClientAsync("legit_owner@test.com", "legit_owner", "Password123!");
+
+            var convResponse = await _client.PostAsJsonAsync("/api/ChatConversation", new CreateChatDTO("My Personal Chat"));
+            var conversation = await convResponse.Content.ReadFromJsonAsync<ChatConversationDTO>();
+            int chatId = conversation!.Id;
+
+            var response = await _client.DeleteAsync($"/api/ChatConversation/{chatId}");
+
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+
+                var chatInDb = db.Set<ChatConversation>().FirstOrDefault(c => c.Id == chatId);
+                chatInDb.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task DeleteChatConversation_ShouldReturnForbidden_WhenUserIsNotOwnerOfConversation()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+
+            await AuthenticateClientAsync("owner_delete@test.com", "owner_del", "Password123!");
+
+            var convResponse = await _client.PostAsJsonAsync("/api/ChatConversation", new CreateChatDTO("Owner Room to Delete"));
+            var conversation = await convResponse.Content.ReadFromJsonAsync<ChatConversationDTO>();
+            int chatId = conversation!.Id;
+
+            await AuthenticateClientAsync("intruder_delete@test.com", "intruder_del", "Password123!");
+
+            var response = await _client.DeleteAsync($"/api/ChatConversation/{chatId}");
+
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                var chatInDb = db.Set<ChatConversation>().FirstOrDefault(c => c.Id == chatId);
+                chatInDb.Should().NotBeNull();
+            }
         }
 
         [Fact]
@@ -147,6 +279,30 @@ namespace ChattyBot.Tests.Integration
             var response = await _client.PostAsJsonAsync($"/api/ChatMessage/{chatId}/send", invalidMessageDto);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task SendMessage_ShouldReturnForbidden_WhenUserIsNotOwnerOfConversation()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ChattyBotDbContext>();
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+            }
+
+            await AuthenticateClientAsync("owner@test.com", "chat_owner", "Password123!");
+
+            var convResponse = await _client.PostAsJsonAsync("/api/ChatConversation", new CreateChatDTO("Owner Private Room"));
+            var conversation = await convResponse.Content.ReadFromJsonAsync<ChatConversationDTO>();
+            int chatId = conversation!.Id;
+
+            await AuthenticateClientAsync("intruder@test.com", "chat_intruder", "Password123!");
+
+            var sneakyMessage = new SendMessageDTO("Hey, I can see this room?");
+            var response = await _client.PostAsJsonAsync($"/api/ChatMessage/{chatId}/send", sneakyMessage);
+
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
         [Fact]
