@@ -17,7 +17,7 @@
 | Project Deliverable 1 | `v1.0` | 28.03.2026 | 🟢 Submitted |
 | Project Deliverable 2 | `v2.0` | 19.04.2026 | 🟢 Submitted |
 | Project Deliverable 3 | `v3.0` | 10.05.2026 | 🟢 Submitted |
-| Project Final Implementation | `v4.0` | [Date] | 🟢 Submitted / 🔴 Pending |
+| Project Final Implementation | `v4.0` | 17.05.2026 | 🟢 Submitted |
 
 > **Note:** To submit, make sure your work is pushed on the main branch, and create a tag 
 - `git tag -a v1.0 -m "project deliverable 1 completed"`
