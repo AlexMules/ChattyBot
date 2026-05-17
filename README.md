@@ -56,32 +56,32 @@ Before running the project locally, ensure you have the following installed on y
 
 2. **Installation:**
 
-1. **Clone the repository:**
+* **Clone the repository:**
 	```bash
 	git clone https://github.com/sd-s2-2026/project-AlexMules/tree/main
 	cd ChattyBot
 	```
-2. **Configure the Database Connection:**
+* **Configure the Database Connection:**
 	Navigate to the server project (ChattyBot.Server) and open appsettings.json or appsettings.Development.json. 
 	Update the connection string with your MySQL server credentials:
 	"ConnectionStrings": {
 		"DefaultConnection": "Server=localhost;Port=3306;Database=ChattyBotDb;Uid=your_mysql_user;Pwd=your_mysql_password;"
 	}
 	
-3. **Apply EF Core Migrations:**
+* **Apply EF Core Migrations:**
 	Open a terminal in the root solution directory and run the following command to initialize the MySQL 
 	database schema:
 	```bash
 	dotnet ef database update --project ChattyBot.Server
 	```
-4. **Run the project:**
+* **Run the project:**
 	Launch the solution via Visual Studio 2026 by configuring it to start both the server project 
 	and the Blazor WebAssembly client). Alternatively, execute it from the terminal:
 	```bash
 	dotnet run --project ChattyBot.Server
 	dotnet run --project ChattyBot.Client
 	```
-5. Open your browser and navigate to the local URL provided in the terminal output 
+* Open your browser and navigate to the local URL provided in the terminal output 
    (typically https://localhost:7001 or http://localhost:5001).
 
 ## 4. Execution
