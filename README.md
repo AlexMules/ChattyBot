@@ -44,11 +44,33 @@ Provide a high-level description of what your project does, the problem it solve
 [Steps to run the program]
 
 ## 5. Execution Screenshots
-Place screenshots of your program running successfully here. 
 
-*Instructions: Save your images in the `screenshots/` folder and link them below.*
-
-![Execution Example 1](./screenshots/task1_output.png)
+![RegisterPage](./screenshots/RegisterPage.jpg)
+![LoginPage](./screenshots/LoginPage.jpg)
+![ProfilePage](./screenshots/ProfilePage.jpg)
+![ManageAccountPage](./screenshots/ManageAccountPage.jpg)
+![ChatsPage1](./screenshots/ChatsPage(1).jpg)
+![ChatsPage2](./screenshots/ChatsPage(2).jpg)
+![ChatsPage3](./screenshots/ChatsPage(3).jpg)
+![HelpCommand](./screenshots/HelpCommand.jpg)
+![AboutCommand](./screenshots/AboutCommand.jpg)
+![CalcCommand](./screenshots/CalcCommand.jpg)
+![ChooseCommand](./screenshots/ChooseCommand.jpg)
+![CoinFlipCommand](./screenshots/CoinFlipCommand.jpg)
+![DiceCommand](./screenshots/DiceCommand.jpg)
+![DiceDuelCommand](./screenshots/DiceDuelCommand.jpg)
+![EncryptCommand](./screenshots/EncryptCommand.jpg)
+![FunFactCommand](./screenshots/FunFactCommand.jpg)
+![JokeCommand](./screenshots/JokeCommand.jpg)
+![MemeCommand](./screenshots/MemeCommand.jpg)
+![MorseCommand](./screenshots/MorseCommand.jpg)
+![MusicCommand](./screenshots/MusicCommand.jpg)
+![QuoteCommand](./screenshots/QuoteCommand.jpg)
+![RandomCommand](./screenshots/RandomCommand.jpg)
+![ReverseCommand](./screenshots/ReverseCommand.jpg)
+![RpsCommand](./screenshots/RpsCommand.jpg)
+![TriviaCommand](./screenshots/TriviaCommand.jpg)
+![VideoGameCommand](./screenshots/VideoGameCommand.jpg)
 
 ## 6. Known Issues
 [e.g., Does not handle negative input yet]
