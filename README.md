@@ -12,7 +12,7 @@ The application provides a complete workspace where you can easily manage your c
 * **`Interactive Bot Engine`**: Access over 15 dynamic commands directly within the chat to perform math calculations, encrypt text (Caesar Cipher), or translate messages to Morse code.
 * **`Mini-Games & Trivia`**: Challenge the bot to a Dice Duel, play Rock Paper Scissors, or start a multi-category trivia game.
 * **`Entertainment & Recommendations`**: Instantly request random jokes, fun facts, memes, inspirational quotes, or music and video game recommendations based on specific genres.
-* **`Data Portability`**: Easily download and back up your complete chat histories and bot interactions to your local device in structured JSON or XML formats.
+* **`Data Portability`**: Easily download and back up your complete chat histories and bot interactions to your local device in structured JSON or XML formats.<br><br>
 
 ## 2. Technologies Used
 * **Language:** C#(.NET 10 / ASP.NET Core Web API & Blazor WebAssembly), HTML, CSS
