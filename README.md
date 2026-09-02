@@ -63,7 +63,7 @@ ChattyBot/
 │       ├── ChattyBot.Shared/     # Shared data contracts across client and server
 │       │   └── Contracts/        # Shared cross-project data structures
 │       │       ├── DTO/          # Data Transfer Objects (LoginDTO, CreateChatDTO, etc.)
-│       │       └── Enums/        # Shared enumerations (MessageType, TriviaCategory)
+│       │       └── Enums/        # Shared enumerations (MessageType)
 │       │
 │       ├── ChattyBot.Tests/      # Comprehensive test suite
 │       │   ├── Client/           # UI Component tests using bUnit
