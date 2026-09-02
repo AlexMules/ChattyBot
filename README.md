@@ -126,7 +126,7 @@ Once the application is up and running in your browser, follow these steps to ex
 
 ### 1. Account Creation and Authentication
 * Click on **Register** to create a new user account by providing an email, username, and password.
-* Log in with your new credentials. The client will securely store your token in `LocalStorage` and redirect you to the main workspace.
+* Log in with your new credentials. You will be redirected to the main workspace.
 
 ### 2. Starting a Conversation
 * In the left sidebar, click the **New Chat** button.
