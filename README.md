@@ -129,6 +129,7 @@ Once the application is up and running in your browser, follow these steps to ex
 * Log in with your new credentials. You will be redirected to the main workspace.
 
 ### 2. Starting a Conversation
+* Click on the **Chats** section.
 * In the left sidebar, click the **New Chat** button.
 * Enter a title for your conversation in the modal window and click **Create**.
 * Your newly created conversation will appear at the top of the **Recent Conversations** list and open automatically.
