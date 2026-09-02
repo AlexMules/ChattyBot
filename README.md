@@ -1,6 +1,6 @@
-# ChattyBot
+# 🤖 ChattyBot
 
-## 1. Project Description
+## 📋 Description
 ChattyBot is a full-stack client-server chat application built on a layered architecture using ASP.NET Core 
 and Blazor. It addresses the fragmentation of messaging platforms by unifying real-time conversation, 
 utility tools, and gamified features directly inside a single, cohesive ecosystem. Users can seamlessly 
