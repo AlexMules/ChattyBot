@@ -125,7 +125,6 @@ Before running the project locally, ensure you have the following installed on y
 Once the application is up and running in your browser, follow these steps to experience its core functionalities:
 
 ### 1. Account Creation and Authentication
-Since the chat endpoints are secured using JWT tokens, you must authenticate to start a conversation:
 * Click on **Register** to create a new user account by providing an email, username, and password.
 * Log in with your new credentials. The client will securely store your token in `LocalStorage` and redirect you to the main workspace.
 
