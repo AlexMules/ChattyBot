@@ -93,14 +93,16 @@ Before running the project locally, ensure you have the following installed on y
 * **Clone the repository:**
 	```bash
 	git clone https://github.com/AlexMules/ChattyBot.git
-	cd ChattyBot
+	cd ChattyBot/src/ChattyBot
 	```
 * **Configure the Database Connection:**
-	Navigate to the server project (ChattyBot.Server) and open appsettings.json or appsettings.Development.json. 
+	Navigate to the server project (**`ChattyBot.Server`**) and open **`appsettings.json`**. 
 	Update the connection string with your MySQL server credentials:
+	```bash
 	"ConnectionStrings": {
 		"DefaultConnection": "Server=localhost;Port=3306;Database=ChattyBotDb;Uid=your_mysql_user;Pwd=your_mysql_password;"
 	}
+ 	```
 	
 * **Apply EF Core Migrations:**
 	Open a terminal in the root solution directory and run the following command to initialize the MySQL 
