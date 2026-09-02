@@ -39,7 +39,46 @@ The application provides a complete workspace where you can easily manage your c
 * **Frontend (Blazor WebAssembly):** A **Single Page Application (SPA)** built on a **Component-Based Architecture**. The user interface is divided into modular, reusable components that manage state locally. This allows for instant UI updates and seamless navigation without requiring full page reloads from the server.<br><br>
 
 ## 📂 Project Structure
+```text
+ChattyBot/
+├── .github/                    
+├── screenshots/                  # Application preview images for documentation
+├── src/                          # Source code
+│   └── ChattyBot/                
+│       ├── ChattyBot.Client/     # Frontend: Blazor WebAssembly SPA
+│       │   ├── Components/       # Reusable UI components
+│       │   ├── Layout/           # Main layout and navigation components
+│       │   ├── Pages/            # Routable views (Home, Login, Chats, ManageAccount)
+│       │   ├── Properties/       # Project properties and launch settings
+│       │   ├── Services/         # External API client callers and Auth State
+│       │   └── wwwroot/          # Static web assets (CSS, images, icons)
+│       │
+│       ├── ChattyBot.Server/     # Backend: ASP.NET Core Web API
+│       │   ├── API/Controllers/  # Entry points for HTTP requests routing
+│       │   ├── Application/      # Core Business Logic (Bot Engine, Commands, Services)
+│       │   ├── Domain/           # Core models (Entities and Enums)
+│       │   ├── Infrastructure/   # EF Core DbContext, Repositories, and JWT Security
+│       │   └── Properties/       # Backend launch settings and environment configs
+│       │
+│       ├── ChattyBot.Shared/     # Shared data contracts across client and server
+│       │   └── Contracts/        # Shared cross-project data structures
+│       │       ├── DTO/          # Data Transfer Objects (LoginDTO, CreateChatDTO, etc.)
+│       │       └── Enums/        # Shared enumerations (MessageType, TriviaCategory)
+│       │
+│       ├── ChattyBot.Tests/      # Comprehensive test suite
+│       │   ├── Client/           # UI Component tests using bUnit
+│       │   ├── Integration/      # End-to-end API tests (WebApplicationFactory)
+│       │   └── Server/           # Unit tests for bot logic, services, and utils (xUnit)
+│       │
+│       └── ChattyBot.slnx        # Main .NET Solution file
+│
+├── tests/                        
+├── .gitignore
+├── LICENSE
+└── README.md                     # Project documentation
+```
 
+<br><br>
 
 ## 3. Setup and Installation
 
