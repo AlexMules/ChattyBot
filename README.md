@@ -112,7 +112,7 @@ Before running the project locally, ensure you have the following installed on y
 	```
 * **Run the project:**
 	Launch the solution via Visual Studio 2026 by configuring it to start both the server project 
-	and the Blazor WebAssembly client). Alternatively, execute it from the terminal:
+	and the Blazor WebAssembly client. Alternatively, execute it from the terminal:
 	```bash
 	dotnet run --project ChattyBot.Server
 	dotnet run --project ChattyBot.Client
