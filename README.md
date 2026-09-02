@@ -4,7 +4,15 @@
 
 **ChattyBot** is an interactive chat application featuring a built-in virtual assistant designed to make messaging fun, engaging, and productive. Instead of just sending plain text, users can interact with the bot using over 15 custom commands to play mini-games, solve math equations, encrypt secret messages, or test their knowledge with multi-category trivia. 
 
-The application provides a complete workspace where you can easily manage your chat history. Users can securely log in, create multiple distinct conversations, rename or delete them, and even export their favorite chats to local files. Whether you want a quick game of Rock Paper Scissors, a random song recommendation, or just a good joke to brighten your day, ChattyBot handles it all directly within a single, seamless chat interface.
+The application provides a complete workspace where you can easily manage your chat history. Users can securely log in, create multiple distinct conversations, rename or delete them, and even export their favorite chats to local files. Whether you want a quick game of Rock Paper Scissors, a random song recommendation, or just a good joke to brighten your day, ChattyBot handles it all directly within a single, seamless chat interface.<br><br>
+
+## ⭐ Key Features
+* **`User Authentication`**: Secure account registration and login system powered by JWT tokens for safe session management.
+* **`Conversation Management`**: Create multiple distinct chat threads, rename active conversations, and delete old ones to keep your workspace organized.
+* **`Interactive Bot Engine`**: Access over 15 dynamic commands directly within the chat to perform math calculations, encrypt text (Caesar Cipher), or translate messages to Morse code.
+* **`Mini-Games & Trivia`**: Challenge the bot to a Dice Duel, play Rock Paper Scissors, or start a multi-category trivia game.
+* **`Entertainment & Recommendations`**: Instantly request random jokes, fun facts, memes, inspirational quotes, or music and video game recommendations based on specific genres.
+* **`Data Portability`**: Easily download and back up your complete chat histories and bot interactions to your local device in structured JSON or XML formats.
 
 ## 2. Technologies Used
 * **Language:** C#(.NET 10 / ASP.NET Core Web API & Blazor WebAssembly), HTML, CSS
