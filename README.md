@@ -28,11 +28,11 @@ The application provides a complete workspace where you can easily manage your c
 
 ## 🏗️ Architecture
 
-ChattyBot follows a cleanly decoupled **Client-Server** architecture, communicating exclusively via a **RESTful API** using JSON. This design ensures a clear separation of concerns, high maintainability, and a fast, fluid user experience.
+**ChattyBot** is built on a decoupled **`Client-Server`** architecture, communicating exclusively through a RESTful API. This design ensures a clear separation of concerns, high maintainability, and a fast, fluid user experience.
 
 * **Backend (ASP.NET Core):** Implements a strict **Layered Architecture** divided into four logical levels:
   * **API Layer:** Acts as the entry point, handling incoming HTTP requests and routing.
-  * **Application (Core) Layer:** The "brain" of the system, utilizing the *Command Pattern* to execute bot commands and process business logic dynamically.
+  * **Application (Core) Layer:** The "brain" of the system, using the *Command Pattern* to execute bot commands and process business logic dynamically.
   * **Infrastructure Layer:** Abstracts data access and database operations using repositories.
   * **Data Storage Layer:** The physical MySQL database where users, sessions, and chat histories are permanently stored.
 
