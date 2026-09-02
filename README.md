@@ -36,7 +36,7 @@ The application provides a complete workspace where you can easily manage your c
   * **Infrastructure Layer:** Abstracts data access and database operations using repositories.
   * **Data Storage Layer:** The physical MySQL database where users, sessions, and chat histories are permanently stored.
 
-* **Frontend (Blazor WebAssembly):** A **Single Page Application (SPA)** built on a **Component-Based Architecture**. The user interface is divided into modular, reusable components that manage state locally. This allows for instant UI updates and seamless navigation without requiring full page reloads from the server.<br><br>
+* **Frontend (Blazor WebAssembly):** A **Single Page Application (SPA)** built on a **Component-Based Architecture**. The user interface is divided into modular, reusable components that manage state locally. This allows for instant UI updates and seamless navigation without requiring full page reloads from the server.<br>
 
 ## 📂 Project Structure
 ```text
@@ -78,9 +78,9 @@ ChattyBot/
 └── README.md                     # Project documentation
 ```
 
-<br><br>
+<br>
 
-## 3. Setup and Installation
+## 🚀 Setup and Installation
 
 1. **Prerequisites:** 
 Before running the project locally, ensure you have the following installed on your system:
