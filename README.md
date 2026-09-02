@@ -92,7 +92,7 @@ Before running the project locally, ensure you have the following installed on y
 
 * **Clone the repository:**
 	```bash
-	git clone https://github.com/AlexMules/ChattyBot/tree/main
+	git clone https://github.com/AlexMules/ChattyBot.git
 	cd ChattyBot
 	```
 * **Configure the Database Connection:**
