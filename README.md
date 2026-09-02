@@ -14,6 +14,16 @@ The application provides a complete workspace where you can easily manage your c
 * **`Entertainment & Recommendations`**: Instantly request random jokes, fun facts, memes, inspirational quotes, or music and video game recommendations based on specific genres.
 * **`Data Portability`**: Easily download and back up your complete chat histories and bot interactions to your local device in structured JSON or XML formats.<br><br>
 
+## 🛠️ Tech Stack
+| **Layer** | **Technologies** |
+| :---: | :---: |
+| Backend | C# (.NET 10), ASP.NET Core Web API, Entity Framework Core, JWT |
+| Frontend | Blazor WebAssembly, HTML5, CSS3, Bootstrap Icons |
+| Database | MySQL |
+| Testing | xUnit, bUnit, NSubstitute, FluentAssertions, EF Core In-Memory |
+| Utilities | Blazored.LocalStorage, System.Text.Json |
+| Tools & Version Control | Visual Studio 2026, Git, GitHub |
+
 ## 2. Technologies Used
 * **Language:** C#(.NET 10 / ASP.NET Core Web API & Blazor WebAssembly), HTML, CSS
 * **Database:** MySQL, Entity Framework Core In-Memory Database (Testing)
