@@ -17,7 +17,7 @@ The application provides a complete workspace where you can easily manage your c
 ## 🛠️ Tech Stack
 | **Layer** | **Technologies** |
 | :---: | :---: |
-| **Backend** | C# (.NET 10), ASP.NET Core Web API, Entity Framework Core |
+| **Backend & API** | C# (.NET 10), Entity Framework Core, ASP.NET Core Web API |
 | **Frontend** | Blazor WebAssembly, HTML, CSS, Bootstrap Icons |
 | **Database** | MySQL |
 | **Testing** | xUnit, bUnit, NSubstitute, FluentAssertions |
