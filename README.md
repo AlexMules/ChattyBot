@@ -96,7 +96,7 @@ Before running the project locally, ensure you have the following installed on y
 	cd ChattyBot/src/ChattyBot
 	```
 * **Configure the Database Connection:**
-	Navigate to the server project (**`ChattyBot.Server`**) and open **`appsettings.json`**. 
+	Navigate to the server project (**`ChattyBot.Server`**) and open **`appsettings.json`** or **`appsettings.Development.json`**. 
 	Update the connection string with your MySQL server credentials:
 	```bash
 	"ConnectionStrings": {
