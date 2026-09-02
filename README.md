@@ -1,29 +1,4 @@
-# 📚 Software Design - 2026
-
-# Project: Chat Application with Bot Integration
-
-## 👤 Student Information
-* **Name:** Alexandru Mules
-* **GitHub Username:** @AlexMules
-* **Group:** 30232-2
-
----
-
-## 📈 Submission Table
-- Update this table before each assignment submission.
-
-| Milestone  | Tag | Submission Date | Status |
-| :--- | :--- | :--- | :--- |
-| Project Deliverable 1 | `v1.0` | 28.03.2026 | 🟢 Submitted |
-| Project Deliverable 2 | `v2.0` | 19.04.2026 | 🟢 Submitted |
-| Project Deliverable 3 | `v3.0` | 10.05.2026 | 🟢 Submitted |
-| Project Final Implementation | `v4.0` | 17.05.2026 | 🟢 Submitted |
-
-> **Note:** To submit, make sure your work is pushed on the main branch, and create a tag 
-- `git tag -a v1.0 -m "project deliverable 1 completed"`
-- `git push origin v1.0`
-- Go to your repository on GitHub, click on the "Tags" tab. If you see v1.0, your submission is successful.
-
+# ChattyBot
 
 ## 1. Project Description
 ChattyBot is a full-stack client-server chat application built on a layered architecture using ASP.NET Core 
