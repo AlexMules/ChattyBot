@@ -120,7 +120,7 @@ Before running the project locally, ensure you have the following installed on y
 * Open your browser and navigate to the local URL provided in the terminal output 
    (https://localhost:7296 or http://localhost:5075).<br><br>
 
-## ▶️ Execution
+## 📖 User Guide
 
 Once the application is up and running in your browser, follow these steps to experience its core functionalities:
 
