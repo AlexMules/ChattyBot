@@ -26,12 +26,6 @@ The application provides a complete workspace where you can easily manage your c
 
 <br><br>
 
-## 2. Technologies Used
-* **Language:** C#(.NET 10 / ASP.NET Core Web API & Blazor WebAssembly), HTML, CSS
-* **Database:** MySQL, Entity Framework Core In-Memory Database (Testing)
-* **Libraries:** Blazored.LocalStorage, Microsoft.AspNetCore.Components.Authorization, Microsoft.EntityFrameworkCore, System.Text.Json, System.Net.Http.Json, xUnit, bUnit, NSubstitute, FluentAssertions, Microsoft.AspNetCore.Mvc.Testing (WebApplicationFactory)
-* **Tools:** Visual Studio 2026 (IDE), Git & GitHub, Bootstrap Icons
-
 ## 3. Setup and Installation
 
 1. **Prerequisites:** 
