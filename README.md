@@ -118,9 +118,9 @@ Before running the project locally, ensure you have the following installed on y
 	dotnet run --project ChattyBot.Client
 	```
 * Open your browser and navigate to the local URL provided in the terminal output 
-   (https://localhost:7296 or http://localhost:5075).
+   (https://localhost:7296 or http://localhost:5075).<br><br>
 
-## 4. Execution
+## ▶️ Execution
 
 Once the application is up and running in your browser, follow these steps to experience its core functionalities:
 
@@ -145,13 +145,9 @@ Type your text in the bottom chat input area. To interact with the bot's dynamic
 * Click **Rename** to update the chat's title using the modal overlay, or click **Delete** to wipe the conversation and its underlying history from the database completely.
 * Click the **Export** icon located in the upper-right area of the chat header to safely download a local copy of your current chat history in either **JSON** or **XML** file structures.
 
-### 5. Running the Test Suite
-To execute the automated unit and integration tests verifying the stability of the component layout and data pipelines, open a terminal in the root solution folder and run:
-```bash
-dotnet test
-```
+<br><br>
 
-## 5. Execution Screenshots
+## 🖼️ Screenshots
 
 ![RegisterPage](./screenshots/RegisterPage.jpg)
 ![LoginPage](./screenshots/LoginPage.jpg)
@@ -179,17 +175,3 @@ dotnet test
 ![RpsCommand](./screenshots/RpsCommand.jpg)
 ![TriviaCommand](./screenshots/TriviaCommand.jpg)
 ![VideoGameCommand](./screenshots/VideoGameCommand.jpg)
-
-## 6. Known Issues
-
-### Stateless JWT Token Invalidation on Logout
-Currently, user logout is handled strictly on the client side by destroying the JSON Web Token (JWT) 
-from the browser's `LocalStorage`. Because the backend API validates incoming tokens in a completely 
-stateless manner, the token itself remains cryptographically valid on the server until its natural 
-expiration time lapses. This introduces a vulnerability where an intercepted token could theoretically 
-still be used to authorize requests even after a user has logged out.
-
-To mitigate this limitation, the application requires a server-side token revocation mechanism. 
-A standard industry resolution would involve integrating an in-memory cache layer like **Redis** 
-to maintain a centralized token blacklist, allowing the backend to explicitly reject logged-out 
-tokens on every incoming request until they safely expire.
