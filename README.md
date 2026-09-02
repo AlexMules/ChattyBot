@@ -17,12 +17,12 @@ The application provides a complete workspace where you can easily manage your c
 ## 🛠️ Tech Stack
 | **Layer** | **Technologies** |
 | :---: | :---: |
-| Backend | C# (.NET 10), ASP.NET Core Web API, Entity Framework Core, JWT |
-| Frontend | Blazor WebAssembly, HTML5, CSS3, Bootstrap Icons |
-| Database | MySQL |
-| Testing | xUnit, bUnit, NSubstitute, FluentAssertions, EF Core In-Memory |
-| Utilities | Blazored.LocalStorage, System.Text.Json |
-| Tools & Version Control | Visual Studio 2026, Git, GitHub |
+| **Backend** | C# (.NET 10), ASP.NET Core Web API, Entity Framework Core |
+| **Frontend** | Blazor WebAssembly, HTML, CSS, Bootstrap Icons |
+| **Database** | MySQL |
+| **Testing** | xUnit, bUnit, NSubstitute, FluentAssertions |
+| **Version Control** | Git |
+<br><br>
 
 ## 2. Technologies Used
 * **Language:** C#(.NET 10 / ASP.NET Core Web API & Blazor WebAssembly), HTML, CSS
