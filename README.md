@@ -118,7 +118,7 @@ Before running the project locally, ensure you have the following installed on y
 	dotnet run --project ChattyBot.Client
 	```
 * Open your browser and navigate to the local URL provided in the terminal output 
-   (typically https://localhost:7001 or http://localhost:5001).
+   (https://localhost:7296 or http://localhost:5075).
 
 ## 4. Execution
 
