@@ -22,6 +22,7 @@ The application provides a complete workspace where you can easily manage your c
 | **Database** | MySQL |
 | **Testing** | xUnit, bUnit, NSubstitute, FluentAssertions |
 | **Version Control** | Git |
+
 <br><br>
 
 ## 2. Technologies Used
